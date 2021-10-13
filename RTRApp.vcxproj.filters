@@ -1,0 +1,196 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Shader Files">
+      <UniqueIdentifier>{aada93c9-9276-407e-9e9f-2332bbb369ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader Files\Normal Shader">
+      <UniqueIdentifier>{af262882-8f00-4716-8716-cf7f31d77142}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader Files\Cube Shader">
+      <UniqueIdentifier>{06f35864-0456-4041-8f21-bc6b0b87b85d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader Files\Tony%27s Shaders">
+      <UniqueIdentifier>{ad3f5658-038b-4dc8-ac45-188e522834a6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader Files\SkyBox Shader">
+      <UniqueIdentifier>{93463dac-e62f-410f-b6b0-18241342e5c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\SkyBox">
+      <UniqueIdentifier>{5cf39dd7-cfac-47e9-a176-91aeaeb9a5f4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader Files\Lighting Shader">
+      <UniqueIdentifier>{169883c0-85db-41dc-85dd-fbb195964afe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader Files\Block Shader">
+      <UniqueIdentifier>{580e3b5b-2bde-4965-a8e4-d1e4e9929cd9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader Files\Sphere Shader">
+      <UniqueIdentifier>{5f3b062d-7ce8-49ff-9741-f2bff732c2e6}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Src\RenderLoop.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Include\glad\glad.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\RTRShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Camera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Cube.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\StateTracker.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Console.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Object.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Lighting.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Sphere.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\SkyBox.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Block.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Src\RenderLoop.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\RTRShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Camera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Cube.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\StateTracker.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Console.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Object.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Lighting.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Sphere.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\SkyBox.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Block.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Src\Shaders\BlockFragShader.frag">
+      <Filter>Shader Files\Block Shader</Filter>
+    </None>
+    <None Include="Src\Shaders\BlockVertShader.vert">
+      <Filter>Shader Files\Block Shader</Filter>
+    </None>
+    <None Include="Src\Shaders\BlockGeomShader.geom">
+      <Filter>Shader Files\Block Shader</Filter>
+    </None>
+    <None Include="Src\Shaders\CubeFragShader.frag">
+      <Filter>Shader Files\Cube Shader</Filter>
+    </None>
+    <None Include="Src\Shaders\CubeGeomShader.geom">
+      <Filter>Shader Files\Cube Shader</Filter>
+    </None>
+    <None Include="Src\Shaders\CubeVertShader.vert">
+      <Filter>Shader Files\Cube Shader</Filter>
+    </None>
+    <None Include="Src\Shaders\LightingFragShader.frag">
+      <Filter>Shader Files\Lighting Shader</Filter>
+    </None>
+    <None Include="Src\Shaders\LightingVertexShader.vert">
+      <Filter>Shader Files\Lighting Shader</Filter>
+    </None>
+    <None Include="Src\Shaders\NormalFragShader.frag">
+      <Filter>Shader Files\Normal Shader</Filter>
+    </None>
+    <None Include="Src\Shaders\NormalGeomShader.geom">
+      <Filter>Shader Files\Normal Shader</Filter>
+    </None>
+    <None Include="Src\Shaders\NormalVertShader.vert">
+      <Filter>Shader Files\Normal Shader</Filter>
+    </None>
+    <None Include="Src\Shaders\SkyBoxFragShader.frag">
+      <Filter>Shader Files\SkyBox Shader</Filter>
+    </None>
+    <None Include="Src\Shaders\SkyBoxVertShader.vert">
+      <Filter>Shader Files\SkyBox Shader</Filter>
+    </None>
+    <None Include="Src\Shaders\RTRDefault.frag">
+      <Filter>Shader Files\Tony%27s Shaders</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Src\container2.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\back.jpg">
+      <Filter>Resource Files\SkyBox</Filter>
+    </Image>
+    <Image Include="Src\bottom.jpg">
+      <Filter>Resource Files\SkyBox</Filter>
+    </Image>
+    <Image Include="Src\front.jpg">
+      <Filter>Resource Files\SkyBox</Filter>
+    </Image>
+    <Image Include="Src\left.jpg">
+      <Filter>Resource Files\SkyBox</Filter>
+    </Image>
+    <Image Include="Src\right.jpg">
+      <Filter>Resource Files\SkyBox</Filter>
+    </Image>
+    <Image Include="Src\top.jpg">
+      <Filter>Resource Files\SkyBox</Filter>
+    </Image>
+    <Image Include="Src\container2_specular.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+</Project>
