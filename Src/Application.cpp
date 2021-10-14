@@ -242,6 +242,7 @@ void Application::RenderFrame()
     glClearColor(0.0, 0.0, 0.0, 1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+    //block
     stateTracker->blockShader->Use();
     stateTracker->blockShader->SetFloat("objectMaterialUniform.shininess", stateTracker->block->material.shininess);
     stateTracker->blockShader->SetMat4("viewMatrixUniform", stateTracker->viewMatrix);
@@ -258,6 +259,7 @@ void Application::RenderFrame()
     stateTracker->normalShader->SetMat4("modelMatrixUniform", stateTracker->modelMatrix);
     stateTracker->block->Render(stateTracker->normalShader);
 
+    // cube
     stateTracker->cubeShader->Use();
     stateTracker->cubeShader->SetMat4("viewMatrixUniform", stateTracker->viewMatrix);
     stateTracker->cubeShader->SetMat4("projectionMatrixUniform", stateTracker->projectionMatrix);
@@ -274,11 +276,23 @@ void Application::RenderFrame()
     stateTracker->normalShader->SetMat4("modelMatrixUniform", stateTracker->modelMatrix);
     stateTracker->cube->Render(stateTracker->normalShader);
 
+    // sphere
+    stateTracker->sphereShader->Use();
+    stateTracker->sphereShader->SetMat4("viewMatrixUniform", stateTracker->viewMatrix);
+    stateTracker->sphereShader->SetMat4("projectionMatrixUniform", stateTracker->projectionMatrix);
+    stateTracker->sphereShader->SetCamera("cameraUniform", *stateTracker->camera);
+    stateTracker->sphereShader->SetLightingModel(*stateTracker->lightModel);
+
+    stateTracker->modelMatrix = glm::mat4(1.0f);
+    stateTracker->modelMatrix = glm::translate(stateTracker->modelMatrix, glm::vec3(6.0, 0.0, 0.0));
+    stateTracker->sphereShader->SetMat4("modelMatrixUniform", stateTracker->modelMatrix);
+    stateTracker->sphere->Render(stateTracker->sphereShader, stateTracker->skyBox->cubemapTexture);
+
     stateTracker->normalShader->Use();
     stateTracker->normalShader->SetMat4("projectionMatrixUniform", stateTracker->projectionMatrix);
     stateTracker->normalShader->SetMat4("viewMatrixUniform", stateTracker->viewMatrix);
     stateTracker->normalShader->SetMat4("modelMatrixUniform", stateTracker->modelMatrix);
-    stateTracker->cube->Render(stateTracker->normalShader);
+    stateTracker->sphere->Render(stateTracker->normalShader, stateTracker->skyBox->cubemapTexture);
 
     // draw skybox as last
     glDepthFunc(GL_LESS); // set depth function back to default
@@ -312,11 +326,18 @@ int Application::Init()
     stateTracker->cube->Init();
     stateTracker->skyBox->Init();
     stateTracker->block->Init();
+    stateTracker->sphere->Init();
 
 
     stateTracker->blockShader->Use();
     stateTracker->blockShader->SetInt("objectMaterialUniform.diffuse", 0);
     stateTracker->blockShader->SetInt("objectMaterialUniform.specular", 1);
+
+    stateTracker->skyBoxShader->Use();
+    stateTracker->skyBoxShader->SetInt("skyBoxUniform", 0);
+
+    stateTracker->sphereShader->Use();
+    stateTracker->sphereShader->SetInt("skyBoxUniform", 0);
 
 
     // Add directional light to follow camera view direction

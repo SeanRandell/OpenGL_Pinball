@@ -6,6 +6,7 @@
 #include "Cube.h"
 #include "Block.h"
 #include "SkyBox.h"
+#include "Sphere.h"
 #include <sdl/SDL_timer.h>
 #include <string>
 
@@ -21,6 +22,7 @@ public:
     Cube* cube;
     Block* block;
     SkyBox* skyBox;
+    Sphere* sphere;
     //int lightSourcesCount;
     //int maxPointLightCount;
     //float deltaTime;
@@ -55,6 +57,7 @@ public:
     RTRShader* skyBoxShader{ nullptr };
     RTRShader* lightingShader{ nullptr };
     RTRShader* blockShader{ nullptr };
+    RTRShader* sphereShader{ nullptr };
 
     LightingModel* lightModel;
 

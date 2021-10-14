@@ -3,9 +3,9 @@ out vec4 FragmentColor;
 
 in vec3 TextureCoordinates;
 
-uniform samplerCube skybox;
+uniform samplerCube skyBoxUniform;
 
 void main()
 {    
-    FragmentColor = texture(skybox, TextureCoordinates);
+    FragmentColor = texture(skyBoxUniform, TextureCoordinates);
 }
