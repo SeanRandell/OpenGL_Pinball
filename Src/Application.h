@@ -29,10 +29,8 @@ private:
     Console* console{ nullptr };
 
     void CheckInput();
-    //void UpdateSponge();
     void UpdateState();
     void RenderFrame();
-    void RenderOnScreenDisplay();
     void UpdateShaders();
     void LoadTexture();
 

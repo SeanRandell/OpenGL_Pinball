@@ -10,16 +10,12 @@ Sphere::Sphere(float radius, int sectors, int stacks, bool smooth) {
         this->sectorCount = MIN_STACK_COUNT;
     this->smooth = smooth;
 
-    if (smooth)
-        BuildVerticesSmooth();
+    BuildVerticesSmooth();
 }
 
 void Sphere::Init()
 {
-    GLuint vboId2 = 0;      // IDs of VBO for vertex arrays
-
     glGenBuffers(1, &vertexBuffer);
-
     glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
     glBufferData(GL_ARRAY_BUFFER, GetInterleavedVertexSize(), GetInterleavedVertices(), GL_STATIC_DRAW);
 
@@ -30,13 +26,18 @@ void Sphere::Init()
     glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
 
     // set attrib arrays using glVertexAttribPointer()
-    int stride = GetInterleavedStride();
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
 
+    // normals
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
     //glVertexAttribPointer(attribVertexTexCoord, 2, GL_FLOAT, false, stride, (void*)(6 * sizeof(float)));
+
+    glGenBuffers(1, &faceElementBuffer);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, faceElementBuffer);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, GetIndexSize(), GetIndices(), GL_STATIC_DRAW);
+
 }
 
 void Sphere::Render(RTRShader* shader, unsigned int cubeMapTexture)
@@ -44,18 +45,21 @@ void Sphere::Render(RTRShader* shader, unsigned int cubeMapTexture)
     glBindVertexArray(vertexArray);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_CUBE_MAP, cubeMapTexture);
-    glDrawArrays(GL_TRIANGLES, 0, numberOfVertices);
-    glBindVertexArray(0);
+    //glDrawArrays(GL_TRIANGLES, 0, numberOfVertices);
+
 
     // draw center sphere
-    //glDrawElements(GL_TRIANGLES,            // primitive type
-    //    sphere2.getIndexCount(), // # of indices
-    //    GL_UNSIGNED_INT,         // data type
-    //    (void*)0);               // ptr to indices
+    glDrawElements(GL_TRIANGLES,            // primitive type
+        GetIndexCount(), // # of indices
+        GL_UNSIGNED_INT,         // data type
+        (void*)0);               // ptr to indices
+
+    glBindVertexArray(0);
 }
 
 void Sphere::End()
 {
+    Object::End();
 }
 
 void Sphere::BuildVerticesSmooth()
@@ -67,7 +71,7 @@ void Sphere::BuildVerticesSmooth()
 
     float x, y, z, xy;                              // vertex position
     float nx, ny, nz, lengthInv = 1.0f / radius;    // normal
-    float s, t;                                     // texCoord
+    //float s, t;                                     // texCoord
 
     float sectorStep = 2 * PI / sectorCount;
     float stackStep = PI / stackCount;
@@ -104,55 +108,55 @@ void Sphere::BuildVerticesSmooth()
     //  |  / |
     //  | /  |
     //  k2--k2+1
-    //unsigned int k1, k2;
-    //for (int i = 0; i < stackCount; ++i)
-    //{
-    //    k1 = i * (sectorCount + 1);     // beginning of current stack
-    //    k2 = k1 + sectorCount + 1;      // beginning of next stack
+    unsigned int k1, k2;
+    for (int i = 0; i < stackCount; ++i)
+    {
+        k1 = i * (sectorCount + 1);     // beginning of current stack
+        k2 = k1 + sectorCount + 1;      // beginning of next stack
 
-    //    for (int j = 0; j < sectorCount; ++j, ++k1, ++k2)
-    //    {
-    //        // 2 triangles per sector excluding 1st and last stacks
-    //        if (i != 0)
-    //        {
-    //            addIndices(k1, k2, k1 + 1);   // k1---k2---k1+1
-    //        }
+        for (int j = 0; j < sectorCount; ++j, ++k1, ++k2)
+        {
+            // 2 triangles per sector excluding 1st and last stacks
+            if (i != 0)
+            {
+                AddIndices(k1, k2, k1 + 1);   // k1---k2---k1+1
+            }
 
-    //        if (i != (stackCount - 1))
-    //        {
-    //            addIndices(k1 + 1, k2, k2 + 1); // k1+1---k2---k2+1
-    //        }
+            if (i != (stackCount - 1))
+            {
+                AddIndices(k1 + 1, k2, k2 + 1); // k1+1---k2---k2+1
+            }
 
-    //        // vertical lines for all stacks
-    //        lineIndices.push_back(k1);
-    //        lineIndices.push_back(k2);
-    //        if (i != 0)  // horizontal lines except 1st stack
-    //        {
-    //            lineIndices.push_back(k1);
-    //            lineIndices.push_back(k1 + 1);
-    //        }
-    //    }
-    //}
+            // vertical lines for all stacks
+            lineIndices.push_back(k1);
+            lineIndices.push_back(k2);
+            if (i != 0)  // horizontal lines except 1st stack
+            {
+                lineIndices.push_back(k1);
+                lineIndices.push_back(k1 + 1);
+            }
+        }
+    }
 
     // generate interleaved vertex array as well
     BuildInterleavedVertices();
 
-    int k = 0;
-    int j = 1;
-    fprintf(stderr, "Start\n");
-    for (size_t i = 0; i < interleavedVertices.size(); i++)
-    {
-        //fprintf(stderr, "mouse x: %d, y: %d\n", keyEvent.button.x, keyEvent.button.y);
-        fprintf(stderr, "%f, ", interleavedVertices[i]);
-        k++;
-        //fprintf(stderr, " - index: %lu\n, ", i);
-        if (k == 6) {
-            fprintf(stderr, " - index: %d,\n", j);
-            j++;
-            k = 0;
-        }
-    }
-    fprintf(stderr, "End\n");
+    //int k = 0;
+    //int j = 1;
+    //fprintf(stderr, "Start\n");
+    //for (size_t i = 0; i < interleavedVertices.size(); i++)
+    //{
+    //    //fprintf(stderr, "mouse x: %d, y: %d\n", keyEvent.button.x, keyEvent.button.y);
+    //    fprintf(stderr, "%f, ", interleavedVertices[i]);
+    //    k++;
+    //    //fprintf(stderr, " - index: %lu\n, ", i);
+    //    if (k == 6) {
+    //        fprintf(stderr, " - index: %d,\n", j);
+    //        j++;
+    //        k = 0;
+    //    }
+    //}
+    //fprintf(stderr, "End\n");
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -187,6 +191,8 @@ void Sphere::ClearArrays()
 {
     std::vector<float>().swap(vertices);
     std::vector<float>().swap(normals);
+    std::vector<unsigned int>().swap(indices);
+    std::vector<unsigned int>().swap(lineIndices);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -207,6 +213,13 @@ void Sphere::AddNormal(float nx, float ny, float nz)
     normals.push_back(nx);
     normals.push_back(ny);
     normals.push_back(nz);
+}
+
+void Sphere::AddIndices(unsigned int i1, unsigned int i2, unsigned int i3)
+{
+    indices.push_back(i1);
+    indices.push_back(i2);
+    indices.push_back(i3);
 }
 
 const char* Sphere::GetName()

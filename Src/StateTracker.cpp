@@ -9,7 +9,9 @@ StateTracker::StateTracker(int screenWidth, int screenHeight)
 
     cube = new Cube();
     block = new Block();
-    sphere = new Sphere(1.0, 5, 5, true);
+    //sphere = new Sphere(1.0, 5, 5, true);
+    sphere = new Sphere();
+    cylinder = new Cylinder();
     skyBox = new SkyBox();
 
     //this->maxPointLightCount = 7;
@@ -47,10 +49,15 @@ void StateTracker::Init()
         "../Assignment2/Src/Shaders/SphereFragShader.frag"
     );
 
-    //this->lightingShader = new RTRShader(
-    //    "../Assignment2/Src/Shaders/LightingVertexShader.vert",
-    //    "../Assignment2/Src/Shaders/LightingFragShader.frag"
-    //);
+    this->lightingShader = new RTRShader(
+        "../Assignment2/Src/Shaders/LightingVertexShader.vert",
+        "../Assignment2/Src/Shaders/LightingFragShader.frag"
+    );
+    this->directionalLightShader = new RTRShader(
+        "../Assignment2/Src/Shaders/DirectionalVertShader.vert",
+        "../Assignment2/Src/Shaders/DirectionalFragShader.frag",
+        "../Assignment2/Src/Shaders/DirectionalGeomShader.geom"
+    );
 }
 
 StateTracker::~StateTracker()
@@ -59,9 +66,10 @@ StateTracker::~StateTracker()
     delete cubeShader;
     delete normalShader;
     delete skyBoxShader;
-    //delete lightingShader;
+    delete lightingShader;
     delete blockShader;
     delete sphereShader;
+    delete directionalLightShader;
     delete lightModel;
 
     cube->End();
@@ -72,6 +80,9 @@ StateTracker::~StateTracker()
 
     sphere->End();
     delete sphere;
+
+    cylinder->End();
+    delete cylinder;
 
     skyBox->End();
     delete skyBox;

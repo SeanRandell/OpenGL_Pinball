@@ -40,6 +40,12 @@
     <Filter Include="Shader Files\Sphere Shader">
       <UniqueIdentifier>{5f3b062d-7ce8-49ff-9741-f2bff732c2e6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shader Files\Bloom Shader">
+      <UniqueIdentifier>{f8596531-db2a-4911-9c1e-f2b8717d5420}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader Files\DirectionalLightShader">
+      <UniqueIdentifier>{c0e2a6a5-74ae-4a33-87a5-6be8c075e133}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\RenderLoop.cpp">
@@ -84,6 +90,9 @@
     <ClCompile Include="Src\Block.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Src\Cylinder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\RenderLoop.h">
@@ -120,6 +129,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Src\Block.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Cylinder.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -171,6 +183,18 @@
     </None>
     <None Include="Src\Shaders\SphereVertShader.vert">
       <Filter>Shader Files\Sphere Shader</Filter>
+    </None>
+    <None Include="Src\Shaders\SphereGeomShader.geom">
+      <Filter>Shader Files\Sphere Shader</Filter>
+    </None>
+    <None Include="Src\Shaders\DirectionalFragShader.frag">
+      <Filter>Shader Files\DirectionalLightShader</Filter>
+    </None>
+    <None Include="Src\Shaders\DirectionalGeomShader.geom">
+      <Filter>Shader Files\DirectionalLightShader</Filter>
+    </None>
+    <None Include="Src\Shaders\DirectionalVertShader.vert">
+      <Filter>Shader Files\DirectionalLightShader</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
