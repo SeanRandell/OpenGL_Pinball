@@ -15,8 +15,10 @@ struct Camera {
 };
 
 struct Material {
-    sampler2D diffuse;
-    sampler2D specular;    
+    vec3 ambient;
+    sampler2D diffuseMap;
+    sampler2D specularMap;
+    sampler2D reflectionMap;
     float shininess;
 }; 
 
@@ -51,6 +53,7 @@ uniform int numberOfLightsUniform;
 uniform Light lightsUniform[MAX_NUMBER_OF_LIGHTS];
 uniform Material objectMaterialUniform;
 uniform Camera cameraUniform;
+uniform samplerCube skyBoxUniform;
 
 void main() 
 {
@@ -62,7 +65,7 @@ void main()
         float attenuation = 1.0;
 
         // calc ambient
-        vec3 ambient = lightsUniform[currentLight].ambient * texture(objectMaterialUniform.diffuse, fragmentShaderIn.TextureCoordinates).rgb;
+        vec3 ambient = lightsUniform[currentLight].ambient * texture(objectMaterialUniform.diffuseMap, fragmentShaderIn.TextureCoordinates).rgb * objectMaterialUniform.ambient;
     
         // calc diffuse
         vec3 lightDirectionVector;
@@ -81,7 +84,7 @@ void main()
         }
         lightDirectionVector = normalize(lightDirectionVector);
         float diffuseFloat = max(dot(normalVector, lightDirectionVector), 0.0);
-        vec3 diffuseVector = lightsUniform[currentLight].diffuse * texture(objectMaterialUniform.diffuse, fragmentShaderIn.TextureCoordinates).rgb * diffuseFloat;
+        vec3 diffuseVector = lightsUniform[currentLight].diffuse * texture(objectMaterialUniform.diffuseMap, fragmentShaderIn.TextureCoordinates).rgb * diffuseFloat;
     
         // calc specular
         vec3 fragmentToCameraVector = normalize(cameraUniform.Position - fragmentShaderIn.FragmentPosition);
@@ -91,9 +94,19 @@ void main()
         // Blinn-Phong
         vec3 BlinnPhongVector = normalize(lightDirectionVector + fragmentToCameraVector);
         float specularFloat = pow(max(dot(normalVector, BlinnPhongVector), 0.0), objectMaterialUniform.shininess);
-        vec3 specularVector = lightsUniform[currentLight].specular * texture(objectMaterialUniform.specular, fragmentShaderIn.TextureCoordinates).rgb * specularFloat;
+        vec3 specularVector = lightsUniform[currentLight].specular * texture(objectMaterialUniform.specularMap, fragmentShaderIn.TextureCoordinates).rgb * specularFloat;
 
-        finalColor += (ambient + attenuation*(diffuseVector + specularVector));
+        //reflection
+        vec3 viewDirectionVector = normalize(fragmentShaderIn.FragmentPosition - cameraUniform.Position);
+        vec3 reflectionVector = reflect(viewDirectionVector, normalize(fragmentShaderIn.Normal));
+
+        vec3 reflection = vec3(texture(skyBoxUniform, reflectionVector).rgb * texture(objectMaterialUniform.reflectionMap, fragmentShaderIn.TextureCoordinates).rgb);
+
+//        vec3 reflection = vec3(texture(skyboxUniform, reflectionVector).rgb * texture(objectMaterialUniform.reflectionMap, fragmentShaderIn.TextureCoordinates).rgb);
+//        specularVector += reflection;
+
+        finalColor += (ambient + attenuation*(diffuseVector + specularVector + reflection));
+//        finalColor += (ambient + attenuation*(diffuseVector + specularVector));
     }
     
     FragmentColor = vec4(finalColor, 1.0);

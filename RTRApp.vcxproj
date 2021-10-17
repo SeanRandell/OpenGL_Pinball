@@ -34,6 +34,7 @@
     <ClCompile Include="Src\SkyBox.cpp" />
     <ClCompile Include="Src\Sphere.cpp" />
     <ClCompile Include="Src\StateTracker.cpp" />
+    <ClCompile Include="Src\TextureObject.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\Application.h" />
@@ -49,6 +50,7 @@
     <ClInclude Include="Src\SkyBox.h" />
     <ClInclude Include="Src\Sphere.h" />
     <ClInclude Include="Src\StateTracker.h" />
+    <ClInclude Include="Src\TextureObject.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Src\Shaders\BlockFragShader.frag">

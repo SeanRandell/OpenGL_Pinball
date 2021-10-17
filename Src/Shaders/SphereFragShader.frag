@@ -50,7 +50,7 @@ uniform int numberOfLightsUniform;
 uniform Light lightsUniform[MAX_NUMBER_OF_LIGHTS];
 uniform Material objectMaterialUniform;
 uniform Camera cameraUniform;
-uniform samplerCube skyboxUniform;
+uniform samplerCube skyBoxUniform;
 
 
 void main()
@@ -59,7 +59,7 @@ void main()
     vec3 reflectionVector = reflect(viewDirectionVector, normalize(fragmentShaderIn.Normal));
 
     // set frag color
-    FragmentColor = vec4(texture(skyboxUniform, reflectionVector).rgb, 1.0);
+    FragmentColor = vec4(texture(skyBoxUniform, reflectionVector).rgb, 1.0);
 }
 
 // REFLECT 

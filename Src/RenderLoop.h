@@ -8,8 +8,8 @@
 class RenderLoop
 {
 public:
-    RenderLoop();
 
+    void Init(StateTracker* stateTracker);
     void CheckInput(StateTracker* stateTracker, bool *quitApp);
     void UpdateState(StateTracker* stateTracker, float deltaTime);
     void RenderOnScreenDisplay();

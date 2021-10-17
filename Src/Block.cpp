@@ -10,8 +10,8 @@ Block::Block(glm::vec3 length, glm::vec2 rep)
     numberOfVertices = 36;
     diffuseMap = 0;
     specularMap = 0;
-    //material = { {1, 1, 1 }, { 1, 1, 1 }, { 1, 1, 1 }, 64.0f };
-    material = { {0.19225, 0.19225, 0.19225 }, { 0.50754, 0.50754, 0.50754 }, { 0.508273, 0.508273, 0.508273 }, 64.0f };
+    material = { {1, 1, 1 }, { 1, 1, 1 }, { 1, 1, 1 }, 64.0f };
+    //material = { {0.19225, 0.19225, 0.19225 }, { 0.50754, 0.50754, 0.50754 }, { 0.508273, 0.508273, 0.508273 }, 64.0f };
     vertexAndTexturePoints = new VertexAndTexturePoint[]{
         // points tex_coords
         { -xl, -yl, zl, 0, 0 }, // front
@@ -67,6 +67,7 @@ void Block::Init()
     //const char* testString1 = "../Assignment2/Src/container2_specular.png";
     diffuseMap = LoadTexture(&diffusePath);
     specularMap = LoadTexture(&specularPath);
+    reflectionMap = LoadTexture(&specularPath);
 
     glGenBuffers(1, &vertexBuffer);
 
@@ -85,7 +86,7 @@ void Block::Init()
     glEnableVertexAttribArray(1);
 }
 
-void Block::Render(RTRShader* shader)
+void Block::Render(RTRShader* shader, SkyBox* skybox)
 {
     //shader->SetMaterial("objectMaterialUniform", material);
 
@@ -96,6 +97,13 @@ void Block::Render(RTRShader* shader)
     // bind specular map
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, specularMap);
+
+    glActiveTexture(GL_TEXTURE2);
+    //glBindTexture(GL_TEXTURE_2D, skybox->cubemapTexture);
+    glBindTexture(GL_TEXTURE_2D, reflectionMap);
+
+    glActiveTexture(GL_TEXTURE3);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, skybox->cubemapTexture);
 
     glBindVertexArray(vertexArray);
     //glDrawElements(GL_TRIANGLES, numberOfFaces * 3, GL_UNSIGNED_INT, 0);
