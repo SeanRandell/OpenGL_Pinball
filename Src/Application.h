@@ -20,6 +20,7 @@ public:
     void Run();
     void Done();
     bool Tick();
+
     StateTracker* stateTracker;
     RenderLoop* renderLoop;
 private:
@@ -31,8 +32,9 @@ private:
     void CheckInput();
     void UpdateState();
     void RenderFrame();
-    void UpdateShaders();
-    void LoadTexture();
+    //void UpdateShaders();
+    //void LoadTexture();
+    //void InitBuffers();
 
     std::string mainWindowTitle;
     bool isFullScreen;
@@ -43,6 +45,11 @@ private:
     SDL_Window* SDLWindow;
     SDL_Renderer* SDLRenderer;
     SDL_GLContext GLContext;
+
+    //unsigned int hdrFBO;
+    //unsigned int rboDepth;
+    //unsigned int pingpongFBO[2];
+    //unsigned int pingpongColorbuffers[2];
 
     unsigned int currentTime{ 0 };
     float timeDelta{ 0 };

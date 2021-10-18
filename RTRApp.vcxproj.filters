@@ -46,6 +46,12 @@
     <Filter Include="Shader Files\DirectionalLightShader">
       <UniqueIdentifier>{c0e2a6a5-74ae-4a33-87a5-6be8c075e133}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shader Files\Blur Shader">
+      <UniqueIdentifier>{f39f0fdb-bdae-45f9-a091-2e981dfd558e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader Files\Bloom Final Shader">
+      <UniqueIdentifier>{50e1a175-05a8-4a01-870e-cb982d494a78}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\RenderLoop.cpp">
@@ -96,6 +102,12 @@
     <ClCompile Include="Src\TextureObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Src\Debug.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Quad.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\RenderLoop.h">
@@ -138,6 +150,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Src\TextureObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Debug.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Quad.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -201,6 +219,18 @@
     </None>
     <None Include="Src\Shaders\DirectionalVertShader.vert">
       <Filter>Shader Files\DirectionalLightShader</Filter>
+    </None>
+    <None Include="Src\Shaders\BlurFragShader.frag">
+      <Filter>Shader Files\Blur Shader</Filter>
+    </None>
+    <None Include="Src\Shaders\BlurVertShader.vert">
+      <Filter>Shader Files\Blur Shader</Filter>
+    </None>
+    <None Include="Src\Shaders\BloomFinalFragShader.frag">
+      <Filter>Shader Files\Bloom Final Shader</Filter>
+    </None>
+    <None Include="Src\Shaders\BloomFinalVertShader.vert">
+      <Filter>Shader Files\Bloom Final Shader</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

@@ -35,4 +35,9 @@ public:
     unsigned int vertexBuffer;
     unsigned int vertexArray;
     unsigned int faceElementBuffer;
+
+    glm::vec3 position;
+    glm::vec3 rotation;
+    glm::vec3 scale;
+
 };

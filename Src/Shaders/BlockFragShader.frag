@@ -1,5 +1,8 @@
 #version 460
-out vec4 FragmentColor;
+//out vec4 FragmentColor;
+layout (location = 0) out vec4 FragmentColor;
+layout (location = 1) out vec4 BrightColor;
+
 
 in VertexData {
     vec3 FragmentPosition;
@@ -108,7 +111,17 @@ void main()
         finalColor += (ambient + attenuation*(diffuseVector + specularVector + reflection));
 //        finalColor += (ambient + attenuation*(diffuseVector + specularVector));
     }
-    
+    // check whether result is higher than some threshold, if so, output as bloom threshold color
+    float brightness = dot(finalColor, vec3(0.2126, 0.7152, 0.0722));
+    if(brightness > 1.0)
+    {
+        BrightColor = vec4(finalColor, 1.0);
+    }
+    else
+    {
+        BrightColor = vec4(0.0, 0.0, 0.0, 1.0);
+    }
+
     FragmentColor = vec4(finalColor, 1.0);
 //    FragmentColor = vec4(0.0, 1.0, 0.0, 1.0); 
 }

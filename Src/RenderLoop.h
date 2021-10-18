@@ -9,10 +9,10 @@ class RenderLoop
 {
 public:
 
-    void Init(StateTracker* stateTracker);
+    void Init(StateTracker* stateTracker, int screenWidth, int screenHeight);
     void CheckInput(StateTracker* stateTracker, bool *quitApp);
     void UpdateState(StateTracker* stateTracker, float deltaTime);
-    void RenderOnScreenDisplay();
+    //void RenderOnScreenDisplay();
     void RenderFrame(StateTracker* stateTracker);
 private:
 

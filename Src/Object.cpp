@@ -25,7 +25,11 @@ Object::Object() {
     vertexBuffer = 0;
     vertexArray = 0;
     faceElementBuffer = 0;
-    std::cout << "Base called" << std::endl;
+    //std::cout << "Base called" << std::endl;
+
+    position = glm::vec3(0, 0, 0);
+    rotation = glm::vec3(0, 0, 0);
+    scale = glm::vec3(1, 1, 1);
 }
 
 void Object::Init()

@@ -33,7 +33,7 @@ void Cylinder::Init()
     glGenVertexArrays(1, &vertexArray);
     glBindVertexArray(vertexArray);
 
-    // bind vbo for smooth sphere (center and right)
+    // bind vbo for smooth sphere
     glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
 
     // set attrib arrays using glVertexAttribPointer()

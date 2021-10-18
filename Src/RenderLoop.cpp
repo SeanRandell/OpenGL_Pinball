@@ -1,14 +1,10 @@
 #include "RenderLoop.h"
 
-void RenderLoop::Init(StateTracker* stateTracker)
+void RenderLoop::Init(StateTracker* stateTracker, int screenWidth, int screenHeight)
 {
     stateTracker->Init();
-    stateTracker->cube->Init();
-    stateTracker->skyBox->Init();
-    stateTracker->block->Init();
-    stateTracker->sphere->Init();
-    stateTracker->cylinder->Init();
-
+    stateTracker->BuildGameObjects();
+    stateTracker->InitBuffers(screenWidth, screenHeight);
 
     stateTracker->blockShader->Use();
     stateTracker->blockShader->SetInt("objectMaterialUniform.diffuse", 0);
@@ -19,9 +15,19 @@ void RenderLoop::Init(StateTracker* stateTracker)
     stateTracker->skyBoxShader->Use();
     stateTracker->skyBoxShader->SetInt("skyBoxUniform", 0);
 
-
     stateTracker->sphereShader->Use();
     stateTracker->sphereShader->SetInt("skyBoxUniform", 0);
+
+    // bloom
+    //stateTracker->blockShader->Use();
+    //stateTracker->blockShader->SetInt("diffuseTextureUniform", 4);
+
+    stateTracker->blurShader->Use();
+    stateTracker->blurShader->SetInt("imageUniform", 0);
+
+    stateTracker->bloomShader->Use();
+    stateTracker->bloomShader->SetInt("sceneUniform", 0);
+    stateTracker->bloomShader->SetInt("bloomBlurUniform", 1);
 
 
     // Add directional light to follow camera view direction
@@ -31,29 +37,29 @@ void RenderLoop::Init(StateTracker* stateTracker)
         .diffuse = glm::vec3(1.0, 1.0, 1.0),
         .specular = glm::vec3(0.5, 0.5, 0.5),
         .direction = glm::vec3(1.0, 0.0, 0.0),
-        .position = glm::vec3(-8.0, 0.0, 0.0)
+        .position = glm::vec3(0.0, 8.0, 0.0)
         });
     // Add x-axis red spot lights (palce all at x+3.0 so they are positioned around shaded cube)
-    //stateTracker->lightModel->AddLight({
-    //    .type = LightType::PointLight,
-    //    .ambient = glm::vec3(1.0, 0.0, 0.0),
-    //    .diffuse = glm::vec3(1.0, 0.0, 0.0),
-    //    .specular = glm::vec3(1.0, 1.0, 1.0),
-    //    .position = glm::vec3(2.0 + 3.0, 0.0, 0.0),
-    //    .constant = 1.0f,
-    //    .linear = 0.35f,
-    //    .quadratic = 0.44f
-    //    });
-    //stateTracker->lightModel->AddLight({
-    //    .type = LightType::PointLight,
-    //    .ambient = glm::vec3(1.0, 0.0, 0.0),
-    //    .diffuse = glm::vec3(1.0, 0.0, 0.0),
-    //    .specular = glm::vec3(1.0, 1.0, 1.0),
-    //    .position = glm::vec3(-2.0 + 3.0, 0.0, 6.0),
-    //    .constant = 1.0f,
-    //    .linear = 0.35f,
-    //    .quadratic = 0.44f
-    //    });
+    stateTracker->lightModel->AddLight({
+        .type = LightType::PointLight,
+        .ambient = glm::vec3(1.0, 0.0, 0.0),
+        .diffuse = glm::vec3(1.0, 0.0, 0.0),
+        .specular = glm::vec3(1.0, 1.0, 1.0),
+        .position = glm::vec3(2.0 + 3.0, 0.0, 0.0),
+        .constant = 1.0f,
+        .linear = 0.35f,
+        .quadratic = 0.44f
+        });
+    stateTracker->lightModel->AddLight({
+        .type = LightType::PointLight,
+        .ambient = glm::vec3(1.0, 0.0, 0.0),
+        .diffuse = glm::vec3(1.0, 0.0, 0.0),
+        .specular = glm::vec3(1.0, 1.0, 1.0),
+        .position = glm::vec3(-2.0 + 3.0, 0.0, 6.0),
+        .constant = 1.0f,
+        .linear = 0.35f,
+        .quadratic = 0.44f
+        });
     //// Add y-axis green spot lights
     stateTracker->lightModel->AddLight({
         .type = LightType::PointLight,
@@ -121,7 +127,7 @@ void RenderLoop::Init(StateTracker* stateTracker)
         });
 }
 
-void RenderLoop::CheckInput(StateTracker* stateTracker, bool *quitApp) {
+void RenderLoop::CheckInput(StateTracker* stateTracker, bool* quitApp) {
     //const Uint8* keys;
     //SDL_PumpEvents();
     //if (keys = SDL_GetKeyboardState(nullptr)) {
@@ -242,75 +248,86 @@ void RenderLoop::UpdateState(StateTracker* stateTracker, float deltaTime)
     stateTracker->viewMatrix = stateTracker->camera->GetViewMatrix();
 }
 
-void RenderLoop::RenderOnScreenDisplay()
-{
-}
-
 void RenderLoop::RenderFrame(StateTracker* stateTracker)
 {
     glClearColor(0.0, 0.0, 0.0, 1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+    // render scene into floating point framebuffer
+    // -----------------------------------------------
+    glBindFramebuffer(GL_FRAMEBUFFER, stateTracker->hdrFBO);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     //block
     stateTracker->blockShader->Use();
-    stateTracker->blockShader->SetVec3("objectMaterialUniform.ambient", stateTracker->block->material.ambient);
-    stateTracker->blockShader->SetFloat("objectMaterialUniform.shininess", stateTracker->block->material.shininess);
+    //stateTracker->blockShader->SetVec3("objectMaterialUniform.ambient", stateTracker->block->material.ambient);
+    //stateTracker->blockShader->SetFloat("objectMaterialUniform.shininess", stateTracker->block->material.shininess);
     stateTracker->blockShader->SetMat4("viewMatrixUniform", stateTracker->viewMatrix);
     stateTracker->blockShader->SetMat4("projectionMatrixUniform", stateTracker->projectionMatrix);
     stateTracker->blockShader->SetCamera("cameraUniform", *stateTracker->camera);
     stateTracker->blockShader->SetLightingModel(*stateTracker->lightModel);
 
-    stateTracker->blockShader->SetMat4("modelMatrixUniform", stateTracker->modelMatrix);
-    stateTracker->block->Render(stateTracker->blockShader, stateTracker->skyBox);
+    for (unsigned int i = 0; i < stateTracker->blocks.size(); i++)
+    {
+    //stateTracker->modelMatrix = glm::mat4(1.0f);
+    //glm::translate(stateTracker->modelMatrix, stateTracker->blocks[i]->position);
+    //stateTracker->blockShader->SetMat4("modelMatrixUniform", stateTracker->modelMatrix);
+    stateTracker->blocks[i]->Render(stateTracker->blockShader, stateTracker->skyBox, stateTracker->modelMatrix);
 
-    stateTracker->normalShader->Use();
-    stateTracker->normalShader->SetMat4("projectionMatrixUniform", stateTracker->projectionMatrix);
-    stateTracker->normalShader->SetMat4("viewMatrixUniform", stateTracker->viewMatrix);
-    stateTracker->normalShader->SetMat4("modelMatrixUniform", stateTracker->modelMatrix);
-    stateTracker->block->Render(stateTracker->normalShader, stateTracker->skyBox);
+
+        //stateTracker->blockShader->SetVec3(("offsets[" + std::to_string(i) + "]")), stateTracker->[i]);
+        //stateTracker->blocks[i]->Render();
+    }
+
+    //block normal
+    //stateTracker->normalShader->Use();
+    //stateTracker->normalShader->SetMat4("projectionMatrixUniform", stateTracker->projectionMatrix);
+    //stateTracker->normalShader->SetMat4("viewMatrixUniform", stateTracker->viewMatrix);
+    //stateTracker->normalShader->SetMat4("modelMatrixUniform", stateTracker->modelMatrix);
+    //stateTracker->block->Render(stateTracker->normalShader, stateTracker->skyBox);
 
     // cube
-    stateTracker->cubeShader->Use();
-    stateTracker->cubeShader->SetMat4("viewMatrixUniform", stateTracker->viewMatrix);
-    stateTracker->cubeShader->SetMat4("projectionMatrixUniform", stateTracker->projectionMatrix);
-    stateTracker->cubeShader->SetCamera("cameraUniform", *stateTracker->camera);
-    stateTracker->cubeShader->SetLightingModel(*stateTracker->lightModel);
+    //stateTracker->cubeShader->Use();
+    //stateTracker->cubeShader->SetMat4("viewMatrixUniform", stateTracker->viewMatrix);
+    //stateTracker->cubeShader->SetMat4("projectionMatrixUniform", stateTracker->projectionMatrix);
+    //stateTracker->cubeShader->SetCamera("cameraUniform", *stateTracker->camera);
+    //stateTracker->cubeShader->SetLightingModel(*stateTracker->lightModel);
 
-    stateTracker->modelMatrix = glm::translate(stateTracker->modelMatrix, glm::vec3(3.0, 0.0, 0.0));
-    stateTracker->cubeShader->SetMat4("modelMatrixUniform", stateTracker->modelMatrix);
-    stateTracker->cube->Render(stateTracker->cubeShader);
+    //stateTracker->modelMatrix = glm::translate(stateTracker->modelMatrix, glm::vec3(3.0, 0.0, 0.0));
+    //stateTracker->cubeShader->SetMat4("modelMatrixUniform", stateTracker->modelMatrix);
+    //stateTracker->cube->Render(stateTracker->cubeShader);
 
-    stateTracker->normalShader->Use();
-    stateTracker->normalShader->SetMat4("modelMatrixUniform", stateTracker->modelMatrix);
-    stateTracker->cube->Render(stateTracker->normalShader);
+    //stateTracker->normalShader->Use();
+    //stateTracker->normalShader->SetMat4("modelMatrixUniform", stateTracker->modelMatrix);
+    //stateTracker->cube->Render(stateTracker->normalShader);
 
     // sphere
-    stateTracker->sphereShader->Use();
-    stateTracker->sphereShader->SetMat4("viewMatrixUniform", stateTracker->viewMatrix);
-    stateTracker->sphereShader->SetMat4("projectionMatrixUniform", stateTracker->projectionMatrix);
-    stateTracker->sphereShader->SetCamera("cameraUniform", *stateTracker->camera);
-    stateTracker->sphereShader->SetLightingModel(*stateTracker->lightModel);
+    //stateTracker->sphereShader->Use();
+    //stateTracker->sphereShader->SetMat4("viewMatrixUniform", stateTracker->viewMatrix);
+    //stateTracker->sphereShader->SetMat4("projectionMatrixUniform", stateTracker->projectionMatrix);
+    //stateTracker->sphereShader->SetCamera("cameraUniform", *stateTracker->camera);
+    //stateTracker->sphereShader->SetLightingModel(*stateTracker->lightModel);
 
-    stateTracker->modelMatrix = glm::mat4(1.0f);
-    stateTracker->modelMatrix = glm::translate(stateTracker->modelMatrix, glm::vec3(6.0, 0.0, 0.0));
-    stateTracker->sphereShader->SetMat4("modelMatrixUniform", stateTracker->modelMatrix);
-    stateTracker->sphere->Render(stateTracker->sphereShader, stateTracker->skyBox->cubemapTexture);
+    //stateTracker->modelMatrix = glm::mat4(1.0f);
+    //stateTracker->modelMatrix = glm::translate(stateTracker->modelMatrix, glm::vec3(6.0, 0.0, 0.0));
+    //stateTracker->sphereShader->SetMat4("modelMatrixUniform", stateTracker->modelMatrix);
+    //stateTracker->sphere->Render(stateTracker->sphereShader, stateTracker->skyBox->cubemapTexture);
 
-    stateTracker->normalShader->Use();
-    stateTracker->normalShader->SetMat4("modelMatrixUniform", stateTracker->modelMatrix);
-    stateTracker->sphere->Render(stateTracker->normalShader, stateTracker->skyBox->cubemapTexture);
+    // sphere normal
+    //stateTracker->normalShader->Use();
+    //stateTracker->normalShader->SetMat4("modelMatrixUniform", stateTracker->modelMatrix);
+    //stateTracker->sphere->Render(stateTracker->normalShader, stateTracker->skyBox->cubemapTexture);
 
     //cylinder
-    stateTracker->sphereShader->Use();
-    stateTracker->modelMatrix = glm::translate(stateTracker->modelMatrix, glm::vec3(9.0, 0.0, 0.0));
-    stateTracker->sphereShader->SetMat4("modelMatrixUniform", stateTracker->modelMatrix);
-    stateTracker->cylinder->Render(stateTracker->sphereShader);
+    //stateTracker->sphereShader->Use();
+    //stateTracker->modelMatrix = glm::translate(stateTracker->modelMatrix, glm::vec3(9.0, 0.0, 0.0));
+    //stateTracker->sphereShader->SetMat4("modelMatrixUniform", stateTracker->modelMatrix);
+    //stateTracker->cylinder->Render(stateTracker->sphereShader);
 
-    stateTracker->normalShader->Use();
-    stateTracker->normalShader->SetMat4("projectionMatrixUniform", stateTracker->projectionMatrix);
-    stateTracker->normalShader->SetMat4("viewMatrixUniform", stateTracker->viewMatrix);
-    stateTracker->normalShader->SetMat4("modelMatrixUniform", stateTracker->modelMatrix);
-    stateTracker->cylinder->Render(stateTracker->normalShader);
+    //stateTracker->normalShader->Use();
+    //stateTracker->normalShader->SetMat4("projectionMatrixUniform", stateTracker->projectionMatrix);
+    //stateTracker->normalShader->SetMat4("viewMatrixUniform", stateTracker->viewMatrix);
+    //stateTracker->normalShader->SetMat4("modelMatrixUniform", stateTracker->modelMatrix);
+    //stateTracker->cylinder->Render(stateTracker->normalShader);
 
 
     //Lights
@@ -320,15 +337,45 @@ void RenderLoop::RenderFrame(StateTracker* stateTracker)
 
     glBindVertexArray(stateTracker->cube->vertexArray);
 
+
+    //float mat_ambient[] = { 0.2, 0.0, 0.0, 1.0 };
+    //float mat_colour[] = { 0.2, 0.0, 0.0, 1.0 };
+    //float mat_specular[] = { 1.0, 0.0, 0.0, 0.0 };
+    //float mat_shininess[] = { 100.0 };
+    //glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient);
+    //glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_colour);
+    //glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
+    //glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
+    //glm::vec3 testVector = glm::normalize(stateTracker->lightModel->GetLight(0)->direction);
+    glm::vec3 testVector = stateTracker->lightModel->GetLight(0)->direction;
+    glm::vec3 posVector = stateTracker->lightModel->GetLight(0)->position;
+
     for (unsigned int i = 0; i < stateTracker->lightModel->GetNumberOfLights(); i++)
     {
         stateTracker->modelMatrix = glm::mat4(1.0f);
         stateTracker->modelMatrix = glm::translate(stateTracker->modelMatrix, stateTracker->lightModel->GetLight(i)->position);
+
         stateTracker->modelMatrix = glm::scale(stateTracker->modelMatrix, glm::vec3(0.2f)); // a smaller cube
         stateTracker->lightingShader->SetMat4("modelMatrixUniform", stateTracker->modelMatrix);
         stateTracker->lightingShader->SetLight("lightUniform", *stateTracker->lightModel->GetLight(i));
+
         glDrawElements(GL_TRIANGLES, stateTracker->cube->numberOfFaces * 3, GL_UNSIGNED_INT, 0);
     }
+
+    //unbind cube vertex array
+    glBindVertexArray(0);
+
+    //// set directional light
+    //stateTracker->directionalLightShader->Use();
+    //stateTracker->modelMatrix = glm::mat4(1.0f);
+    //stateTracker->modelMatrix = glm::translate(stateTracker->modelMatrix, stateTracker->lightModel->GetLight(0)->position);
+    //stateTracker->directionalLightShader->SetMat4("projectionMatrixUniform", stateTracker->projectionMatrix);
+    //stateTracker->directionalLightShader->SetMat4("viewMatrixUniform", stateTracker->viewMatrix);
+    //stateTracker->directionalLightShader->SetMat4("modelMatrixUniform", stateTracker->modelMatrix);
+
+    //stateTracker->directionalLightShader->SetVec3("endVector", stateTracker->lightModel->GetLight(0)->direction);
+    //stateTracker->directionalLightShader->SetVec3("lineColor", glm::vec3(1, 0, 0));
+    //stateTracker->debugObject->Render(stateTracker->directionalLightShader);
 
 
     //directional light direction shader
@@ -340,44 +387,57 @@ void RenderLoop::RenderFrame(StateTracker* stateTracker)
     //stateTracker->directionalLightShader->SetLight("lightUniform", *stateTracker->lightModel->GetLight(0));
     //stateTracker->cube->Render(stateTracker->directionalLightShader);
 
-    //glPushMatrix();
-    float mat_ambient[] = { 0.2, 0.0, 0.0, 1.0 };
-    float mat_colour[] = { 0.2, 0.0, 0.0, 1.0 };
-    float mat_specular[] = { 1.0, 0.0, 0.0, 0.0 };
-    float mat_shininess[] = { 100.0 };
-    glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient);
-    glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_colour);
-    glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
-    glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
-    //glScalef(2.0f, 2.0f, 2.0f);
-    glPushMatrix();
-    glBegin(GL_LINES);
-    //glVertex3f(position, -1.0, 0.0);
-    //glVertex3f(position, 1.0, 0.0);
-    //glVertex3f(-1.0, position, 0.0);
-    //glVertex3f(1.0, position, 0.0);
-    glm::vec3 testVector = glm::normalize(stateTracker->lightModel->GetLight(0)->direction);
-    glm::vec3 posVector = stateTracker->lightModel->GetLight(0)->position;
-    glVertex3f(stateTracker->lightModel->GetLight(0)->position.x, stateTracker->lightModel->GetLight(0)->position.y, stateTracker->lightModel->GetLight(0)->position.z);
-    glVertex3f(posVector.x + testVector.x, posVector.y + testVector.y, posVector.z + testVector.z);
-    //glVertex3f(stateTracker->lightModel->GetLight(0)->position.x, stateTracker->lightModel->GetLight(0)->position.y, stateTracker->lightModel->GetLight(0)->position.z);
-    //glVertex3f(stateTracker->lightModel->GetLight(0)->direction.x, stateTracker->lightModel->GetLight(0)->direction.y, stateTracker->lightModel->GetLight(0)->direction.z);
-    //glVertex3f(10, 10, 10);
-    glEnd();
-    glPopMatrix();
+        // draw skybox as last
+    //glDepthFunc(GL_LESS); // set depth function back to default
+    //stateTracker->skyBoxShader->Use();
+    //// remove translation from the view matrix
+    //stateTracker->viewMatrix = glm::mat4(glm::mat3(stateTracker->camera->GetViewMatrix()));
+    //stateTracker->skyBoxShader->SetMat4("viewMatrixUniform", stateTracker->viewMatrix);
+    //stateTracker->skyBoxShader->SetMat4("projectionMatrixUniform", stateTracker->projectionMatrix);
+    //stateTracker->skyBox->Render(stateTracker->skyBoxShader);
+    //glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when values are equal to depth buffer's content
 
-    //unbind cube vertex array
-    glBindVertexArray(0);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    // 2. blur bright fragments with two-pass Gaussian Blur 
+    // --------------------------------------------------
 
-    // draw skybox as last
-    glDepthFunc(GL_LESS); // set depth function back to default
-    stateTracker->skyBoxShader->Use();
-    // remove translation from the view matrix
-    stateTracker->viewMatrix = glm::mat4(glm::mat3(stateTracker->camera->GetViewMatrix()));
-    stateTracker->skyBoxShader->SetMat4("viewMatrixUniform", stateTracker->viewMatrix);
-    stateTracker->skyBoxShader->SetMat4("projectionMatrixUniform", stateTracker->projectionMatrix);
-    stateTracker->skyBox->Render(stateTracker->skyBoxShader);
-    glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when values are equal to depth buffer's content
+    bool horizontal = true, first_iteration = true;
+    unsigned int amount = 10;
+    stateTracker->blurShader->Use();
+    for (unsigned int i = 0; i < amount; i++)
+    {
+        glBindFramebuffer(GL_FRAMEBUFFER, stateTracker->pingpongFBO[horizontal]);
+        stateTracker->blurShader->SetInt("horizontal", horizontal);
+        glBindTexture(GL_TEXTURE_2D, first_iteration ? stateTracker->colorBuffers[1] : stateTracker->pingpongColorbuffers[!horizontal]);  // bind texture of other framebuffer (or scene if first iteration)
+        stateTracker->quad->Render(stateTracker->blurShader);
+        horizontal = !horizontal;
+        if (first_iteration)
+            first_iteration = false;
+    }
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+    // 3. now render floating point color buffer to 2D quad and tonemap HDR colors to default framebuffer's (clamped) color range
+    //
+
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    stateTracker->bloomShader->Use();
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, stateTracker->colorBuffers[0]);
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, stateTracker->pingpongColorbuffers[!horizontal]);
+    stateTracker->bloomShader->SetInt("bloom", stateTracker->isBloomOn);
+    stateTracker->bloomShader->SetFloat("exposure", stateTracker->bloomExposure);
+    stateTracker->quad->Render(stateTracker->bloomShader);
+
+    //// draw skybox as last
+    //glDepthFunc(GL_LESS); // set depth function back to default
+    //stateTracker->skyBoxShader->Use();
+    //// remove translation from the view matrix
+    //stateTracker->viewMatrix = glm::mat4(glm::mat3(stateTracker->camera->GetViewMatrix()));
+    //stateTracker->skyBoxShader->SetMat4("viewMatrixUniform", stateTracker->viewMatrix);
+    //stateTracker->skyBoxShader->SetMat4("projectionMatrixUniform", stateTracker->projectionMatrix);
+    //stateTracker->skyBox->Render(stateTracker->skyBoxShader);
+    //glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when values are equal to depth buffer's content
 
 }
 

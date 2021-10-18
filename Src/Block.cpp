@@ -1,6 +1,9 @@
 #include "Block.h"
 
-Block::Block(glm::vec3 length, glm::vec2 rep)
+Block::Block(
+    glm::vec3 postion, glm::vec3 rotation, glm::vec3 scale, 
+    glm::vec3 length, glm::vec2 rep
+)
 {
     float xl = length.x / 2.0f;
     float yl = length.y / 2.0f;
@@ -10,6 +13,7 @@ Block::Block(glm::vec3 length, glm::vec2 rep)
     numberOfVertices = 36;
     diffuseMap = 0;
     specularMap = 0;
+    reflectionMap = 0;
     material = { {1, 1, 1 }, { 1, 1, 1 }, { 1, 1, 1 }, 64.0f };
     //material = { {0.19225, 0.19225, 0.19225 }, { 0.50754, 0.50754, 0.50754 }, { 0.508273, 0.508273, 0.508273 }, 64.0f };
     vertexAndTexturePoints = new VertexAndTexturePoint[]{
@@ -56,7 +60,7 @@ Block::Block(glm::vec3 length, glm::vec2 rep)
         { -xl, -yl, zl, 0, sr },
         { -xl, -yl, -zl, 0, 0 },
     };
-    std::cout << "child called" << std::endl;
+    //std::cout << "child called" << std::endl;
 }
 
 void Block::Init()
@@ -86,9 +90,16 @@ void Block::Init()
     glEnableVertexAttribArray(1);
 }
 
-void Block::Render(RTRShader* shader, SkyBox* skybox)
+void Block::Render(
+    RTRShader* shader, SkyBox* skybox, glm::mat4 modelMatrix)
 {
     //shader->SetMaterial("objectMaterialUniform", material);
+    shader->SetVec3("objectMaterialUniform.ambient", material.ambient);
+    shader->SetFloat("objectMaterialUniform.shininess", material.shininess);
+
+    modelMatrix = glm::mat4(1.0f);
+    glm::translate(modelMatrix, position);
+    shader->SetMat4("modelMatrixUniform", modelMatrix);
 
     // bind diffuse map
     glActiveTexture(GL_TEXTURE0);
