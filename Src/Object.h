@@ -8,6 +8,10 @@
 #include "RTRShader.h"
 #include <stb/stb_image.h>
 
+const glm::vec3 OBJECT_DEFAULT_POSITION = glm::vec3(0.0f, 0.0f, 0.0f);
+const glm::vec3 OBJECT_DEFAULT_ROTATION = glm::vec3(0.0f, 0.0f, 0.0f);
+const glm::vec3 OBJECT_DEFAULT_SCALE = glm::vec3(1.0f, 1.0f, 1.0f);
+
 struct VertexPoint {
     float x, y, z;
 };

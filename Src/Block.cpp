@@ -1,10 +1,89 @@
 #include "Block.h"
 
-Block::Block(
-    glm::vec3 postion, glm::vec3 rotation, glm::vec3 scale, 
-    glm::vec3 length, glm::vec2 rep
-)
+Block::Block()
 {
+    position = OBJECT_DEFAULT_POSITION;
+    rotation = OBJECT_DEFAULT_ROTATION;
+    scale = OBJECT_DEFAULT_SCALE;
+    InitConstructorValues();
+}
+
+Block::Block(glm::vec3 newPosition, glm::vec3 rotation, glm::vec3 scale)
+{
+    ////assign any non default arguments
+    this->position = newPosition;
+    this->rotation = rotation;
+    this->scale = scale;
+
+    //float xl = length.x / 2.0f;
+    //float yl = length.y / 2.0f;
+    //float zl = length.z / 2.0f;
+    //float rr = rep.r;
+    //float sr = rep.s;
+    //numberOfVertices = 36;
+    //diffuseMap = 0;
+    //specularMap = 0;
+    //reflectionMap = 0;
+    //material = { {1, 1, 1 }, { 1, 1, 1 }, { 1, 1, 1 }, 64.0f };
+    ////material = { {0.19225, 0.19225, 0.19225 }, { 0.50754, 0.50754, 0.50754 }, { 0.508273, 0.508273, 0.508273 }, 64.0f };
+    //vertexAndTexturePoints = new VertexAndTexturePoint[]{
+    //    // points tex_coords
+    //    { -xl, -yl, zl, 0, 0 }, // front
+    //    { xl, -yl, zl, rr, 0 },
+    //    { xl, yl, zl, rr, sr },
+    //    { xl, yl, zl, rr, sr },
+    //    { -xl, yl, zl, 0, sr },
+    //    { -xl, -yl, zl, 0, 0 },
+
+    //    { xl, -yl, zl, 0, 0 }, // right
+    //    { xl, -yl, -zl, rr, 0 },
+    //    { xl, yl, -zl, rr, sr },
+    //    { xl, yl, -zl, rr, sr },
+    //    { xl, yl, zl, 0, sr },
+    //    { xl, -yl, zl, 0, 0 },
+
+    //    { xl, -yl, -zl, 0, 0 }, // back
+    //    { -xl, -yl, -zl, rr, 0 },
+    //    { -xl, yl, -zl, rr, sr },
+    //    { -xl, yl, -zl, rr, sr },
+    //    { xl, yl, -zl, 0, sr },
+    //    { xl, -yl, -zl, 0, 0 },
+
+    //    { -xl, -yl, -zl, 0, 0 }, // left
+    //    { -xl, -yl, zl, rr, 0 },
+    //    { -xl, yl, zl, rr, sr },
+    //    { -xl, yl, zl, rr, sr },
+    //    { -xl, yl, -zl, 0, sr },
+    //    { -xl, -yl, -zl, 0, 0 },
+
+    //    { -xl, yl, zl, 0, 0 }, // top
+    //    { xl, yl, zl, rr, 0 },
+    //    { xl, yl, -zl, rr, sr },
+    //    { xl, yl, -zl, rr, sr },
+    //    { -xl, yl, -zl, 0, sr },
+    //    { -xl, yl, zl, 0, 0 },
+
+    //    { -xl, -yl, -zl, 0, 0 }, // bottom
+    //    { xl, -yl, -zl, rr, 0 },
+    //    { xl, -yl, zl, rr, sr },
+    //    { xl, -yl, zl, rr, sr },
+    //    { -xl, -yl, zl, 0, sr },
+    //    { -xl, -yl, -zl, 0, 0 },
+    //};
+    ////std::cout << "child called" << std::endl;
+    InitConstructorValues();
+}
+
+void Block::InitConstructorValues()
+{
+    //assign any non default arguments
+    //this->position = position;
+    //this->rotation = rotation;
+    //this->scale = scale;
+
+    glm::vec3 length = glm::vec3(1.0, 1.0, 1.0);
+    glm::vec2 rep = glm::vec2(1.0, 1.0);
+
     float xl = length.x / 2.0f;
     float yl = length.y / 2.0f;
     float zl = length.z / 2.0f;
@@ -81,7 +160,7 @@ void Block::Init()
     glGenVertexArrays(1, &vertexArray);
     glBindVertexArray(vertexArray);
 
-    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+    //glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
@@ -97,9 +176,10 @@ void Block::Render(
     shader->SetVec3("objectMaterialUniform.ambient", material.ambient);
     shader->SetFloat("objectMaterialUniform.shininess", material.shininess);
 
-    modelMatrix = glm::mat4(1.0f);
-    glm::translate(modelMatrix, position);
-    shader->SetMat4("modelMatrixUniform", modelMatrix);
+    //modelMatrix = glm::mat4(1.0f);
+    //glm::translate(modelMatrix, position);
+    //glm::scale(modelMatrix, scale);
+    //shader->SetMat4("modelMatrixUniform", modelMatrix);
 
     // bind diffuse map
     glActiveTexture(GL_TEXTURE0);

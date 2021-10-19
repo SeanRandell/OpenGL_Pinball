@@ -13,6 +13,8 @@
 #include <sdl/SDL_timer.h>
 #include <string>
 
+const unsigned int SHADOW_WIDTH = 1024, SHADOW_HEIGHT = 1024;
+
 class StateTracker {
 public:
 
@@ -34,35 +36,16 @@ public:
     float bloomExposure;
     bool isBloomOn;
 
+
+
     //int lightSourcesCount;
     //int maxPointLightCount;
-    //float deltaTime;
 
-    //int verticesCount;
-    //int facesCount;
-
-    //int countedFrames;
-    //int refreshFramesCounter;
-    //Uint32 timeTicks;
-    //float averageFPS;
 
     //bool isLightingOn;
     //bool isDepthTestingOn;
-    //bool isBackFaceCullingOn;
     //bool isFullHUDOn;
-    //bool stateChanged;
 
-    //unsigned int VBO;
-    //unsigned int VAO;
-    ////unsigned int EBO;
-
-    //unsigned int lightVAO;
-    ////unsigned int lightEBO;
-
-    //unsigned int shaderProgram;
-    //unsigned int fragmentShader;
-    //unsigned int vertexShader;
-    //
     RTRShader* cubeShader{ nullptr };
     RTRShader* normalShader{ nullptr };
     RTRShader* skyBoxShader{ nullptr };
@@ -72,14 +55,26 @@ public:
     RTRShader* directionalLightShader{ nullptr };
     RTRShader* blurShader{ nullptr };
     RTRShader* bloomShader{ nullptr };
+    RTRShader* simpleDepthShader{ nullptr };
+    RTRShader* debugDepthQuadShader{ nullptr };
 
     LightingModel* lightModel;
 
-    unsigned int hdrFBO;
-    unsigned int rboDepth;
-    unsigned int pingpongFBO[2];
-    unsigned int pingpongColorbuffers[2];
-    unsigned int colorBuffers[2];
+    //bloom buffers
+    unsigned int hdrFBO{0};
+    unsigned int rboDepth{0};
+    unsigned int pingpongFBO[2]{0,0};
+    unsigned int pingpongColorbuffers[2]{0,0};
+    unsigned int colorBuffers[2]{0,0};
+
+    // directional shadows buffers
+    unsigned int depthMapFBO{ 0 };
+    unsigned int depthMap{0};
+
+    //screen size
+    int windowWidth, windowHeight;
+    int screenWidth, screenHeight;
+
 
     StateTracker(int screenWidth, int screenHeight);
     ~StateTracker();

@@ -3,25 +3,25 @@
 void Quad::Init()
 {
     numberOfVertices = 4;
-    vertices = {
-        // positions        // texture Coords
-        -1.0f,  1.0f, 0.0f, 0.0f, 1.0f
-        -1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
-         1.0f,  1.0f, 0.0f, 1.0f, 1.0f,
-         1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
-    };
     //vertices = {
     //    // positions        // texture Coords
     //    -1.0f,  1.0f, 0.0f, 0.0f, 1.0f
-    //    - 1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
+    //    -1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
     //     1.0f,  1.0f, 0.0f, 1.0f, 1.0f,
     //     1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
     //};
+    vertices = {
+        // positions        // texture Coords
+        -1.0f,  -1.0f,  0.0f,  0.0f, 0.0f,
+         1.0f,  -1.0f,  1.0f,  1.0f, 0.0f,
+        -1.0f,   1.0f,  0.0f,  0.0f, 1.0f,
+         1.0f,   1.0f,  0.0f,  1.0f, 1.0f,
+    };
 
     glGenBuffers(1, &vertexBuffer);
 
     glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-    glBufferData(GL_ARRAY_BUFFER, vertices.size() *sizeof(float), vertices.data(), GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, (unsigned int)vertices.size() * sizeof(float), vertices.data(), GL_STATIC_DRAW);
 
     glGenVertexArrays(1, &vertexArray);
     glBindVertexArray(vertexArray);

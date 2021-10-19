@@ -15,5 +15,5 @@ void main()
 {
     vertexShaderOut.FragmentPosition = vec3(modelMatrixUniform * vec4(aPosition, 1.0f));
     vertexShaderOut.TextureCoordinates = aTextureCoordinate;
-    gl_Position = projectionMatrixUniform * viewMatrixUniform * vec4(vertexShaderOut.FragmentPosition, 1.0f);
+    gl_Position = projectionMatrixUniform * viewMatrixUniform * modelMatrixUniform * vec4(vertexShaderOut.FragmentPosition, 1.0f);
 }    

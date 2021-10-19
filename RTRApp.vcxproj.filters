@@ -40,9 +40,6 @@
     <Filter Include="Shader Files\Sphere Shader">
       <UniqueIdentifier>{5f3b062d-7ce8-49ff-9741-f2bff732c2e6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Shader Files\Bloom Shader">
-      <UniqueIdentifier>{f8596531-db2a-4911-9c1e-f2b8717d5420}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Shader Files\DirectionalLightShader">
       <UniqueIdentifier>{c0e2a6a5-74ae-4a33-87a5-6be8c075e133}</UniqueIdentifier>
     </Filter>
@@ -51,6 +48,12 @@
     </Filter>
     <Filter Include="Shader Files\Bloom Final Shader">
       <UniqueIdentifier>{50e1a175-05a8-4a01-870e-cb982d494a78}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader Files\Simple Depth Shader">
+      <UniqueIdentifier>{071157f7-3542-487f-9f1a-d46141b5a7fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader Files\DebugDepthQuad">
+      <UniqueIdentifier>{9e8ce315-951f-45c0-9152-50b7f297abaf}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -158,6 +161,9 @@
     <ClInclude Include="Src\Quad.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Src\ParticleGenerator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Src\Shaders\BlockFragShader.frag">
@@ -231,6 +237,12 @@
     </None>
     <None Include="Src\Shaders\BloomFinalVertShader.vert">
       <Filter>Shader Files\Bloom Final Shader</Filter>
+    </None>
+    <None Include="Src\Shaders\DepthFragShader.frag">
+      <Filter>Shader Files\Simple Depth Shader</Filter>
+    </None>
+    <None Include="Src\Shaders\DepthVertShader.vert">
+      <Filter>Shader Files\Simple Depth Shader</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

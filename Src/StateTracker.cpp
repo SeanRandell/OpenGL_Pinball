@@ -2,21 +2,34 @@
 
 StateTracker::StateTracker(int screenWidth, int screenHeight)
 {
+    this->screenWidth = screenWidth;
+    this->screenHeight = screenHeight;
+
+    //TODO fix this so that it does not break non fullscreen
+    windowWidth = screenWidth;
+    windowHeight = windowHeight;
+
     this->camera = new Camera(1.5, 2.0, 10.0, 0.0, 1.0, 0.0, -90.0f, 0.0f, screenWidth, screenHeight);
     //this->sponge = new Sponge();
 
     lightModel = new LightingModel();
 
     cube = new Cube();
-    //sphere = new Sphere(1.0, 5, 5, true);
-    //sphere = new Sphere();
     cylinder = new Cylinder();
     skyBox = new SkyBox();
     debugObject = new Debug();
     quad = new Quad();
 
-    bloomExposure = 1.0f;
+    bloomExposure = 0.9f;
     isBloomOn = true;
+
+    //hdrFBO = 0;
+    //rboDepth = 0;
+    //pingpongFBO[2] = { 0,0 };
+    //pingpongColorbuffers[2] = { 0,0 };
+    //colorBuffers[2] = { 0,0 };
+    //depthMap = 0;
+
     //this->maxPointLightCount = 7;
     //this->lightSourcesCount = 4;
     //this->deltaTime = 0;
@@ -25,7 +38,6 @@ StateTracker::StateTracker(int screenWidth, int screenHeight)
     //this->isBackFaceCullingOn = true;
     //this->isFullHUDOn = true;
 
-    //BuildGameObjects();
 }
 
 void StateTracker::Init()
@@ -70,6 +82,14 @@ void StateTracker::Init()
         "../Assignment2/Src/Shaders/BloomFinalVertShader.vert",
         "../Assignment2/Src/Shaders/BloomFinalFragShader.frag"
     );
+    this->simpleDepthShader = new RTRShader(
+        "../Assignment2/Src/Shaders/DepthVertShader.vert",
+        "../Assignment2/Src/Shaders/DepthFragShader.frag"
+    );
+    this->debugDepthQuadShader = new RTRShader(
+        "../Assignment2/Src/Shaders/DebugQuadVertShader.vert",
+        "../Assignment2/Src/Shaders/DebugQuadDepthFragShader.frag"
+    );
 }
 
 StateTracker::~StateTracker()
@@ -84,6 +104,8 @@ StateTracker::~StateTracker()
     delete directionalLightShader;
     delete blurShader;
     delete bloomShader;
+    delete simpleDepthShader;
+    delete debugDepthQuadShader;
     delete lightModel;
 
     cube->End();
@@ -113,6 +135,7 @@ StateTracker::~StateTracker()
     glDeleteFramebuffers(1, &hdrFBO);
     glDeleteFramebuffers(1, &rboDepth);
     glDeleteFramebuffers(2, pingpongFBO);
+    glDeleteFramebuffers(1, &depthMapFBO);
 
 }
 
@@ -122,7 +145,11 @@ void StateTracker::BuildGameObjects()
 
     skyBox->Init();
 
+    //glm::vec3 vector1 = glm::vec3(0.0, -4.0, 0.0);
+    //glm::vec3 vector2 = glm::vec3(0.0, 0.0, 0.0);
+    //glm::vec3 vector3 = glm::vec3(12.5f, 0.5f, 12.5f);
     Block* floorBlock = new Block(glm::vec3(0.0, -4.0, 0.0), glm::vec3(0.0, 0.0, 0.0), glm::vec3(12.5f, 0.5f, 12.5f));
+    //Block* floorBlock = new Block(vector1, vector2, vector3);
     Block* block1 = new Block();
 
     blocks.push_back(floorBlock);
@@ -209,6 +236,27 @@ void StateTracker::InitBuffers(int screenWidth, int screenHeight)
         if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
             std::cout << "Framebuffer not complete!" << std::endl;
     }
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+
+    // configure depth map FBO
+// -----------------------
+    glGenFramebuffers(1, &depthMapFBO);
+    // create depth texture
+    glGenTextures(1, &depthMap);
+    glBindTexture(GL_TEXTURE_2D, depthMap);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+    float borderColor[] = { 1.0, 1.0, 1.0, 1.0 };
+    glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
+    // attach depth texture as FBO's depth buffer
+    glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMap, 0);
+    glDrawBuffer(GL_NONE);
+    glReadBuffer(GL_NONE);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 

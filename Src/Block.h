@@ -17,14 +17,15 @@ public:
     std::string diffusePath;
     std::string specularPath;
 
-    Block(
-        glm::vec3 postion = glm::vec3(0.0, 0.0, 0.0), 
-        glm::vec3 rotation = glm::vec3(0.0, 0.0, 0.0),
-        glm::vec3 scale = glm::vec3(1.0, 1.0, 1.0),
-        glm::vec3 length = glm::vec3(1.0, 1.0, 1.0),
-        glm::vec2 rep = glm::vec2(1.0, 1.0)
-    );
+    Block();
+    Block(glm::vec3 postion, glm::vec3 rotation, glm::vec3 scale);
+    //Block(float positionX, float positionY, float positionZ, 
+    //    float rotationX, float rotationY, float rotationZ,
+
+    //);
+
     ~Block() {}
+    void InitConstructorValues();
     virtual void Init();
     //virtual void Render(RTRShader* shader, SkyBox* skybox);
     //virtual void Render(RTRShader* shader, SkyBox* skybox, glm::mat4 modelMatrix, glm::mat4 projectionMatrix, glm::mat4 viewMatrix, int instanceCount);

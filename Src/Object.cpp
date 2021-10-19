@@ -27,9 +27,9 @@ Object::Object() {
     faceElementBuffer = 0;
     //std::cout << "Base called" << std::endl;
 
-    position = glm::vec3(0, 0, 0);
-    rotation = glm::vec3(0, 0, 0);
-    scale = glm::vec3(1, 1, 1);
+    //*position = &OBJECT_DEFAULT_POSITION;
+    rotation = OBJECT_DEFAULT_ROTATION;
+    scale = OBJECT_DEFAULT_SCALE;
 }
 
 void Object::Init()
@@ -68,13 +68,13 @@ void Object::End()
 
     if (vertexPoints != nullptr)
     {
-        delete vertexPoints; 
-        vertexPoints = nullptr; 
+        delete vertexPoints;
+        vertexPoints = nullptr;
     }
-    if (faces != nullptr) 
-    { 
-        delete faces; 
-        faces = nullptr; 
+    if (faces != nullptr)
+    {
+        delete faces;
+        faces = nullptr;
     }
 }
 
