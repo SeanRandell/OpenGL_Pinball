@@ -35,7 +35,7 @@ public:
 
     float bloomExposure;
     bool isBloomOn;
-
+    bool isDebugOn;
 
 
     //int lightSourcesCount;

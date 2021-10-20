@@ -1,4 +1,5 @@
 #include "RenderLoop.h"
+#include <utility>
 
 RenderLoop::RenderLoop(int screenWidth, int screenHeight)
 {
@@ -7,7 +8,7 @@ RenderLoop::RenderLoop(int screenWidth, int screenHeight)
 
     //TODO fix this so that it does not break non fullscreen
     windowWidth = screenWidth;
-    windowHeight = windowHeight;
+    windowHeight = screenHeight;
 }
 
 void RenderLoop::Init(StateTracker* stateTracker, int screenWidth, int screenHeight)
@@ -181,6 +182,10 @@ void RenderLoop::CheckInput(StateTracker* stateTracker, bool* quitApp) {
         std::cout << "key pressed" << std::endl;
         switch (keyEvent.type)
         {
+        case SDLK_b:
+            stateTracker->isDebugOn = !stateTracker->isDebugOn;
+            //TODO - reset camera turn debug stuff off
+            break;
         case SDL_QUIT:
             *quitApp = true;
             break;
@@ -260,6 +265,124 @@ void RenderLoop::UpdateState(StateTracker* stateTracker, float deltaTime)
 
     stateTracker->modelMatrix = glm::mat4(1.0f);
     stateTracker->viewMatrix = stateTracker->camera->GetViewMatrix();
+
+    //PHYSICS
+    auto DoCirclesOverLap = [](float x1, float y1, float radius1, float x2, float y2, float radius2) {
+        return sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2) <= (radius1 + radius2));
+    };
+
+    // vector for the balls that have collided
+    std::vector<std::pair<Sphere*, Sphere*>> vectorCollidingPairs;
+
+    //Update ball positions
+    for (auto& ball : stateTracker->spheres) {
+
+        //friction
+        ball->acceleration.x = -ball->velocity.x * 0.08f;
+        ball->acceleration.y = -ball->velocity.y * 0.08f;
+
+        // velocities
+        ball->velocity.x += ball->acceleration.x * deltaTime;
+        ball->velocity.y += ball->acceleration.y * deltaTime;
+
+        //positions
+        ball->position.x += ball->velocity.x * deltaTime;
+        ball->position.y += ball->velocity.y * deltaTime;
+
+        // wrap around the screen
+        if (ball->position.x < 0) ball->position.x += float(screenWidth);
+        if (ball->position.x >= screenWidth) ball->position.x -= float(screenWidth); 
+        if (ball->position.y < 0) ball->position.y += float(screenHeight);
+        if (ball->position.y >= 0) ball->position.y -= float(screenHeight);
+
+        //if ball is approaching zero then stop it
+        if (fabs(ball->velocity.x * ball->velocity.x + ball->velocity.y * ball->velocity.y) < 0.01f) {
+            ball->velocity.x = 0;
+            ball->velocity.y = 0;
+        }
+    }
+
+    // test every ball against every other ball
+    // current ball
+    for (auto& ball : stateTracker->spheres)
+    {
+        // target ball
+        for (auto& target : stateTracker->spheres)
+        {
+            // filter out self collisions
+            if (ball->id != target->id)
+            {
+                if (DoCirclesOverLap(ball->position.x, ball->position.y, ball->radius, target->position.x, target->position.y, target->radius))
+                {
+                    // Distance between ball centers
+                    float distance = sqrtf((ball->position.x - target->position.x) * (ball->position.x - target->position.x) + (ball->position.y - target->position.y) * (ball->position.y - target->position.y));
+
+                    float overlap = 0.5f * (distance - ball->radius - target->radius);
+
+                    //collision has occured
+                    vectorCollidingPairs.push_back({ ball, target });
+
+                    //Displace current ball
+                    ball->position.x -= overlap * (ball->position.x - target->position.x) / distance;
+                    ball->position.y -= overlap * (ball->position.y - target->position.y) / distance;
+
+                    //Displace target ball
+                    target->position.x += overlap * (ball->position.x - target->position.x) / distance;
+                    target->position.y += overlap * (ball->position.y - target->position.y) / distance;
+                }
+            }
+        }
+    }
+
+    // work out dynamic collisions
+    for (auto collidedSpheres : vectorCollidingPairs)
+    {
+        Sphere* ball1 = collidedSpheres.first;
+        Sphere* ball2 = collidedSpheres.second;
+
+        // Distance between ball centers
+        float distance = sqrtf((ball1->position.x - ball2->position.x) * (ball1->position.x - ball2->position.x) + (ball1->position.y - ball2->position.y) * (ball1->position.y - ball2->position.y));
+
+        //Normal 
+        float nx = (ball2->position.x - ball1->position.x) / distance;
+        float ny = (ball2->position.y - ball1->position.y) / distance;
+
+        //Tangent
+        float tx = -ny;
+        float ty = nx;
+
+        // Dot Product Tangent
+        float dpTan1 = ball1->velocity.x * tx + ball1->velocity.y * ty;
+        float dpTan2 = ball2->velocity.x * tx + ball2->velocity.y * ty;
+
+        //TODO if a do not do this if it is a peg that the ball is colliding with.
+        float dpNormal1 = ball1->velocity.x * nx + ball1->velocity.y * ny;
+        float dpNormal2 = ball2->velocity.x * nx + ball2->velocity.y * ny;
+
+        //conservation of momentum in 1D
+        float momentum1 = (dpNormal1 * (ball1->mass - ball2->mass) + 2.0f * ball2->mass * dpNormal2) / (ball1->mass + ball2->mass);
+        float momentum2 = (dpNormal2 * (ball2->mass - ball1->mass) + 2.0f * ball1->mass * dpNormal1) / (ball1->mass + ball2->mass);
+
+
+        // update velocities
+        ball1->velocity.x = tx * dpTan1 * momentum1;
+        ball1->velocity.y = ty * dpTan1 * momentum1;
+
+        //TODO if a ball and not a peg
+        ball2->velocity.x = tx * dpTan2 * momentum2;
+        ball2->velocity.y = ty * dpTan2 * momentum2;
+
+
+        //TODO wiki shortened version of these calcs 
+        //float kx = (ball1->velocity.x - ball2->velocity.x);
+        //float ky = (ball1->velocity.y - ball2->velocity.y);
+        //float p = 2.0 * (nx * kx + ny * ky) / (ball1->mass + ball2->mass);
+        //ball1->velocity.x = ball1->velocity.x - p * ball2->mass * nx;
+        //ball1->velocity.y = ball1->velocity.y - p * ball2->mass * ny;
+        //ball2->velocity.x = ball2->velocity.x + p * ball1->mass * nx;
+        //ball2->velocity.y = ball2->velocity.y + p * ball1->mass * ny;
+
+    }
 }
 
 void RenderLoop::RenderFrame(StateTracker* stateTracker)

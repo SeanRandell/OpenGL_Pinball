@@ -9,18 +9,29 @@
 const int MIN_SECTOR_COUNT = 3;
 const int MIN_STACK_COUNT = 2;
 
+const glm::vec2 STARTING_VELOCITY = glm::vec2(0.0f, 1.0f);
+
 class Sphere : public Object
 {
 public:
-    Sphere(float radius = 1.0f, int sectorCount = 36, int stackCount = 18, bool smooth = true);
+    bool waitingForLaunch;
+    glm::vec2 velocity;
+    glm::vec2 acceleration;
+    float radius;
+    float mass;
+    int id;
+
+    Sphere(float radius = 1.0f, int sectorCount = 36, int stackCount = 18, bool smooth = true, int id);
     ~Sphere() {}
     virtual void Init();
+    void InitConstructorValues();
     virtual void Render(RTRShader* shader, unsigned int cubeMapTexture);
     virtual void End();
 
+    glm::vec2 Move(float dt, unsigned int window_width);
+
 private:
     // memeber vars
-    float radius;
     int sectorCount;                        // longitude, # of slices
     int stackCount;                         // latitude, # of stacks
     bool smooth;

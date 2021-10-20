@@ -1,6 +1,6 @@
 #include "Sphere.h"
 
-Sphere::Sphere(float radius, int sectors, int stacks, bool smooth) {
+Sphere::Sphere(float radius, int sectors, int stacks, bool smooth, int id) {
     this->radius = radius;
     this->sectorCount = sectors;
     if (sectors < MIN_SECTOR_COUNT)
@@ -10,7 +10,15 @@ Sphere::Sphere(float radius, int sectors, int stacks, bool smooth) {
         this->sectorCount = MIN_STACK_COUNT;
     this->smooth = smooth;
 
+    this->velocity = glm::vec2(1.0f);
+    this->mass = radius * 10.0f;
+    this->id = id;
+
     BuildVerticesSmooth();
+}
+
+void Sphere::InitConstructorValues()
+{
 }
 
 void Sphere::Init()
@@ -60,6 +68,34 @@ void Sphere::Render(RTRShader* shader, unsigned int cubeMapTexture)
 void Sphere::End()
 {
     Object::End();
+}
+
+glm::vec2 Sphere::Move(float deltaTime, unsigned int window_width)
+{
+    //// if not stuck to player board
+    //if (!this->waitingForLaunch)
+    //{
+    //    // move the ball
+    //    this->position += this->velocity * deltaTime;
+    //    // check if outside window bounds; if so, reverse velocity and restore at correct position
+    //    if (this->position.x <= 0.0f)
+    //    {
+    //        this->velocity.x = -this->velocity.x;
+    //        this->position.x = 0.0f;
+    //    }
+    //    else if (this->position.x + this->Size.x >= window_width)
+    //    {
+    //        this->velocity.x = -this->velocity.x;
+    //        this->Position.x = window_width - this->Size.x;
+    //    }
+    //    if (this->Position.y <= 0.0f)
+    //    {
+    //        this->Velocity.y = -this->Velocity.y;
+    //        this->Position.y = 0.0f;
+    //    }
+
+    //}
+    //return this->Position;
 }
 
 void Sphere::BuildVerticesSmooth()

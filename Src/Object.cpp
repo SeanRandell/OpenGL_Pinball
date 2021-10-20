@@ -30,6 +30,7 @@ Object::Object() {
     //*position = &OBJECT_DEFAULT_POSITION;
     rotation = OBJECT_DEFAULT_ROTATION;
     scale = OBJECT_DEFAULT_SCALE;
+    size = OBJECT_DEFAULT_SIZE;
 }
 
 void Object::Init()

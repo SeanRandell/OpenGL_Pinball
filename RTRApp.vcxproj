@@ -28,7 +28,9 @@
     <ClCompile Include="Src\Cylinder.cpp" />
     <ClCompile Include="Src\Debug.cpp" />
     <ClCompile Include="Src\Lighting.cpp" />
+    <ClCompile Include="Src\ParticleGenerator.cpp" />
     <ClCompile Include="Src\Quad.cpp" />
+    <ClCompile Include="Src\QuadTree.cpp" />
     <ClCompile Include="Src\RenderLoop.cpp" />
     <ClCompile Include="Src\Main.cpp" />
     <ClCompile Include="Src\Object.cpp" />
@@ -48,6 +50,7 @@
     <ClInclude Include="Src\Debug.h" />
     <ClInclude Include="Src\ParticleGenerator.h" />
     <ClInclude Include="Src\Quad.h" />
+    <ClInclude Include="Src\QuadTree.h" />
     <ClInclude Include="Src\RenderLoop.h" />
     <ClInclude Include="Src\Lighting.h" />
     <ClInclude Include="Src\Object.h" />

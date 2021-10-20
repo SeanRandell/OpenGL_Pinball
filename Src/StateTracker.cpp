@@ -22,6 +22,7 @@ StateTracker::StateTracker(int screenWidth, int screenHeight)
 
     bloomExposure = 0.9f;
     isBloomOn = true;
+    isDebugOn = false;
 
     //hdrFBO = 0;
     //rboDepth = 0;
