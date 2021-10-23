@@ -18,8 +18,8 @@ void Physics::CalculateBallPhysics(StateTracker* stateTracker, float deltaTime, 
     for (auto& ball : stateTracker->spheres) {
 
         //friction
-        ball->acceleration.x = -ball->velocity.x * 0.8f;
-        ball->acceleration.y = -ball->velocity.y * 0.8f;
+        ball->acceleration.x = -ball->velocity.x * 0.01f;
+        ball->acceleration.y = -ball->velocity.y * 0.01f;
 
         // velocities
         ball->velocity.x += ball->acceleration.x * deltaTime;
@@ -170,7 +170,7 @@ Collision Physics::CheckCollision(Sphere& one, Block& two) // AABB - Circle coll
     // get center point circle first 
     //glm::vec2 center(one.position + one.radius);
     // calculate AABB info (center, half-extents)
-    glm::vec2 aabb_half_extents((two.scale.x / 2.0f) / 2.0f, (two.scale.y / 2.0f) / 2);
+    glm::vec2 aabb_half_extents((1 / 2.0f), (1 / 2.0f));
     //glm::vec2 aabb_center(
     //    two.position.x + aabb_half_extents.x,
     //    two.position.y + aabb_half_extents.y
@@ -189,6 +189,8 @@ Collision Physics::CheckCollision(Sphere& one, Block& two) // AABB - Circle coll
         << "Ball: " << "(" << ballPosition.x << ", " << ballPosition.y << ") "
         << "Diff: " << "(" << difference.x << ", " << difference.y << ") "
         << "length: " << "(" << glm::length(difference) << ") " << std::endl;
+  /*  if (DoCirclesOverLap(one.position.x, one.position.y, one.radius, two.position.x, two.position.y, 0.5)) */
+
     if (glm::length(difference) < one.radius)
     {
         std::cout << "COLLISION" << std::endl;

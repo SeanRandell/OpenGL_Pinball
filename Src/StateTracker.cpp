@@ -33,8 +33,8 @@ StateTracker::StateTracker(int screenWidth, int screenHeight)
     moveRightFlipper = false;
     isDebugOn = false;
 
-    launchCooldown = 2.0f;
-    launchCountdown = 2.0f;
+    launchCooldown = 1.0f;
+    launchCountdown = 1.0f;
 }
 
 void StateTracker::Init()
@@ -156,33 +156,68 @@ void StateTracker::BuildGameObjects()
     Block* floorBlock = new Block(glm::vec3(0.0, -4.0, 0.0), glm::vec3(0.0, 0.0, 0.0), glm::vec3(12.5f, 0.5f, 12.5f));
     //Block* floorBlock = new Block(vector1, vector2, vector3);
     Block* block1 = new Block();
-    block1->position = glm::vec3(0.0, 3.0, 0);
+    block1->position = glm::vec3(0.0, 2.0, 0.0);
     //block1->scale = glm::vec3(2.0, 2.0, 2.0);
-    block1->scale = glm::vec3(1.0, 0.0, 1.0);
+    //block1->scale = glm::vec3(1.0, 1.0, 1.0);
     Block* block2 = new Block();
-    block2->position = glm::vec3(0.0, 0.0, 0);
+    block2->position = glm::vec3(0.0, -2.0, 0.0);
     Block* block3 = new Block();
-    block3->position = glm::vec3(3.0, 3.0, 0);
-
+    block3->position = glm::vec3(-2.0, 0.0, 0.0);
+    Block* block4 = new Block();
+    block4->position = glm::vec3(2.0, 0.0, 0.0);
+    Block* block5 = new Block();
+    block5->position = glm::vec3(0.0, 2.0, 0.0);
+    Block* block6 = new Block();
+    block6->position = glm::vec3(2.0, 2.0, 0.0);
+    Block* block7 = new Block();
+    block7->position = glm::vec3(-2.0, 2.0, 0.0);
+    Block* block8 = new Block();
+    block8->position = glm::vec3(2.0, -2.0, 0.0);
+    Block* block9 = new Block();
+    block9->position = glm::vec3(-2.0, -2.0, 0.0);
+    //Block* block6 = new Block();
+    //block6->position = glm::vec3(0.0, 3.0, 0.0);
+    //block4->scale = glm::vec3(1.0, 0.0, 1.0);
     //blocks.push_back(floorBlock);
     blocks.push_back(block1);
     blocks.push_back(block2);
     blocks.push_back(block3);
+    blocks.push_back(block4);
+    blocks.push_back(block5);
+    blocks.push_back(block6);
+    blocks.push_back(block7);
+    blocks.push_back(block8);
+    blocks.push_back(block9);
+
 
     for (size_t i = 0; i < blocks.size(); i++)
     {
         blocks[i]->Init();
     }
 
-    Sphere* ball1 = new Sphere(-1);
-    ball1->position = glm::vec3(0.5f, 5.0f, 0.0f);
-    ball1->velocity = glm::vec2(0.5, -1.0);
-    Sphere* ball2 = new Sphere(-2);
-    ball2->position = glm::vec3(3.0f, 5.0f, 0.0f);
-    ball2->velocity = glm::vec2(-2, 1.0);
+    //Sphere* ball1 = new Sphere(-1);
+    //ball1->position = glm::vec3(0.5f, 5.0f, 0.0f);
+    //ball1->velocity = glm::vec2(0.5, -1.0);
+    //Sphere* ball2 = new Sphere(-2);
+    //ball2->position = glm::vec3(3.0f, 5.0f, 0.0f);
+    //ball2->velocity = glm::vec2(-2, 1.0);
 
-    //spheres.push_back(ball1);
+    Sphere* ball2 = new Sphere(-3);
+    ball2->position = glm::vec3(0.0, 0.0, 0.0);
+    Sphere* ball3 = new Sphere(-4);
+    ball3->position = glm::vec3(3.0, 0.0, 0.0);
+    Sphere* ball4 = new Sphere(-5);
+    ball4->position = glm::vec3(2.0, 1.0, 0.0);
+    Sphere* ball5 = new Sphere(-6);
+    ball5->position = glm::vec3(1.0, 2.0, 0.0);
+    Sphere* ball6 = new Sphere(-7);
+    ball6->position = glm::vec3(0.0, 3.0, 0.0);
+
     //spheres.push_back(ball2);
+    //spheres.push_back(ball3);
+    //spheres.push_back(ball4);
+    //spheres.push_back(ball5);
+    //spheres.push_back(ball6);
 
     for (int i = 0; i < spheres.size(); i++)
     {
@@ -191,7 +226,7 @@ void StateTracker::BuildGameObjects()
 
     cylinder->Init();
     debugObject->Init();
-    quad->Init();
+    quad->Init(); 
 }
 
 void StateTracker::LaunchBall()
@@ -199,7 +234,8 @@ void StateTracker::LaunchBall()
     int newSphereId = spheres.size();
     Sphere* newball = new Sphere(newSphereId);
     newball->Init();
-    newball->velocity = glm::vec2(1.0, 8.0);
+    newball->velocity = glm::vec2(8.0, 4.0);
+    //newball->scale = glm::vec3(2.0f, 2.0f, 2.0f);
     spheres.push_back(newball);
 }
 

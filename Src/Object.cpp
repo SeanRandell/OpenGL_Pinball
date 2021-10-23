@@ -27,7 +27,7 @@ Object::Object() {
     faceElementBuffer = 0;
     //std::cout << "Base called" << std::endl;
 
-    //*position = &OBJECT_DEFAULT_POSITION;
+    position = OBJECT_DEFAULT_POSITION;
     rotation = OBJECT_DEFAULT_ROTATION;
     scale = OBJECT_DEFAULT_SCALE;
     size = OBJECT_DEFAULT_SIZE;

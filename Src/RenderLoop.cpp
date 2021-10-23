@@ -395,7 +395,8 @@ void RenderLoop::RenderFrame(StateTracker* stateTracker, Quadtree* quadtree)
     for (unsigned int i = 0; i < stateTracker->blocks.size(); i++)
     {
         stateTracker->modelMatrix = glm::mat4(1.0f);
-        stateTracker->modelMatrix = glm::translate(stateTracker->modelMatrix, stateTracker->blocks[i]->position);
+        glm::vec3 testVector = glm::vec3(stateTracker->blocks[i]->position.x, stateTracker->blocks[i]->position.y, stateTracker->blocks[i]->position.z);
+        stateTracker->modelMatrix = glm::translate(stateTracker->modelMatrix, testVector);
         stateTracker->modelMatrix = glm::scale(stateTracker->modelMatrix, stateTracker->blocks[i]->scale);
         stateTracker->blockShader->SetMat4("modelMatrixUniform", stateTracker->modelMatrix);
         stateTracker->blocks[i]->Render(stateTracker->blockShader, stateTracker->skyBox, stateTracker->modelMatrix);
