@@ -18,7 +18,9 @@ Camera::Camera(
     turnLeft = false;
     turnRight = false;
     constrainPitch = true;
+    firstMouse = true;
 
+    MouseSensitivity = SENSITIVITY;
     movementSpeed = DEFAULT_MOVE_SPEED;
     strafeSpeed= DEFAULT_STRAFE_SPEED;
     turnSpeed = DEFAULT_TURN_SPEED;
@@ -56,26 +58,26 @@ void Camera::UpdateCameraVectors()
 }
 
 // processes input received from a mouse input system. Expects the offset value in both the x and y direction.
-//void Camera::ProcessMouseMovement(float xoffset, float yoffset, float deltaTime, GLboolean constrainPitch = true)
-//{
-//    xoffset *= MouseSensitivity * deltaTime;
-//    yoffset *= MouseSensitivity * deltaTime;
-//
-//    Yaw += xoffset;
-//    Pitch += yoffset;
-//
-//    // make sure that when pitch is out of bounds, screen doesn't get flipped
-//    if (constrainPitch)
-//    {
-//        if (Pitch > 89.0f)
-//            Pitch = 89.0f;
-//        if (Pitch < -89.0f)
-//            Pitch = -89.0f;
-//    }
-//
-//    // update Front, Right and Up Vectors using the updated Euler angles
-//    UpdateCameraVectors();
-//}
+void Camera::ProcessMouseMovement(float xoffset, float yoffset, float deltaTime, GLboolean constrainPitch)
+{
+    xoffset *= MouseSensitivity * deltaTime;
+    yoffset *= MouseSensitivity * deltaTime;
+
+    yaw += xoffset;
+    pitch += yoffset;
+
+    // make sure that when pitch is out of bounds, screen doesn't get flipped
+    if (constrainPitch)
+    {
+        if (pitch > 89.0f)
+            pitch = 89.0f;
+        if (pitch < -89.0f)
+            pitch = -89.0f;
+    }
+
+    // update Front, Right and Up Vectors using the updated Euler angles
+    UpdateCameraVectors();
+}
 
 // processes input received from any keyboard-like input system. Accepts input parameter in the form of camera defined ENUM (to abstract it from windowing systems)
 void Camera::ProcessCameraMoving(float deltaTime)

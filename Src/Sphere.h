@@ -21,7 +21,8 @@ public:
     float mass;
     int id;
 
-    Sphere(float radius = 1.0f, int sectorCount = 36, int stackCount = 18, bool smooth = true, int id);
+    Sphere(int id);
+    Sphere(float radius, float mass, glm::vec2 velocity, int sectors, int stacks, bool smooth, int id);
     ~Sphere() {}
     virtual void Init();
     void InitConstructorValues();

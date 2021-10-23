@@ -18,13 +18,7 @@ const float DEFAULT_STRAFE_SPEED = 20.0f;          // units per second
 const float DEFAULT_TURN_SPEED = 60.0f;         // degrees per second
 const float DEFAULT_TILT_SPEED = 60.0f;         // degrees per second
 const float ZOOM = 45.0f;
-
-//const float DEFAULT_YAW = -90.0f;        // degrees
-//const float DEFAULT_PITCH = 0.0f;          // degrees
-//const float DEFAULT_MOVE_SPEED = 4.0f;          // units per second
-//const float DEFAULT_STRAFE_SPEED = 4.0f;          // units per second
-//const float DEFAULT_TURN_SPEED = 60.0f;         // degrees per second
-//const float DEFAULT_TILT_SPEED = 60.0f;         // degrees per second
+const float SENSITIVITY = 10.0f;
 
 class Camera
 {
@@ -46,7 +40,9 @@ public:
     float strafeSpeed;
     float turnSpeed;
     float tiltSpeed;
+
     bool constrainPitch;
+    bool mouseControls;
 
     // movement booleans
     bool moveLeft;
@@ -57,6 +53,12 @@ public:
     bool tiltDown;
     bool turnLeft;
     bool turnRight;
+    bool firstMouse;
+
+    //mouse bariables
+    float MouseSensitivity;
+    float lastX;
+    float lastY;
 
     // constructor with scalar values
     Camera(float posX, float posY, float posZ, float upX, float upY, float upZ, float yaw, float pitch, int screenWidth, int screenHeight);
@@ -65,6 +67,7 @@ public:
     glm::mat4 GetViewMatrix();
     void ProcessCameraMoving(float deltaTime);
     void ProcessCameraTurning(float deltaTime);
+    void ProcessMouseMovement(float xoffset, float yoffset, float deltaTime, GLboolean constrainPitch = true);
 private:
     void UpdateCameraVectors();
 };

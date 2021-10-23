@@ -56,27 +56,32 @@ bool Application::Tick()
 {
     quitApp = false;
     CheckInput();
-    UpdateState();
+    Rectangle* boundary = new Rectangle(0, 0, 10 , 10);
+    Quadtree* quadtree = new Quadtree(boundary, 4);
+    UpdateState(quadtree);
     //update models and shaders here
 
-    RenderFrame();
+    RenderFrame(quadtree);
+
+    delete boundary;
+    delete quadtree;
     return quitApp;
 }
 
 void Application::CheckInput()
 {
-    renderLoop->CheckInput(stateTracker, &quitApp);
+    renderLoop->CheckInput(stateTracker, &quitApp, timeDelta);
 }
 
-void Application::UpdateState()
+void Application::UpdateState(Quadtree* quadtree)
 {
-    renderLoop->UpdateState(stateTracker, timeDelta);
+    renderLoop->UpdateState(stateTracker, timeDelta, quadtree);
 }
 
-void Application::RenderFrame()
+void Application::RenderFrame(Quadtree* quadtree)
 {
     // Print out all debug info
-    renderLoop->RenderFrame(stateTracker);
+    renderLoop->RenderFrame(stateTracker, quadtree);
 
     console->Render("DEBUG", fps,
         stateTracker->camera->position.x, stateTracker->camera->position.y, stateTracker->camera->position.z,
@@ -179,6 +184,7 @@ void Application::Done()
     delete console;
 
     delete stateTracker;
+    delete renderLoop;
 
     SDL_GL_DeleteContext(GLContext);
     SDL_DestroyRenderer(SDLRenderer);

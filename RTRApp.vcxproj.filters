@@ -52,11 +52,14 @@
     <Filter Include="Shader Files\Simple Depth Shader">
       <UniqueIdentifier>{071157f7-3542-487f-9f1a-d46141b5a7fd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Shader Files\DebugDepthQuad">
-      <UniqueIdentifier>{9e8ce315-951f-45c0-9152-50b7f297abaf}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Rendering">
       <UniqueIdentifier>{2a4852fb-0a88-44b5-ae10-1df9084b701a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader Files\Particle Shader">
+      <UniqueIdentifier>{a9a7fd07-d583-46f5-8d50-c7e5c30c8131}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader Files\Debug Depth Quad Shader">
+      <UniqueIdentifier>{01fc7cd5-bc64-4cc0-b0ec-33bd5f2b33ef}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -120,6 +123,9 @@
     <ClCompile Include="Src\ParticleGenerator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Src\Physics.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\RenderLoop.h">
@@ -174,6 +180,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Src\QuadTree.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Physics.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -256,6 +265,18 @@
     <None Include="Src\Shaders\DepthVertShader.vert">
       <Filter>Shader Files\Simple Depth Shader</Filter>
     </None>
+    <None Include="Src\Shaders\ParticleFragShader.frag">
+      <Filter>Shader Files\Particle Shader</Filter>
+    </None>
+    <None Include="Src\Shaders\ParticleVertShader.vert">
+      <Filter>Shader Files\Particle Shader</Filter>
+    </None>
+    <None Include="Src\Shaders\DebugQuadDepthFragShader.frag">
+      <Filter>Shader Files\Debug Depth Quad Shader</Filter>
+    </None>
+    <None Include="Src\Shaders\DebugQuadDepthVertShader.vert">
+      <Filter>Shader Files\Debug Depth Quad Shader</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Src\container2.png">
@@ -280,6 +301,9 @@
       <Filter>Resource Files\SkyBox</Filter>
     </Image>
     <Image Include="Src\container2_specular.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Src\particle.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

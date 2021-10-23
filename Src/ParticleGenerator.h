@@ -36,17 +36,20 @@ public:
     void Update(float dt, Sphere& object, unsigned int newParticles, glm::vec2 offset = glm::vec2(0.0f, 0.0f));
     // render all particles
     void Render(RTRShader* shader);
+    void Init();
 private:
 
     // state
     std::vector<Particle> particles;
     unsigned int amount;
 
+    std::string particlePath;
+
     // render state
     Quad* particleQuad;
     //unsigned int VAO;
     // initializes buffer and vertex attributes
-    void init();
+
     // returns the first Particle index that's currently unused e.g. Life <= 0.0f or 0 if no particle is currently inactive
     unsigned int FirstUnusedParticle();
     // respawns particle

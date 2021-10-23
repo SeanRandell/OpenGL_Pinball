@@ -9,6 +9,13 @@ RenderLoop::RenderLoop(int screenWidth, int screenHeight)
     //TODO fix this so that it does not break non fullscreen
     windowWidth = screenWidth;
     windowHeight = screenHeight;
+
+    physicsMethods = new Physics();
+}
+
+RenderLoop::~RenderLoop()
+{
+    delete physicsMethods;
 }
 
 void RenderLoop::Init(StateTracker* stateTracker, int screenWidth, int screenHeight)
@@ -16,6 +23,7 @@ void RenderLoop::Init(StateTracker* stateTracker, int screenWidth, int screenHei
     stateTracker->Init();
     stateTracker->BuildGameObjects();
     stateTracker->InitBuffers(screenWidth, screenHeight);
+    stateTracker->particleGenerator->Init();
 
     stateTracker->blockShader->Use();
     stateTracker->blockShader->SetInt("objectMaterialUniform.diffuse", 0);
@@ -142,7 +150,7 @@ void RenderLoop::Init(StateTracker* stateTracker, int screenWidth, int screenHei
         });
 }
 
-void RenderLoop::CheckInput(StateTracker* stateTracker, bool* quitApp) {
+void RenderLoop::CheckInput(StateTracker* stateTracker, bool* quitApp, float deltaTime) {
     //const Uint8* keys;
     //SDL_PumpEvents();
     //if (keys = SDL_GetKeyboardState(nullptr)) {
@@ -177,15 +185,36 @@ void RenderLoop::CheckInput(StateTracker* stateTracker, bool* quitApp) {
 
 
     SDL_Event keyEvent;
+
+    //while (SDL_PollEvent(&keyEvent)) {
+    //    if (keyEvent.type == SDL_MOUSEMOTION) {
+    //        //fprintf(stderr, "mouse x: %d, y: %d\n", keyEvent.button.x, keyEvent.button.y);
+    //        //SDL_GetMouseState(&xpos, &ypos);
+
+    //        static int xPosition = stateTracker->camera->lastX;
+    //        static int yPosition = stateTracker->camera->lastY;
+    //        xPosition += keyEvent.motion.xrel;
+    //        yPosition += keyEvent.motion.yrel;
+
+    //        if (stateTracker->camera->firstMouse && (stateTracker->camera->lastX = xPosition) && (stateTracker->camera->lastY = yPosition)) {
+    //            stateTracker->camera->lastX = xPosition;
+    //            stateTracker->camera->lastY = yPosition;
+    //            stateTracker->camera->firstMouse = false;
+    //        }
+
+    //        float xOffSet = xPosition - stateTracker->camera->lastX;
+    //        float yOffSet = stateTracker->camera->lastY - yPosition;
+
+    //        stateTracker->camera->lastX = xPosition;
+    //        stateTracker->camera->lastY = yPosition;
+
+    //        stateTracker->camera->ProcessMouseMovement(xOffSet, yOffSet, deltaTime, true);
+    //    }
+    //}
     if (SDL_PollEvent(&keyEvent))
     {
-        std::cout << "key pressed" << std::endl;
         switch (keyEvent.type)
         {
-        case SDLK_b:
-            stateTracker->isDebugOn = !stateTracker->isDebugOn;
-            //TODO - reset camera turn debug stuff off
-            break;
         case SDL_QUIT:
             *quitApp = true;
             break;
@@ -220,6 +249,26 @@ void RenderLoop::CheckInput(StateTracker* stateTracker, bool* quitApp) {
             case SDLK_DOWN:
                 stateTracker->camera->tiltDown = true;
                 break;
+            case SDLK_b:
+                stateTracker->isDebugOn = !stateTracker->isDebugOn;
+                //TODO - reset camera turn debug stuff off
+                break;
+            case SDLK_m:
+                stateTracker->camera->mouseControls = !stateTracker->camera->mouseControls;
+                break;
+            case SDLK_SPACE:
+                //TODO - launch ball after time
+                stateTracker->canLaunchBall = true;
+                std::cout << "space pressed" << std::endl;
+                break;
+            case SDLK_PERIOD:
+                // '>' – right flipper
+                stateTracker->moveRightFlipper = true;
+                break;
+            case SDLK_COMMA:
+                //'<' –  left flipper
+                stateTracker->moveLeftFlipper = true;
+                break;
             }
             break;
         case SDL_KEYUP:
@@ -249,13 +298,17 @@ void RenderLoop::CheckInput(StateTracker* stateTracker, bool* quitApp) {
             case SDLK_DOWN:
                 stateTracker->camera->tiltDown = false;
                 break;
+            //case SDLK_SPACE:
+            //    //TODO - launch ball after time
+            //    stateTracker->canLaunchBall = false;
+            //    break;
             }
             break;
         }
     }
 }
 
-void RenderLoop::UpdateState(StateTracker* stateTracker, float deltaTime)
+void RenderLoop::UpdateState(StateTracker* stateTracker, float deltaTime, Quadtree* quadtree)
 {
     stateTracker->camera->ProcessCameraMoving(deltaTime);
     stateTracker->camera->ProcessCameraTurning(deltaTime);
@@ -266,126 +319,33 @@ void RenderLoop::UpdateState(StateTracker* stateTracker, float deltaTime)
     stateTracker->modelMatrix = glm::mat4(1.0f);
     stateTracker->viewMatrix = stateTracker->camera->GetViewMatrix();
 
+    if (stateTracker->canLaunchBall)
+    {
+        if (stateTracker->launchCountdown >= stateTracker->launchCooldown) {
+            //launch ball
+            stateTracker->LaunchBall();
+
+            stateTracker->launchCountdown = 0;
+            std::cout << "launched" << std::endl;
+            stateTracker->canLaunchBall = false;
+        }
+        else {
+            stateTracker->launchCountdown += deltaTime;
+            std::cout << "Cooldown" << std::endl;
+        }
+    }
+
     //PHYSICS
-    auto DoCirclesOverLap = [](float x1, float y1, float radius1, float x2, float y2, float radius2) {
-        return sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2) <= (radius1 + radius2));
-    };
+    physicsMethods->CalculateBallPhysics(stateTracker, deltaTime, quadtree);
 
-    // vector for the balls that have collided
-    std::vector<std::pair<Sphere*, Sphere*>> vectorCollidingPairs;
-
-    //Update ball positions
-    for (auto& ball : stateTracker->spheres) {
-
-        //friction
-        ball->acceleration.x = -ball->velocity.x * 0.08f;
-        ball->acceleration.y = -ball->velocity.y * 0.08f;
-
-        // velocities
-        ball->velocity.x += ball->acceleration.x * deltaTime;
-        ball->velocity.y += ball->acceleration.y * deltaTime;
-
-        //positions
-        ball->position.x += ball->velocity.x * deltaTime;
-        ball->position.y += ball->velocity.y * deltaTime;
-
-        // wrap around the screen
-        if (ball->position.x < 0) ball->position.x += float(screenWidth);
-        if (ball->position.x >= screenWidth) ball->position.x -= float(screenWidth); 
-        if (ball->position.y < 0) ball->position.y += float(screenHeight);
-        if (ball->position.y >= 0) ball->position.y -= float(screenHeight);
-
-        //if ball is approaching zero then stop it
-        if (fabs(ball->velocity.x * ball->velocity.x + ball->velocity.y * ball->velocity.y) < 0.01f) {
-            ball->velocity.x = 0;
-            ball->velocity.y = 0;
-        }
-    }
-
-    // test every ball against every other ball
-    // current ball
-    for (auto& ball : stateTracker->spheres)
+    // update particles
+    for (int i = 0; i < stateTracker->spheres.size(); i++)
     {
-        // target ball
-        for (auto& target : stateTracker->spheres)
-        {
-            // filter out self collisions
-            if (ball->id != target->id)
-            {
-                if (DoCirclesOverLap(ball->position.x, ball->position.y, ball->radius, target->position.x, target->position.y, target->radius))
-                {
-                    // Distance between ball centers
-                    float distance = sqrtf((ball->position.x - target->position.x) * (ball->position.x - target->position.x) + (ball->position.y - target->position.y) * (ball->position.y - target->position.y));
-
-                    float overlap = 0.5f * (distance - ball->radius - target->radius);
-
-                    //collision has occured
-                    vectorCollidingPairs.push_back({ ball, target });
-
-                    //Displace current ball
-                    ball->position.x -= overlap * (ball->position.x - target->position.x) / distance;
-                    ball->position.y -= overlap * (ball->position.y - target->position.y) / distance;
-
-                    //Displace target ball
-                    target->position.x += overlap * (ball->position.x - target->position.x) / distance;
-                    target->position.y += overlap * (ball->position.y - target->position.y) / distance;
-                }
-            }
-        }
-    }
-
-    // work out dynamic collisions
-    for (auto collidedSpheres : vectorCollidingPairs)
-    {
-        Sphere* ball1 = collidedSpheres.first;
-        Sphere* ball2 = collidedSpheres.second;
-
-        // Distance between ball centers
-        float distance = sqrtf((ball1->position.x - ball2->position.x) * (ball1->position.x - ball2->position.x) + (ball1->position.y - ball2->position.y) * (ball1->position.y - ball2->position.y));
-
-        //Normal 
-        float nx = (ball2->position.x - ball1->position.x) / distance;
-        float ny = (ball2->position.y - ball1->position.y) / distance;
-
-        //Tangent
-        float tx = -ny;
-        float ty = nx;
-
-        // Dot Product Tangent
-        float dpTan1 = ball1->velocity.x * tx + ball1->velocity.y * ty;
-        float dpTan2 = ball2->velocity.x * tx + ball2->velocity.y * ty;
-
-        //TODO if a do not do this if it is a peg that the ball is colliding with.
-        float dpNormal1 = ball1->velocity.x * nx + ball1->velocity.y * ny;
-        float dpNormal2 = ball2->velocity.x * nx + ball2->velocity.y * ny;
-
-        //conservation of momentum in 1D
-        float momentum1 = (dpNormal1 * (ball1->mass - ball2->mass) + 2.0f * ball2->mass * dpNormal2) / (ball1->mass + ball2->mass);
-        float momentum2 = (dpNormal2 * (ball2->mass - ball1->mass) + 2.0f * ball1->mass * dpNormal1) / (ball1->mass + ball2->mass);
-
-
-        // update velocities
-        ball1->velocity.x = tx * dpTan1 * momentum1;
-        ball1->velocity.y = ty * dpTan1 * momentum1;
-
-        //TODO if a ball and not a peg
-        ball2->velocity.x = tx * dpTan2 * momentum2;
-        ball2->velocity.y = ty * dpTan2 * momentum2;
-
-
-        //TODO wiki shortened version of these calcs 
-        //float kx = (ball1->velocity.x - ball2->velocity.x);
-        //float ky = (ball1->velocity.y - ball2->velocity.y);
-        //float p = 2.0 * (nx * kx + ny * ky) / (ball1->mass + ball2->mass);
-        //ball1->velocity.x = ball1->velocity.x - p * ball2->mass * nx;
-        //ball1->velocity.y = ball1->velocity.y - p * ball2->mass * ny;
-        //ball2->velocity.x = ball2->velocity.x + p * ball1->mass * nx;
-        //ball2->velocity.y = ball2->velocity.y + p * ball1->mass * ny;
 
     }
 }
 
-void RenderLoop::RenderFrame(StateTracker* stateTracker)
+void RenderLoop::RenderFrame(StateTracker* stateTracker, Quadtree* quadtree)
 {
     glClearColor(0.0, 0.0, 0.0, 1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -405,18 +365,18 @@ void RenderLoop::RenderFrame(StateTracker* stateTracker)
     //stateTracker->simpleDepthShader->Use();
     //stateTracker->simpleDepthShader->SetMat4("lightSpaceMatrix", lightSpaceMatrix);
 
-    glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
-    glBindFramebuffer(GL_FRAMEBUFFER, stateTracker->depthMapFBO);
-    glClear(GL_DEPTH_BUFFER_BIT);
-    glActiveTexture(GL_TEXTURE0);
+    //glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+    //glBindFramebuffer(GL_FRAMEBUFFER, stateTracker->depthMapFBO);
+    //glClear(GL_DEPTH_BUFFER_BIT);
+    //glActiveTexture(GL_TEXTURE0);
     //glBindTexture(GL_TEXTURE_2D, woodTexture);
     //RenderScene(stateTracker->simpleDepthShader);
-    RenderScene(stateTracker);
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    //RenderScene(stateTracker);
+    //glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-    // reset viewport
-    glViewport(0, 0, screenWidth, screenHeight);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    //// reset viewport
+    //glViewport(0, 0, screenWidth, screenHeight);
+    //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // render scene into floating point framebuffer
     // -----------------------------------------------
@@ -467,22 +427,25 @@ void RenderLoop::RenderFrame(StateTracker* stateTracker)
     //stateTracker->cube->Render(stateTracker->normalShader);
 
     // sphere
-    //stateTracker->sphereShader->Use();
-    //stateTracker->sphereShader->SetMat4("viewMatrixUniform", stateTracker->viewMatrix);
-    //stateTracker->sphereShader->SetMat4("projectionMatrixUniform", stateTracker->projectionMatrix);
-    //stateTracker->sphereShader->SetCamera("cameraUniform", *stateTracker->camera);
-    //stateTracker->sphereShader->SetLightingModel(*stateTracker->lightModel);
+    stateTracker->sphereShader->Use();
+    stateTracker->sphereShader->SetMat4("viewMatrixUniform", stateTracker->viewMatrix);
+    stateTracker->sphereShader->SetMat4("projectionMatrixUniform", stateTracker->projectionMatrix);
+    stateTracker->sphereShader->SetCamera("cameraUniform", *stateTracker->camera);
+    stateTracker->sphereShader->SetLightingModel(*stateTracker->lightModel);
 
-    //stateTracker->modelMatrix = glm::mat4(1.0f);
-    //stateTracker->modelMatrix = glm::translate(stateTracker->modelMatrix, glm::vec3(6.0, 0.0, 0.0));
-    //stateTracker->sphereShader->SetMat4("modelMatrixUniform", stateTracker->modelMatrix);
-    //stateTracker->sphere->Render(stateTracker->sphereShader, stateTracker->skyBox->cubemapTexture);
+    for (unsigned int i = 0; i < stateTracker->spheres.size(); i++)
+    {
+        stateTracker->modelMatrix = glm::mat4(1.0f);
+        stateTracker->modelMatrix = glm::translate(stateTracker->modelMatrix, stateTracker->spheres[i]->position);
+        stateTracker->modelMatrix = glm::scale(stateTracker->modelMatrix, stateTracker->spheres[i]->scale);
+        stateTracker->sphereShader->SetMat4("modelMatrixUniform", stateTracker->modelMatrix);
+        stateTracker->spheres[i]->Render(stateTracker->sphereShader, stateTracker->skyBox->cubemapTexture);
 
-    // sphere normal
-    //stateTracker->normalShader->Use();
-    //stateTracker->normalShader->SetMat4("modelMatrixUniform", stateTracker->modelMatrix);
-    //stateTracker->sphere->Render(stateTracker->normalShader, stateTracker->skyBox->cubemapTexture);
-
+        //sphere normal
+    /*    stateTracker->normalShader->Use();
+        stateTracker->normalShader->SetMat4("modelMatrixUniform", stateTracker->modelMatrix);
+        stateTracker->spheres[i]->Render(stateTracker->normalShader, stateTracker->skyBox->cubemapTexture);*/
+    }
     //cylinder
     //stateTracker->sphereShader->Use();
     //stateTracker->modelMatrix = glm::translate(stateTracker->modelMatrix, glm::vec3(9.0, 0.0, 0.0));
@@ -527,6 +490,8 @@ void RenderLoop::RenderFrame(StateTracker* stateTracker)
 
         glDrawElements(GL_TRIANGLES, stateTracker->cube->numberOfFaces * 3, GL_UNSIGNED_INT, 0);
     }
+    stateTracker->modelMatrix = glm::mat4(1.0f);
+    stateTracker->lightingShader->SetMat4("modelMatrixUniform", stateTracker->modelMatrix);
 
     //unbind cube vertex array
     glBindVertexArray(0);
@@ -561,8 +526,17 @@ void RenderLoop::RenderFrame(StateTracker* stateTracker)
     //// set directional light
     //stateTracker->directionalLightShader->SetLight("lightUniform", *stateTracker->lightModel->GetLight(0));
     //stateTracker->cube->Render(stateTracker->directionalLightShader);
+    //glUseProgram(0);
+    glActiveTexture(0);
+    //glMatrixMode(GL_MODELVIEW);
+    //WHATEVER THE LAST SHADER IS
+    //glLoadIdentity();
+    //glPushMatrix();
+    quadtree->DrawQuadTree(stateTracker->lightingShader);
+    //glPopMatrix();
+    //quadtree->DrawQuadTree();
 
-        // draw skybox as last
+    // draw skybox as last
     glDepthFunc(GL_LESS); // set depth function back to default
     stateTracker->skyBoxShader->Use();
     // remove translation from the view matrix
@@ -605,6 +579,27 @@ void RenderLoop::RenderFrame(StateTracker* stateTracker)
     stateTracker->bloomShader->SetBool("bloom", stateTracker->isBloomOn);
     stateTracker->bloomShader->SetFloat("exposure", stateTracker->bloomExposure);
     stateTracker->quad->Render(stateTracker->bloomShader);
+
+
+
+    //glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    //glActiveTexture(0);
+    //glMatrixMode(GL_MODELVIEW);
+    //glLoadIdentity();
+    //debug quadtree
+    //float mat_ambient[] = { 0.2, 0.0, 0.0, 1.0 };
+    //float mat_colour[] = { 0.2, 0.0, 0.0, 1.0 };
+    //float mat_specular[] = { 1.0, 0.0, 0.0, 0.0 };
+    //float mat_shininess[] = { 100.0 };
+    //glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient);
+    //glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_colour);
+    //glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
+    //glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
+    //glPushMatrix();
+    //glColor3d(1, 0, 0);
+    //stateTracker->quadtree->DrawQuadTree();
+    //glPopMatrix();
 }
 
 void RenderLoop::RenderScene(StateTracker* stateTracker)

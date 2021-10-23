@@ -9,10 +9,16 @@ StateTracker::StateTracker(int screenWidth, int screenHeight)
     windowWidth = screenWidth;
     windowHeight = windowHeight;
 
-    this->camera = new Camera(1.5, 2.0, 10.0, 0.0, 1.0, 0.0, -90.0f, 0.0f, screenWidth, screenHeight);
+    particleAmountPerBall = 500;
+
+    this->camera = new Camera(0, 2.0, 10.0, 0.0, 1.0, 0.0, -90.0f, 0.0f, screenWidth, screenHeight);
     //this->sponge = new Sponge();
 
     lightModel = new LightingModel();
+    particleGenerator = new ParticleGenerator(particleAmountPerBall);
+
+    //boundary = new Rectangle(0, 0, 10 , 10);
+    //quadtree = new Quadtree(boundary, 4);
 
     cube = new Cube();
     cylinder = new Cylinder();
@@ -22,23 +28,13 @@ StateTracker::StateTracker(int screenWidth, int screenHeight)
 
     bloomExposure = 0.9f;
     isBloomOn = true;
+    canLaunchBall = false;
+    moveLeftFlipper = false;
+    moveRightFlipper = false;
     isDebugOn = false;
 
-    //hdrFBO = 0;
-    //rboDepth = 0;
-    //pingpongFBO[2] = { 0,0 };
-    //pingpongColorbuffers[2] = { 0,0 };
-    //colorBuffers[2] = { 0,0 };
-    //depthMap = 0;
-
-    //this->maxPointLightCount = 7;
-    //this->lightSourcesCount = 4;
-    //this->deltaTime = 0;
-    //this->isLightingOn = true;
-    //this->isDepthTestingOn = true;
-    //this->isBackFaceCullingOn = true;
-    //this->isFullHUDOn = true;
-
+    launchCooldown = 2.0f;
+    launchCountdown = 2.0f;
 }
 
 void StateTracker::Init()
@@ -88,8 +84,12 @@ void StateTracker::Init()
         "../Assignment2/Src/Shaders/DepthFragShader.frag"
     );
     this->debugDepthQuadShader = new RTRShader(
-        "../Assignment2/Src/Shaders/DebugQuadVertShader.vert",
+        "../Assignment2/Src/Shaders/DebugQuadDepthVertShader.vert",
         "../Assignment2/Src/Shaders/DebugQuadDepthFragShader.frag"
+    );
+    this->particleShader = new RTRShader(
+        "../Assignment2/Src/Shaders/ParticleVertShader.vert",
+        "../Assignment2/Src/Shaders/ParticleFragShader.frag"
     );
 }
 
@@ -107,7 +107,11 @@ StateTracker::~StateTracker()
     delete bloomShader;
     delete simpleDepthShader;
     delete debugDepthQuadShader;
+    delete particleShader;
     delete lightModel;
+    //delete boundary;
+    //delete quadtree;
+
 
     cube->End();
     delete cube;
@@ -152,22 +156,35 @@ void StateTracker::BuildGameObjects()
     Block* floorBlock = new Block(glm::vec3(0.0, -4.0, 0.0), glm::vec3(0.0, 0.0, 0.0), glm::vec3(12.5f, 0.5f, 12.5f));
     //Block* floorBlock = new Block(vector1, vector2, vector3);
     Block* block1 = new Block();
+    block1->position = glm::vec3(0.0, 3.0, 0);
+    //block1->scale = glm::vec3(2.0, 2.0, 2.0);
+    block1->scale = glm::vec3(1.0, 0.0, 1.0);
+    Block* block2 = new Block();
+    block2->position = glm::vec3(0.0, 0.0, 0);
+    Block* block3 = new Block();
+    block3->position = glm::vec3(3.0, 3.0, 0);
 
-    blocks.push_back(floorBlock);
+    //blocks.push_back(floorBlock);
     blocks.push_back(block1);
+    blocks.push_back(block2);
+    blocks.push_back(block3);
 
     for (size_t i = 0; i < blocks.size(); i++)
     {
         blocks[i]->Init();
     }
 
-    Sphere* ball1 = new Sphere();
-    Sphere* ball2 = new Sphere();
+    Sphere* ball1 = new Sphere(-1);
+    ball1->position = glm::vec3(0.5f, 5.0f, 0.0f);
+    ball1->velocity = glm::vec2(0.5, -1.0);
+    Sphere* ball2 = new Sphere(-2);
+    ball2->position = glm::vec3(3.0f, 5.0f, 0.0f);
+    ball2->velocity = glm::vec2(-2, 1.0);
 
-    spheres.push_back(ball1);
-    spheres.push_back(ball2);
+    //spheres.push_back(ball1);
+    //spheres.push_back(ball2);
 
-    for (size_t i = 0; i < spheres.size(); i++)
+    for (int i = 0; i < spheres.size(); i++)
     {
         spheres[i]->Init();
     }
@@ -175,6 +192,15 @@ void StateTracker::BuildGameObjects()
     cylinder->Init();
     debugObject->Init();
     quad->Init();
+}
+
+void StateTracker::LaunchBall()
+{
+    int newSphereId = spheres.size();
+    Sphere* newball = new Sphere(newSphereId);
+    newball->Init();
+    newball->velocity = glm::vec2(1.0, 8.0);
+    spheres.push_back(newball);
 }
 
 std::string StateTracker::GetSettingString(bool boolToCheck)

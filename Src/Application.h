@@ -30,8 +30,8 @@ private:
     Console* console{ nullptr };
 
     void CheckInput();
-    void UpdateState();
-    void RenderFrame();
+    void UpdateState(Quadtree* quadtree);
+    void RenderFrame(Quadtree* quadtree);
     //void UpdateShaders();
     //void LoadTexture();
     //void InitBuffers();

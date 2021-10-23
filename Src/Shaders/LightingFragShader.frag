@@ -24,7 +24,7 @@ void main()
     FragmentColor = vec4(lightUniform.diffuse, 1.0); // set alle 4 vector values to 1.0
 
     // check whether result is higher than some threshold, if so, output as bloom threshold color
-    float brightness = dot(FragmentColor.rgb, vec3(0.2126, 0.7152, 0.0722));
+    float brightness = dot(FragmentColor.rgb, vec3(0.3126, 0.8152, 0.0822));
     if(brightness > 1.0)
         BrightColor = vec4(FragmentColor.rgb, 1.0);
 	else

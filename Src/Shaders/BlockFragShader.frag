@@ -61,6 +61,8 @@ uniform samplerCube skyBoxUniform;
 
 uniform sampler2D shadowMap;
 
+uniform Light directionalLight;
+
 float ShadowCalculation(vec4 fragPosLightSpace)
 {
     // perform perspective divide
@@ -73,7 +75,7 @@ float ShadowCalculation(vec4 fragPosLightSpace)
     float currentDepth = projCoords.z;
     // calculate bias (based on depth map resolution and slope)
     vec3 normal = normalize(fragmentShaderIn.Normal);
-    vec3 lightDir = normalize(lightPos - fragmentShaderIn.FragmentPosition);
+    vec3 lightDir = normalize(directionalLight.position - fragmentShaderIn.FragmentPosition);
     float bias = max(0.05 * (1.0 - dot(normal, lightDir)), 0.005);
     // check whether current frag pos is in shadow
     // float shadow = currentDepth - bias > closestDepth  ? 1.0 : 0.0;
@@ -151,7 +153,7 @@ void main()
 //        finalColor += (ambient + attenuation*(diffuseVector + specularVector));
     }
     // check whether result is higher than some threshold, if so, output as bloom threshold color
-    float brightness = dot(finalColor, vec3(0.2126, 0.7152, 0.0722));
+    float brightness = dot(finalColor, vec3(0.3126, 0.8152, 0.0822));
     if(brightness > 1.0)
     {
         BrightColor = vec4(finalColor, 1.0);

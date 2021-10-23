@@ -1,24 +1,39 @@
 #include "Sphere.h"
 
-Sphere::Sphere(float radius, int sectors, int stacks, bool smooth, int id) {
-    this->radius = radius;
-    this->sectorCount = sectors;
-    if (sectors < MIN_SECTOR_COUNT)
-        this->sectorCount = MIN_SECTOR_COUNT;
-    this->stackCount = stacks;
-    if (sectors < MIN_STACK_COUNT)
-        this->sectorCount = MIN_STACK_COUNT;
-    this->smooth = smooth;
-
-    this->velocity = glm::vec2(1.0f);
-    this->mass = radius * 10.0f;
+Sphere::Sphere(int id)
+{
+    radius = 0.5f;
+    sectorCount = 36;
+    smooth = true;
+    stackCount = 18;
+    this->velocity = glm::vec2(0.0f);
     this->id = id;
 
-    BuildVerticesSmooth();
+    InitConstructorValues();
+}
+
+Sphere::Sphere(float radius, float mass, glm::vec2 velocity, int sectors, int stacks, bool smooth, int id) {
+    this->radius = radius;
+    this->sectorCount = sectors;
+    this->stackCount = stacks;
+    this->smooth = smooth;
+
+    this->velocity = velocity;
+    this->id = id;
+
+    InitConstructorValues();
+
 }
 
 void Sphere::InitConstructorValues()
 {
+    this->mass = radius * 5.0f;
+    if (sectorCount < MIN_SECTOR_COUNT)
+        this->sectorCount = MIN_SECTOR_COUNT;
+
+    if (stackCount < MIN_STACK_COUNT)
+        this->stackCount = MIN_STACK_COUNT;
+    BuildVerticesSmooth();
 }
 
 void Sphere::Init()
@@ -70,33 +85,33 @@ void Sphere::End()
     Object::End();
 }
 
-glm::vec2 Sphere::Move(float deltaTime, unsigned int window_width)
-{
-    //// if not stuck to player board
-    //if (!this->waitingForLaunch)
-    //{
-    //    // move the ball
-    //    this->position += this->velocity * deltaTime;
-    //    // check if outside window bounds; if so, reverse velocity and restore at correct position
-    //    if (this->position.x <= 0.0f)
-    //    {
-    //        this->velocity.x = -this->velocity.x;
-    //        this->position.x = 0.0f;
-    //    }
-    //    else if (this->position.x + this->Size.x >= window_width)
-    //    {
-    //        this->velocity.x = -this->velocity.x;
-    //        this->Position.x = window_width - this->Size.x;
-    //    }
-    //    if (this->Position.y <= 0.0f)
-    //    {
-    //        this->Velocity.y = -this->Velocity.y;
-    //        this->Position.y = 0.0f;
-    //    }
-
-    //}
-    //return this->Position;
-}
+//glm::vec2 Sphere::Move(float deltaTime, unsigned int window_width)
+//{
+//    //// if not stuck to player board
+//    //if (!this->waitingForLaunch)
+//    //{
+//    //    // move the ball
+//    //    this->position += this->velocity * deltaTime;
+//    //    // check if outside window bounds; if so, reverse velocity and restore at correct position
+//    //    if (this->position.x <= 0.0f)
+//    //    {
+//    //        this->velocity.x = -this->velocity.x;
+//    //        this->position.x = 0.0f;
+//    //    }
+//    //    else if (this->position.x + this->Size.x >= window_width)
+//    //    {
+//    //        this->velocity.x = -this->velocity.x;
+//    //        this->Position.x = window_width - this->Size.x;
+//    //    }
+//    //    if (this->Position.y <= 0.0f)
+//    //    {
+//    //        this->Velocity.y = -this->Velocity.y;
+//    //        this->Position.y = 0.0f;
+//    //    }
+//
+//    //}
+//    //return this->Position;
+//}
 
 void Sphere::BuildVerticesSmooth()
 {
@@ -260,5 +275,5 @@ void Sphere::AddIndices(unsigned int i1, unsigned int i2, unsigned int i3)
 
 const char* Sphere::GetName()
 {
-    return nullptr;
+    return "Sphere";
 }

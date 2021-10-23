@@ -10,6 +10,8 @@
 #include "Cylinder.h"
 #include "Debug.h"
 #include "Quad.h"
+#include "ParticleGenerator.h"
+#include "QuadTree.h"
 #include <sdl/SDL_timer.h>
 #include <string>
 
@@ -37,6 +39,15 @@ public:
     bool isBloomOn;
     bool isDebugOn;
 
+    bool canLaunchBall;
+    float launchCooldown;
+    float launchCountdown;
+
+    bool moveLeftFlipper;
+    bool moveRightFlipper;
+
+    int particleAmountPerBall;
+
 
     //int lightSourcesCount;
     //int maxPointLightCount;
@@ -57,8 +68,12 @@ public:
     RTRShader* bloomShader{ nullptr };
     RTRShader* simpleDepthShader{ nullptr };
     RTRShader* debugDepthQuadShader{ nullptr };
+    RTRShader* particleShader{ nullptr };
 
     LightingModel* lightModel;
+    ParticleGenerator* particleGenerator;
+    Rectangle* boundary;
+    //Quadtree* quadtree;
 
     //bloom buffers
     unsigned int hdrFBO{0};
@@ -84,6 +99,7 @@ public:
     std::string GetSettingString(bool boolToCheck);
     void InitBuffers(int screenWidth, int screenHeight);
     void BuildGameObjects();
+    void LaunchBall();
     
 private:
 

@@ -4,7 +4,10 @@
 ParticleGenerator::ParticleGenerator(unsigned int amount)
 {
     this->amount = amount;
-    this->init();
+    particlePath = "../Assignment2/Src/particle.png";
+    particleTexture = 0;
+    this->particleQuad = new Quad();
+    //this->init();
 }
 
 ParticleGenerator::~ParticleGenerator()
@@ -34,36 +37,12 @@ void ParticleGenerator::Update(float dt, Sphere& object, unsigned int newParticl
     }
 }
 
-// render all particles
-void ParticleGenerator::Render(RTRShader* shader)
+void ParticleGenerator::Init()
 {
-    // use additive blending to give it a 'glow' effect
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-    shader->Use();
-    for (Particle particle : this->particles)
-    {
-        if (particle.life > 0.0f)
-        {
-            shader->SetVec2("offset", particle.position);
-            shader->SetVec4("color", particle.color);
-            glBindTexture(GL_TEXTURE_2D, particleTexture);
-            //glBindVertexArray(this->VAO);
-            //glDrawArrays(GL_TRIANGLES, 0, 6);
-            //glBindVertexArray(0);
-            particleQuad->Render(shader);
-        }
-    }
-    // don't forget to reset to default blending mode
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-}
-
-void ParticleGenerator::init()
-{
-    std::string particlePath = "../Assignment2/Src/particle.png";
     particleTexture = LoadTexture(&particlePath);
 
     // set up mesh and attribute properties
-    this->particleQuad = new Quad();
+
     particleQuad->Init();
 
     //unsigned int VBO;
@@ -91,6 +70,31 @@ void ParticleGenerator::init()
     for (unsigned int i = 0; i < this->amount; ++i)
         this->particles.push_back(Particle());
 }
+
+// render all particles
+void ParticleGenerator::Render(RTRShader* shader)
+{
+    // use additive blending to give it a 'glow' effect
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+    shader->Use();
+    for (Particle particle : this->particles)
+    {
+        if (particle.life > 0.0f)
+        {
+            shader->SetVec2("offset", particle.position);
+            shader->SetVec4("color", particle.color);
+            glBindTexture(GL_TEXTURE_2D, particleTexture);
+            //glBindVertexArray(this->VAO);
+            //glDrawArrays(GL_TRIANGLES, 0, 6);
+            //glBindVertexArray(0);
+            particleQuad->Render(shader);
+        }
+    }
+    // don't forget to reset to default blending mode
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+}
+
+
 
 unsigned int ParticleGenerator::FirstUnusedParticle()
 {
@@ -128,8 +132,8 @@ void ParticleGenerator::RespawnParticle(Particle& particle, Sphere& object, glm:
 unsigned int ParticleGenerator::LoadTexture(std::string* path) {
 
     //std::cout << testString << std::endl;
-    unsigned int textureID;
-    glGenTextures(1, &textureID);
+    unsigned int textureID2 = 0;
+    glGenTextures(1, &textureID2);
 
     // load image, create texture and generate mipmaps
     int width = 0;
@@ -151,7 +155,7 @@ unsigned int ParticleGenerator::LoadTexture(std::string* path) {
             format = GL_RGBA;
         }
 
-        glBindTexture(GL_TEXTURE_2D, textureID);
+        glBindTexture(GL_TEXTURE_2D, textureID2);
         glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
         glGenerateMipmap(GL_TEXTURE_2D);
 
@@ -173,5 +177,5 @@ unsigned int ParticleGenerator::LoadTexture(std::string* path) {
         stbi_image_free(data);
     }
 
-    return textureID;
+    return textureID2;
 }

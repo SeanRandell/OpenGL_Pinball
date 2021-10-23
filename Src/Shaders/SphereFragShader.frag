@@ -1,6 +1,7 @@
 // GLSL version
 #version 460
-out vec4 FragmentColor;
+layout (location = 0) out vec4 FragmentColor;
+layout (location = 1) out vec4 BrightColor;
 
 in VertexData {
     vec3 FragmentPosition;
@@ -57,9 +58,20 @@ void main()
 {
     vec3 viewDirectionVector = normalize(fragmentShaderIn.FragmentPosition - cameraUniform.Position);
     vec3 reflectionVector = reflect(viewDirectionVector, normalize(fragmentShaderIn.Normal));
+    vec3 finalColor = texture(skyBoxUniform, reflectionVector).rgb;
+
+    float brightness = dot(finalColor, vec3(0.3126, 0.8152, 0.0822));
+    if(brightness > 1.0)
+    {
+        BrightColor = vec4(finalColor, 1.0);
+    }
+    else
+    {
+        BrightColor = vec4(0.0, 0.0, 0.0, 1.0);
+    }
 
     // set frag color
-    FragmentColor = vec4(texture(skyBoxUniform, reflectionVector).rgb, 1.0);
+    FragmentColor = vec4(finalColor, 1.0);
 }
 
 // REFLECT 

@@ -3,6 +3,7 @@
 #include <sdl/SDL.h>
 #include "StateTracker.h"
 #include "Lighting.h"
+#include "Physics.h"
 
 // Class for taking away some of the clutter from the application class
 class RenderLoop
@@ -13,13 +14,15 @@ public:
     int windowWidth, windowHeight;
     int screenWidth, screenHeight;
 
+    Physics* physicsMethods;
 
     RenderLoop(int screenWidth, int screenHeight);
+    ~RenderLoop();
     void Init(StateTracker* stateTracker, int screenWidth, int screenHeight);
-    void CheckInput(StateTracker* stateTracker, bool *quitApp);
-    void UpdateState(StateTracker* stateTracker, float deltaTime);
+    void CheckInput(StateTracker* stateTracker, bool *quitApp, float deltaTime);
+    void UpdateState(StateTracker* stateTracker, float deltaTime, Quadtree* quadtree);
     //void RenderOnScreenDisplay();
-    void RenderFrame(StateTracker* stateTracker);
+    void RenderFrame(StateTracker* stateTracker, Quadtree* quadtree);
     void RenderScene(StateTracker* stateTracker);
 private:
 
