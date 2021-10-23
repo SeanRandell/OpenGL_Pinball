@@ -7,6 +7,7 @@
 #include "Lighting.h"
 #include "RTRShader.h"
 #include <stb/stb_image.h>
+#include "Rectangle.h"
 
 const glm::vec3 OBJECT_DEFAULT_POSITION = glm::vec3(0.0f, 0.0f, 0.0f);
 const glm::vec3 OBJECT_DEFAULT_ROTATION = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -31,6 +32,7 @@ public:
     virtual void End();
     void SetMaterial(ObjectMaterial material);
     virtual const char* GetName();
+    virtual bool IsContainedWithin(Rectangle* boundary);
 
     unsigned int numberOfVertices;
     unsigned int numberOfFaces;

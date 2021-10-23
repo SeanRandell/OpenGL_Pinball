@@ -277,3 +277,12 @@ const char* Sphere::GetName()
 {
     return "Sphere";
 }
+
+bool Sphere::IsContainedWithin(Rectangle* boundary) {
+    return (
+        this->position.x + this->radius >= boundary->x - boundary->width &&
+        this->position.x + this->radius <= boundary->x + boundary->width &&
+        this->position.y + this->radius >= boundary->y - boundary->width &&
+        this->position.y + this->radius <= boundary->y + boundary->width
+        );
+}

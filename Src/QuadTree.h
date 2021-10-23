@@ -2,6 +2,8 @@
 #include <vector>
 #include <glad/glad.h>
 #include "Sphere.h"
+#include "Block.h"
+#include "Rectangle.h"
 
 struct Circle {
     float x, y, radius;
@@ -9,31 +11,6 @@ struct Circle {
         this->x = x;
         this->y = y;
         this->radius = radius;
-    }
-};
-
-struct Rectangle {
-    //float left, bottom, width, height;
-    float x, y, width, height;
-    float left, right, top, bottom;
-    Rectangle(float x, float y, float width, float height) {
-        this->x = x;
-        this->y = y;
-        this->width = width;
-        this->height = height;
-        this->left = x - width / 2;
-        this->right = x + width / 2;
-        this->top = y + height / 2;
-        this->bottom = y - height / 2;
-    }
-
-    bool Contains(Sphere* circle) {
-        return (
-            circle->position.x + circle->radius >= this->x - this->width &&
-            circle->position.x + circle->radius <= this->x + this->width &&
-            circle->position.y + circle->radius >= this->y - this->width &&
-            circle->position.y + circle->radius <= this->y + this->width
-            );
     }
 };
 
@@ -46,7 +23,7 @@ public:
     int level;
     //std::vector<Rectangle> objects;
     Rectangle* boundary;
-    std::vector<Sphere*> objects;
+    std::vector<Object*> objects;
     Quadtree* northeast;
     Quadtree* northwest;
     Quadtree* southeast;
@@ -59,11 +36,11 @@ public:
     void Split();
     void GetIndex();
     void SubDivide();
-    bool Insert(Sphere* circle);
+    bool Insert(Object* block);
     std::vector<Rectangle> Retrieve();
-    std::vector<Sphere*> Query(Sphere* circle);
+    std::vector<Object*> Query(Sphere* circle);
     Quadtree* FindQuadrant(Sphere* circle);
-    std::vector<Sphere*> GetObjectList(Quadtree* currentQuadtree);
+    std::vector<Object*> GetObjectList(Quadtree* currentQuadtree);
     void DrawQuadTree(RTRShader* shader);    
     void DrawQuadTree();
 };

@@ -87,3 +87,9 @@ const char* Object::GetName()
 {
     return "Object";;
 }
+
+bool Object::IsContainedWithin(Rectangle* boundary)
+{
+    return false;
+}
+

@@ -30,7 +30,7 @@ public:
     virtual void End();
 
     glm::vec2 Move(float dt, unsigned int window_width);
-
+    bool IsContainedWithin(Rectangle* boundary);
 private:
     // memeber vars
     int sectorCount;                        // longitude, # of slices
@@ -47,6 +47,7 @@ private:
     int interleavedStride;                  // # of bytes to hop to the next vertex (should be 32 bytes)
 
     virtual const char* GetName();
+
     void BuildVerticesSmooth();
     void BuildInterleavedVertices();
     void ClearArrays();

@@ -34,4 +34,5 @@ public:
     //unsigned int LoadTexture(char const* path);
     unsigned int LoadTexture(std::string* path);
     virtual const char* GetName();
+    bool IsContainedWithin(Rectangle* boundary);
 };

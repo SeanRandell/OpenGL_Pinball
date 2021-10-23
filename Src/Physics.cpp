@@ -7,6 +7,15 @@ void Physics::CalculateBallPhysics(StateTracker* stateTracker, float deltaTime, 
         quadtree->Insert(ball);
     }
 
+    for (auto& block : stateTracker->blocks) {
+        quadtree->Insert(block);
+    }
+
+    for (auto& ball : stateTracker->spheres) {
+        std::vector<Object*> quadtreeResult = quadtree->Query(ball);
+    }
+
+
     auto DoCirclesOverLap = [](float x1, float y1, float radius1, float x2, float y2, float radius2) {
         return sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2)) <= (radius1 + radius2);
     };
@@ -182,14 +191,14 @@ Collision Physics::CheckCollision(Sphere& one, Block& two) // AABB - Circle coll
     glm::vec2 difference = ballPosition - blockPosition;
     glm::vec2 clamped = glm::clamp(difference, -aabb_half_extents, aabb_half_extents);
     // add clamped value to AABB_center and we get the value of box closest to circle
-    glm::vec2 closest = blockPosition +clamped;
+    glm::vec2 closest = blockPosition + clamped;
     // retrieve vector between center circle and closest point AABB and check if length <= radius
     difference = closest - ballPosition;
     std::cout << "Block: " << "(" << blockPosition.x << ", " << blockPosition.y << ") "
         << "Ball: " << "(" << ballPosition.x << ", " << ballPosition.y << ") "
         << "Diff: " << "(" << difference.x << ", " << difference.y << ") "
         << "length: " << "(" << glm::length(difference) << ") " << std::endl;
-  /*  if (DoCirclesOverLap(one.position.x, one.position.y, one.radius, two.position.x, two.position.y, 0.5)) */
+    /*  if (DoCirclesOverLap(one.position.x, one.position.y, one.radius, two.position.x, two.position.y, 0.5)) */
 
     if (glm::length(difference) < one.radius)
     {
@@ -197,7 +206,7 @@ Collision Physics::CheckCollision(Sphere& one, Block& two) // AABB - Circle coll
         // not <= since in that case a collision also occurs when object one exactly touches object two, which they are at the end of each collision resolution stage.
         return std::make_tuple(true, VectorDirection(difference), difference);
     }
-        return std::make_tuple(false, UP, glm::vec2(0.0f, 0.0f));
+    return std::make_tuple(false, UP, glm::vec2(0.0f, 0.0f));
 }
 
 Direction Physics::VectorDirection(glm::vec2 target)

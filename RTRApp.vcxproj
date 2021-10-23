@@ -53,6 +53,7 @@
     <ClInclude Include="Src\Physics.h" />
     <ClInclude Include="Src\Quad.h" />
     <ClInclude Include="Src\QuadTree.h" />
+    <ClInclude Include="Src\Rectangle.h" />
     <ClInclude Include="Src\RenderLoop.h" />
     <ClInclude Include="Src\Lighting.h" />
     <ClInclude Include="Src\Object.h" />

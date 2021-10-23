@@ -205,3 +205,14 @@ unsigned int Block::LoadTexture(std::string* path) {
 const char* Block::GetName() {
     return "Block";
 }
+
+bool Block::IsContainedWithin(Rectangle* boundary) {
+    // collision x-axis?
+    bool collisionX = this->position.x + this->scale.x >= boundary->x &&
+        boundary->x + boundary->width >= this->position.x;
+    // collision y-axis?
+    bool collisionY = this->position.y + this->scale.y >= boundary->y &&
+        boundary->y + boundary->width >= this->position.y;
+    // collision only if on both axes
+    return collisionX && collisionY;
+}
