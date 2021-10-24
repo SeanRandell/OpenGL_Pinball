@@ -8,7 +8,19 @@ Sphere::Sphere(int id)
     stackCount = 18;
     this->velocity = glm::vec2(0.0f);
     this->id = id;
+    this->isPeg = false;
+    InitConstructorValues();
+}
 
+Sphere::Sphere(int id, bool isPeg)
+{
+    radius = 0.5f;
+    sectorCount = 36;
+    smooth = true;
+    stackCount = 18;
+    this->velocity = glm::vec2(0.0f);
+    this->id = id;
+    this->isPeg = isPeg;
     InitConstructorValues();
 }
 
@@ -20,7 +32,7 @@ Sphere::Sphere(float radius, float mass, glm::vec2 velocity, int sectors, int st
 
     this->velocity = velocity;
     this->id = id;
-
+    this->isPeg = false;
     InitConstructorValues();
 
 }
@@ -41,7 +53,7 @@ void Sphere::Init()
     glGenBuffers(1, &vertexBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
     glBufferData(GL_ARRAY_BUFFER, GetInterleavedVertexSize(), GetInterleavedVertices(), GL_STATIC_DRAW);
-
+    //glBufferSubData(GL_ARRAY_BUFFER, GetInterleavedVertexSize() + sizeof(normals), sizeof(tex),GL_DYNAMIC_DRAW);
     glGenVertexArrays(1, &vertexArray);
     glBindVertexArray(vertexArray);
 
@@ -57,14 +69,19 @@ void Sphere::Init()
     glEnableVertexAttribArray(1);
     //glVertexAttribPointer(attribVertexTexCoord, 2, GL_FLOAT, false, stride, (void*)(6 * sizeof(float)));
 
+    //modelmatrix
+
+
     glGenBuffers(1, &faceElementBuffer);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, faceElementBuffer);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, GetIndexSize(), GetIndices(), GL_STATIC_DRAW);
 
 }
 
-void Sphere::Render(RTRShader* shader, unsigned int cubeMapTexture)
+void Sphere::Render(RTRShader* shader, unsigned int cubeMapTexture, std::vector<glm::mat4> sphereModelMatrices)
 {
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+
     glBindVertexArray(vertexArray);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_CUBE_MAP, cubeMapTexture);
@@ -84,34 +101,6 @@ void Sphere::End()
 {
     Object::End();
 }
-
-//glm::vec2 Sphere::Move(float deltaTime, unsigned int window_width)
-//{
-//    //// if not stuck to player board
-//    //if (!this->waitingForLaunch)
-//    //{
-//    //    // move the ball
-//    //    this->position += this->velocity * deltaTime;
-//    //    // check if outside window bounds; if so, reverse velocity and restore at correct position
-//    //    if (this->position.x <= 0.0f)
-//    //    {
-//    //        this->velocity.x = -this->velocity.x;
-//    //        this->position.x = 0.0f;
-//    //    }
-//    //    else if (this->position.x + this->Size.x >= window_width)
-//    //    {
-//    //        this->velocity.x = -this->velocity.x;
-//    //        this->Position.x = window_width - this->Size.x;
-//    //    }
-//    //    if (this->Position.y <= 0.0f)
-//    //    {
-//    //        this->Velocity.y = -this->Velocity.y;
-//    //        this->Position.y = 0.0f;
-//    //    }
-//
-//    //}
-//    //return this->Position;
-//}
 
 void Sphere::BuildVerticesSmooth()
 {

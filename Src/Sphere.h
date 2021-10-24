@@ -20,18 +20,19 @@ public:
     float radius;
     float mass;
     int id;
-
+    bool isPeg;
     Sphere(int id);
+    Sphere(int id, bool isPeg);
     Sphere(float radius, float mass, glm::vec2 velocity, int sectors, int stacks, bool smooth, int id);
     ~Sphere() {}
     virtual void Init();
     void InitConstructorValues();
-    virtual void Render(RTRShader* shader, unsigned int cubeMapTexture);
+    //virtual void Render(RTRShader* shader, unsigned int cubeMapTexture);
+    virtual void Render(RTRShader* shader, unsigned int cubeMapTexture, std::vector<glm::mat4> sphereModelMatrices);
     virtual void End();
 
-    glm::vec2 Move(float dt, unsigned int window_width);
     bool IsContainedWithin(Rectangle* boundary);
-private:
+//private:
     // memeber vars
     int sectorCount;                        // longitude, # of slices
     int stackCount;                         // latitude, # of stacks

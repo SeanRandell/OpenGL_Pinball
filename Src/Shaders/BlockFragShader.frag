@@ -153,7 +153,8 @@ void main()
 //        finalColor += (ambient + attenuation*(diffuseVector + specularVector));
     }
     // check whether result is higher than some threshold, if so, output as bloom threshold color
-    float brightness = dot(finalColor, vec3(0.3126, 0.8152, 0.0822));
+    float brightness = dot(finalColor, vec3(0.1126, 0.5152, 0.0522));
+    //vec3(0.2126, 0.7152, 0.0722)
     if(brightness > 1.0)
     {
         BrightColor = vec4(finalColor, 1.0);

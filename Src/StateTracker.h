@@ -72,8 +72,9 @@ public:
 
     LightingModel* lightModel;
     ParticleGenerator* particleGenerator;
-    Rectangle* boundary;
     //Quadtree* quadtree;
+
+
 
     //bloom buffers
     unsigned int hdrFBO{0};
@@ -90,6 +91,14 @@ public:
     int windowWidth, windowHeight;
     int screenWidth, screenHeight;
 
+
+    //sphere 
+    unsigned int sphereVertexBuffer{0};
+    unsigned int sphereVertexArray{0};
+    unsigned int sphereFaceElementBuffer{0};
+    std::vector<glm::vec3> spherePositions;
+    std::vector<glm::mat4> sphereMatrices;
+    Sphere* testSphere;
 
     StateTracker(int screenWidth, int screenHeight);
     ~StateTracker();

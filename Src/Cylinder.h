@@ -19,7 +19,7 @@ class Cylinder : public Object
 {
 public:
     // ctor/dtor
-    Cylinder(float baseRadius = 1.0f, float topRadius = 1.0f, float height = 1.0f,
+    Cylinder(float baseRadius = 0.5f, float topRadius = 0.5f, float height = 1.0f,
         int sectorCount = 36, int stackCount = 1, bool smooth = true);
     ~Cylinder() {}
 

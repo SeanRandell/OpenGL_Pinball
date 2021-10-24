@@ -208,10 +208,10 @@ const char* Block::GetName() {
 
 bool Block::IsContainedWithin(Rectangle* boundary) {
     // collision x-axis?
-    bool collisionX = this->position.x + this->scale.x >= boundary->x &&
+    bool collisionX = this->position.x + this->scale.x/2 >= boundary->x &&
         boundary->x + boundary->width >= this->position.x;
     // collision y-axis?
-    bool collisionY = this->position.y + this->scale.y >= boundary->y &&
+    bool collisionY = this->position.y + this->scale.y/2 >= boundary->y &&
         boundary->y + boundary->width >= this->position.y;
     // collision only if on both axes
     return collisionX && collisionY;

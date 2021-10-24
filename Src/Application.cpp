@@ -166,6 +166,9 @@ int Application::InitTest() {
         std::cerr << "RTR:WARNING: SDL coudn't retrieve current display mode details." << std::endl;
     }
 
+    //SDL_SetRelativeMouseMode(SDL_TRUE);
+    SDL_CaptureMouse(SDL_TRUE);
+
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
 

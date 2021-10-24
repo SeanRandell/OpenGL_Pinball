@@ -1,7 +1,11 @@
 // GLSL version
 #version 460
+// mesh attributes
 layout (location = 0) in vec3 aPosition;
 layout (location = 1) in vec3 aNormal;
+
+// per instance attribute
+//layout (location = 2) in mat4 aInstanceModeMatrix;
 
 out VertexData{
     vec3 FragmentPosition;
@@ -30,7 +34,9 @@ void main()
 //    gl_Position = matrixModelViewProjection * vec4(vertexPosition, 1.0);
 
     vertexShaderOut.FragmentPosition = vec3(modelMatrixUniform * vec4(aPosition, 1.0));
-    vertexShaderOut.Normal = mat3(transpose(inverse(modelMatrixUniform))) * aNormal;  
+    vertexShaderOut.Normal = mat3(transpose(inverse(modelMatrixUniform))) * aNormal;
+//    vertexShaderOut.FragmentPosition = vec3(aInstanceModeMatrix * vec4(aPosition, 1.0));
+//    vertexShaderOut.Normal = mat3(transpose(inverse(aInstanceModeMatrix))) * aNormal;  
     gl_Position = projectionMatrixUniform * viewMatrixUniform * vec4(vertexShaderOut.FragmentPosition, 1.0);
 //     gl_Position = projectionMatrixUniform * viewMatrixUniform * modelMatrixUniform * vec4(vertexShaderOut.FragmentPosition, 1.0);
 }

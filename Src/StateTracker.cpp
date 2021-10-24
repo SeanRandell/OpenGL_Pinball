@@ -26,7 +26,7 @@ StateTracker::StateTracker(int screenWidth, int screenHeight)
     debugObject = new Debug();
     quad = new Quad();
 
-    bloomExposure = 0.9f;
+    bloomExposure = 0.5f;
     isBloomOn = true;
     canLaunchBall = false;
     moveLeftFlipper = false;
@@ -128,6 +128,9 @@ StateTracker::~StateTracker()
         delete spheres[i];
     }
 
+    testSphere->End();
+    delete testSphere;
+
     cylinder->End();
     delete cylinder;
 
@@ -160,21 +163,35 @@ void StateTracker::BuildGameObjects()
     //block1->scale = glm::vec3(2.0, 2.0, 2.0);
     //block1->scale = glm::vec3(1.0, 1.0, 1.0);
     Block* block2 = new Block();
-    block2->position = glm::vec3(0.0, -2.0, 0.0);
+    block2->position = glm::vec3(0.0, 7.1, 0.0);
+    block2->scale = glm::vec3(12.0, 4.0f, 1.0);
     Block* block3 = new Block();
-    block3->position = glm::vec3(-2.0, 0.0, 0.0);
+    block3->position = glm::vec3(-7.1, 0.0, 0.0);
+    block3->scale = glm::vec3(4.0, 10.0f, 1.0);
     Block* block4 = new Block();
-    block4->position = glm::vec3(2.0, 0.0, 0.0);
+    block4->position = glm::vec3(7.1, 0.0, 0.0);
+    block4->scale = glm::vec3(4.0, 10.0f, 1.0);
     Block* block5 = new Block();
-    block5->position = glm::vec3(0.0, 2.0, 0.0);
+    block5->position = glm::vec3(-4.6, -5.6, 0.0);
     Block* block6 = new Block();
-    block6->position = glm::vec3(2.0, 2.0, 0.0);
+    block6->position = glm::vec3(-3.6, -5.6, 0.0);
     Block* block7 = new Block();
-    block7->position = glm::vec3(-2.0, 2.0, 0.0);
+    block7->position = glm::vec3(4.6, -5.6, 0.0);
     Block* block8 = new Block();
-    block8->position = glm::vec3(2.0, -2.0, 0.0);
+    block8->position = glm::vec3(3.6, -5.6, 0.0);
     Block* block9 = new Block();
     block9->position = glm::vec3(-2.0, -2.0, 0.0);
+    Block* block10 = new Block();
+    block10->position = glm::vec3(0.0, 3.0, 0.0);
+    Block* block11 = new Block();
+    block11->position = glm::vec3(3.0, 3.0, 0.0);
+    Block* block12 = new Block();
+    block12->position = glm::vec3(-3.0, 3.0, 0.0);
+    Block* block13 = new Block();
+    block13->position = glm::vec3(3.0, -3.0, 0.0);
+    Block* block14= new Block();
+    block14->position = glm::vec3(-3.0, -3.0, 0.0);
+
     //Block* block6 = new Block();
     //block6->position = glm::vec3(0.0, 3.0, 0.0);
     //block4->scale = glm::vec3(1.0, 0.0, 1.0);
@@ -187,8 +204,12 @@ void StateTracker::BuildGameObjects()
     blocks.push_back(block6);
     blocks.push_back(block7);
     blocks.push_back(block8);
-    blocks.push_back(block9);
-
+    //blocks.push_back(block9);
+    blocks.push_back(block10);
+    //blocks.push_back(block11);
+    //blocks.push_back(block12);
+    //blocks.push_back(block13);
+    //blocks.push_back(block14);
 
     for (size_t i = 0; i < blocks.size(); i++)
     {
@@ -224,6 +245,54 @@ void StateTracker::BuildGameObjects()
         spheres[i]->Init();
     }
 
+    //sphere building
+    //testSphere = new Sphere(-10);
+    //testSphere->Init();
+    //
+    //glGenBuffers(1, &sphereVertexBuffer);
+    //glBindBuffer(GL_ARRAY_BUFFER, sphereVertexBuffer);
+    //glBufferData(GL_ARRAY_BUFFER, testSphere->GetInterleavedVertexSize() + (sizeof(glm::mat4) * 1), testSphere->GetInterleavedVertices(), GL_DYNAMIC_DRAW);
+    ////glBufferSubData(GL_ARRAY_BUFFER, GetInterleavedVertexSize() + sizeof(normals), sizeof(tex),GL_DYNAMIC_DRAW);
+    //glGenVertexArrays(1, &sphereVertexArray);
+    //glBindVertexArray(sphereVertexArray);
+
+    //// bind vbo for smooth sphere (center and right)
+    //glBindBuffer(GL_ARRAY_BUFFER, sphereVertexBuffer);
+
+    //// set attrib arrays using glVertexAttribPointer()
+    //glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+    //glEnableVertexAttribArray(0);
+
+    //// normals
+    //glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+    //glEnableVertexAttribArray(1);
+    ////glVertexAttribPointer(attribVertexTexCoord, 2, GL_FLOAT, false, stride, (void*)(6 * sizeof(float)));
+
+    ////modelmatrix
+    //// set attribute pointers for matrix (4 times vec4)
+
+    //glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(glm::vec4), (void*)0);
+    //glEnableVertexAttribArray(2);
+
+    //glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(glm::vec4), (void*)(sizeof(glm::vec4)));
+    //glEnableVertexAttribArray(3);
+
+    //glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(glm::vec4), (void*)(2 * sizeof(glm::vec4)));
+    //glEnableVertexAttribArray(4);
+
+    //glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(glm::vec4), (void*)(3 * sizeof(glm::vec4)));
+    //glEnableVertexAttribArray(5);
+
+    //glVertexAttribDivisor(2, 1);
+    //glVertexAttribDivisor(3, 1);
+    //glVertexAttribDivisor(4, 1);
+    //glVertexAttribDivisor(5, 1);
+
+    //glGenBuffers(1, &sphereFaceElementBuffer);
+    //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, sphereFaceElementBuffer);
+    //glBufferData(GL_ELEMENT_ARRAY_BUFFER, testSphere->GetIndexSize(), testSphere->GetIndices(), GL_STATIC_DRAW);
+    //glBindVertexArray(0);
+
     cylinder->Init();
     debugObject->Init();
     quad->Init(); 
@@ -237,6 +306,7 @@ void StateTracker::LaunchBall()
     newball->velocity = glm::vec2(8.0, 4.0);
     //newball->scale = glm::vec3(2.0f, 2.0f, 2.0f);
     spheres.push_back(newball);
+    spherePositions.push_back(newball->position);
 }
 
 std::string StateTracker::GetSettingString(bool boolToCheck)

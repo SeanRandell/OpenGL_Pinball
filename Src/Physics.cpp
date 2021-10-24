@@ -179,7 +179,7 @@ Collision Physics::CheckCollision(Sphere& one, Block& two) // AABB - Circle coll
     // get center point circle first 
     //glm::vec2 center(one.position + one.radius);
     // calculate AABB info (center, half-extents)
-    glm::vec2 aabb_half_extents((1 / 2.0f), (1 / 2.0f));
+    glm::vec2 aabb_half_extents((two.scale.x / 2.0f), (two.scale.y / 2.0f));
     //glm::vec2 aabb_center(
     //    two.position.x + aabb_half_extents.x,
     //    two.position.y + aabb_half_extents.y
@@ -194,15 +194,15 @@ Collision Physics::CheckCollision(Sphere& one, Block& two) // AABB - Circle coll
     glm::vec2 closest = blockPosition + clamped;
     // retrieve vector between center circle and closest point AABB and check if length <= radius
     difference = closest - ballPosition;
-    std::cout << "Block: " << "(" << blockPosition.x << ", " << blockPosition.y << ") "
-        << "Ball: " << "(" << ballPosition.x << ", " << ballPosition.y << ") "
-        << "Diff: " << "(" << difference.x << ", " << difference.y << ") "
-        << "length: " << "(" << glm::length(difference) << ") " << std::endl;
+    //std::cout << "Block: " << "(" << blockPosition.x << ", " << blockPosition.y << ") "
+    //    << "Ball: " << "(" << ballPosition.x << ", " << ballPosition.y << ") "
+    //    << "Diff: " << "(" << difference.x << ", " << difference.y << ") "
+    //    << "length: " << "(" << glm::length(difference) << ") " << std::endl;
     /*  if (DoCirclesOverLap(one.position.x, one.position.y, one.radius, two.position.x, two.position.y, 0.5)) */
 
     if (glm::length(difference) < one.radius)
     {
-        std::cout << "COLLISION" << std::endl;
+        //std::cout << "COLLISION" << std::endl;
         // not <= since in that case a collision also occurs when object one exactly touches object two, which they are at the end of each collision resolution stage.
         return std::make_tuple(true, VectorDirection(difference), difference);
     }

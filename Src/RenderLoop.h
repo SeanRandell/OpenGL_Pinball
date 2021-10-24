@@ -4,6 +4,7 @@
 #include "StateTracker.h"
 #include "Lighting.h"
 #include "Physics.h"
+#include <algorithm>
 
 // Class for taking away some of the clutter from the application class
 class RenderLoop

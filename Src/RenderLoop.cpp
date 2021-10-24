@@ -218,6 +218,31 @@ void RenderLoop::CheckInput(StateTracker* stateTracker, bool* quitApp, float del
         case SDL_QUIT:
             *quitApp = true;
             break;
+        case SDL_MOUSEMOTION:
+        {
+            //fprintf(stderr, "mouse x: %d, y: %d\n", keyEvent.button.x, keyEvent.button.y);
+            //SDL_GetMouseState(&xpos, &ypos);
+
+            static int xPosition = stateTracker->camera->lastX;
+            static int yPosition = stateTracker->camera->lastY;
+            xPosition += keyEvent.motion.xrel;
+            yPosition += keyEvent.motion.yrel;
+
+            if (stateTracker->camera->firstMouse && (stateTracker->camera->lastX = xPosition) && (stateTracker->camera->lastY = yPosition)) {
+                stateTracker->camera->lastX = xPosition;
+                stateTracker->camera->lastY = yPosition;
+                stateTracker->camera->firstMouse = false;
+            }
+
+            float xOffSet = xPosition - stateTracker->camera->lastX;
+            float yOffSet = stateTracker->camera->lastY - yPosition;
+
+            stateTracker->camera->lastX = xPosition;
+            stateTracker->camera->lastY = yPosition;
+
+            stateTracker->camera->ProcessMouseMovement(xOffSet, yOffSet, deltaTime, true);
+        }
+        break;
         case SDL_KEYDOWN:
             switch (keyEvent.key.keysym.sym)
             {
@@ -298,10 +323,6 @@ void RenderLoop::CheckInput(StateTracker* stateTracker, bool* quitApp, float del
             case SDLK_DOWN:
                 stateTracker->camera->tiltDown = false;
                 break;
-            //case SDLK_SPACE:
-            //    //TODO - launch ball after time
-            //    stateTracker->canLaunchBall = false;
-            //    break;
             }
             break;
         }
@@ -319,24 +340,62 @@ void RenderLoop::UpdateState(StateTracker* stateTracker, float deltaTime, Quadtr
     stateTracker->modelMatrix = glm::mat4(1.0f);
     stateTracker->viewMatrix = stateTracker->camera->GetViewMatrix();
 
-    if (stateTracker->canLaunchBall)
-    {
-        if (stateTracker->launchCountdown >= stateTracker->launchCooldown) {
+
+    if (stateTracker->launchCountdown >= stateTracker->launchCooldown) {
+        if (stateTracker->canLaunchBall)
+        {
             //launch ball
             stateTracker->LaunchBall();
 
             stateTracker->launchCountdown = 0;
-            std::cout << "launched" << std::endl;
+            //std::cout << "launched" << std::endl;
             stateTracker->canLaunchBall = false;
         }
-        else {
-            stateTracker->launchCountdown += deltaTime;
-            std::cout << "Cooldown" << std::endl;
-        }
+    }
+    else {
+        stateTracker->launchCountdown += deltaTime;
+        //std::cout << "Cooldown" << std::endl;
     }
 
     //PHYSICS
     physicsMethods->CalculateBallPhysics(stateTracker, deltaTime, quadtree);
+
+    // check if ball needs to be deleted
+    if (stateTracker->spheres.size() > 0)
+    {
+        //auto i = std::remove_if(stateTracker->spheres.begin(), stateTracker->spheres.end(), [&](Sphere* o) {
+        //    return (o->position.x <= -200 || o.position->z <= -200 || o.position->z >= 200 || o.position->x >= 200);
+        //    });
+        //if (i != stateTracker->spheres.end()) {
+        //    stateTracker->spheres[i]->end;
+        //    stateTracker->spheres.erase(i);
+        //}
+        //stateTracker->spheres.erase(std::remove(
+        //    stateTracker->spheres.begin(), stateTracker->spheres.end(), 8), vec.end());
+        //std::vector<Sphere*>::std::iterator it;
+        //for (it2 = stateTracker->spheres.begin(); it2 != stateTracker->spheres.end();)
+        //{
+        //        if (...)
+        //        {
+        //            it2 = uc.erase(it2);
+        //        }
+        //        else
+        //        {
+        //            ++it2;
+        //        }
+        //    ...
+        //}
+        std::vector<Sphere*>::iterator it = stateTracker->spheres.begin();
+
+        while (it != stateTracker->spheres.end()) {
+            Sphere* currentSphere = (Sphere*)*it;
+            if (currentSphere->position.y < -10.0) {
+                currentSphere->End();
+                it = stateTracker->spheres.erase(it);
+            }
+            else ++it;
+        }
+    }
 
     // update particles
     for (int i = 0; i < stateTracker->spheres.size(); i++)
@@ -434,13 +493,48 @@ void RenderLoop::RenderFrame(StateTracker* stateTracker, Quadtree* quadtree)
     stateTracker->sphereShader->SetCamera("cameraUniform", *stateTracker->camera);
     stateTracker->sphereShader->SetLightingModel(*stateTracker->lightModel);
 
+    //--------------------
+    //stateTracker->sphereMatrices.clear();
+    //for (int i = 0; i < stateTracker->spherePositions.size(); i++)
+    //{
+    //    glm::mat4 newMatrix = glm::mat4(1.0f);
+    //    glm::translate(newMatrix, stateTracker->spherePositions[i]);
+    //    stateTracker->sphereMatrices.push_back(newMatrix);
+    //}
+    //if (stateTracker->spherePositions.size() > 0) {
+    //    glBindBuffer(GL_ARRAY_BUFFER, stateTracker->sphereVertexBuffer);
+    //    glBufferSubData(GL_ARRAY_BUFFER,
+    //        stateTracker->testSphere->GetInterleavedVertexSize(),
+    //        stateTracker->sphereMatrices.size() * sizeof(glm::mat4),
+    //        stateTracker->sphereMatrices.data());
+    //    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    //    glBindVertexArray(stateTracker->sphereVertexArray);
+
+
+
+    //    glActiveTexture(GL_TEXTURE0);
+    //    glBindTexture(GL_TEXTURE_CUBE_MAP, stateTracker->skyBox->cubemapTexture);
+    //    //glDrawArrays(GL_TRIANGLES, 0, numberOfVertices);
+
+
+    //    // draw center sphere
+    //    glDrawElementsInstanced(GL_TRIANGLES,            // primitive type
+    //        stateTracker->testSphere->GetIndexCount(), // # of indices
+    //        GL_UNSIGNED_INT,         // data type
+    //        (void*)0,                // ptr to indices
+    //        stateTracker->spherePositions.size());
+
+    //    glBindVertexArray(0);
+    //}
+    //-------------------------
+
     for (unsigned int i = 0; i < stateTracker->spheres.size(); i++)
     {
         stateTracker->modelMatrix = glm::mat4(1.0f);
         stateTracker->modelMatrix = glm::translate(stateTracker->modelMatrix, stateTracker->spheres[i]->position);
         stateTracker->modelMatrix = glm::scale(stateTracker->modelMatrix, stateTracker->spheres[i]->scale);
         stateTracker->sphereShader->SetMat4("modelMatrixUniform", stateTracker->modelMatrix);
-        stateTracker->spheres[i]->Render(stateTracker->sphereShader, stateTracker->skyBox->cubemapTexture);
+        stateTracker->spheres[i]->Render(stateTracker->sphereShader, stateTracker->skyBox->cubemapTexture, stateTracker->sphereMatrices);
 
         //sphere normal
     /*    stateTracker->normalShader->Use();
