@@ -18,7 +18,7 @@ struct Camera {
 };
 
 struct Material {
-    vec3 ambient;
+//    vec3 ambient;
     sampler2D diffuseMap;
     sampler2D specularMap;
     sampler2D reflectionMap;
@@ -109,7 +109,7 @@ void main()
         float attenuation = 1.0;
 
         // calc ambient
-        vec3 ambient = lightsUniform[currentLight].ambient * texture(objectMaterialUniform.diffuseMap, fragmentShaderIn.TextureCoordinates).rgb * objectMaterialUniform.ambient;
+        vec3 ambient = lightsUniform[currentLight].ambient * texture(objectMaterialUniform.diffuseMap, fragmentShaderIn.TextureCoordinates).rgb;
     
         // calc diffuse
         vec3 lightDirectionVector;
@@ -128,7 +128,7 @@ void main()
         }
         lightDirectionVector = normalize(lightDirectionVector);
         float diffuseFloat = max(dot(normalVector, lightDirectionVector), 0.0);
-        vec3 diffuseVector = lightsUniform[currentLight].diffuse * texture(objectMaterialUniform.diffuseMap, fragmentShaderIn.TextureCoordinates).rgb * diffuseFloat;
+        vec3 diffuseVector = lightsUniform[currentLight].diffuse * diffuseFloat * texture(objectMaterialUniform.diffuseMap, fragmentShaderIn.TextureCoordinates).rgb;
     
         // calc specular
         vec3 fragmentToCameraVector = normalize(cameraUniform.Position - fragmentShaderIn.FragmentPosition);
@@ -147,15 +147,16 @@ void main()
         vec3 reflection = vec3(texture(skyBoxUniform, reflectionVector).rgb * texture(objectMaterialUniform.reflectionMap, fragmentShaderIn.TextureCoordinates).rgb);
 
 //        vec3 reflection = vec3(texture(skyboxUniform, reflectionVector).rgb * texture(objectMaterialUniform.reflectionMap, fragmentShaderIn.TextureCoordinates).rgb);
-//        specularVector += reflection;
+        specularVector*= 2;
+        specularVector += (reflection * 3) ;
 
-        finalColor += (ambient + attenuation*(diffuseVector + specularVector + reflection));
+        finalColor += (ambient + attenuation*(diffuseVector + specularVector));
 //        finalColor += (ambient + attenuation*(diffuseVector + specularVector));
     }
     // check whether result is higher than some threshold, if so, output as bloom threshold color
-    float brightness = dot(finalColor, vec3(0.1126, 0.5152, 0.0522));
+    float brightness = dot(finalColor, vec3(0.4126, 0.9152, 0.0922));
     //vec3(0.2126, 0.7152, 0.0722)
-    if(brightness > 1.0)
+    if(brightness > 3.0)
     {
         BrightColor = vec4(finalColor, 1.0);
     }

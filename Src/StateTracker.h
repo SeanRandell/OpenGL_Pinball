@@ -28,6 +28,9 @@ public:
 
     Cube* cube;
     SkyBox* skyBox;
+    Block* leftFlipper;
+    Block* rightFlipper;
+
     std::vector<Block*> blocks;
     std::vector<Sphere*> spheres;
 
@@ -45,6 +48,8 @@ public:
 
     bool moveLeftFlipper;
     bool moveRightFlipper;
+    bool leftFlipperMoving;
+    bool rightFlipperMoving;
 
     int particleAmountPerBall;
 

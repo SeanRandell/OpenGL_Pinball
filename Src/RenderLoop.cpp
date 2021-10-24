@@ -26,8 +26,8 @@ void RenderLoop::Init(StateTracker* stateTracker, int screenWidth, int screenHei
     stateTracker->particleGenerator->Init();
 
     stateTracker->blockShader->Use();
-    stateTracker->blockShader->SetInt("objectMaterialUniform.diffuse", 0);
-    stateTracker->blockShader->SetInt("objectMaterialUniform.specular", 1);
+    stateTracker->blockShader->SetInt("objectMaterialUniform.diffuseMap", 0);
+    stateTracker->blockShader->SetInt("objectMaterialUniform.specularMap", 1);
     stateTracker->blockShader->SetInt("objectMaterialUniform.reflectionMap", 2);
     stateTracker->blockShader->SetInt("skyBoxUniform", 3);
 
@@ -57,97 +57,97 @@ void RenderLoop::Init(StateTracker* stateTracker, int screenWidth, int screenHei
     stateTracker->lightModel->AddLight({
         .type = LightType::DirectionalLight,
         .ambient = glm::vec3(0.2, 0.2, 0.2),
-        .diffuse = glm::vec3(1.0, 1.0, 1.0),
-        .specular = glm::vec3(0.5, 0.5, 0.5),
-        .direction = glm::vec3(1.0, 0.0, 0.0),
-        .position = glm::vec3(0.0, 8.0, 0.0)
+        .diffuse = glm::vec3(0.5, 0.5, 0.5),
+        .specular = glm::vec3(1.0, 1.0, 1.0),
+        .direction = glm::vec3(0.0, 0.0, -1.0),
+        .position = glm::vec3(0.0, 8.0, 5.0)
         });
     // Add x-axis red spot lights (palce all at x+3.0 so they are positioned around shaded cube)
-    stateTracker->lightModel->AddLight({
-        .type = LightType::PointLight,
-        .ambient = glm::vec3(1.0, 0.0, 0.0),
-        .diffuse = glm::vec3(1.0, 0.0, 0.0),
-        .specular = glm::vec3(1.0, 1.0, 1.0),
-        .position = glm::vec3(2.0 + 3.0, 0.0, 0.0),
-        .constant = 1.0f,
-        .linear = 0.35f,
-        .quadratic = 0.44f
-        });
-    stateTracker->lightModel->AddLight({
-        .type = LightType::PointLight,
-        .ambient = glm::vec3(1.0, 0.0, 0.0),
-        .diffuse = glm::vec3(1.0, 0.0, 0.0),
-        .specular = glm::vec3(1.0, 1.0, 1.0),
-        .position = glm::vec3(-2.0 + 3.0, 0.0, 6.0),
-        .constant = 1.0f,
-        .linear = 0.35f,
-        .quadratic = 0.44f
-        });
-    //// Add y-axis green spot lights
-    stateTracker->lightModel->AddLight({
-        .type = LightType::PointLight,
-        .ambient = glm::vec3(0.0, 0.2, 0.0),
-        .diffuse = glm::vec3(0.0, 1.0, 0.0),
-        .specular = glm::vec3(1.0, 1.0, 1.0),
-        .position = glm::vec3(0.0 + 3.0, 2.0, 0.0),
-        .constant = 1.0f,
-        .linear = 0.35f,
-        .quadratic = 0.44f
-        });
-    stateTracker->lightModel->AddLight({
-        .type = LightType::PointLight,
-        .ambient = glm::vec3(0.0, 0.2, 0.0),
-        .diffuse = glm::vec3(0.0, 1.0, 0.0),
-        .specular = glm::vec3(1.0, 1.0, 1.0),
-        .position = glm::vec3(0.0 + 3.0, -2.0, 0.0),
-        .constant = 1.0f,
-        .linear = 0.35f,
-        .quadratic = 0.44f
-        });
-    //// Add z-axis blue spot lights
-    stateTracker->lightModel->AddLight({
-        .type = LightType::PointLight,
-        .ambient = glm::vec3(0.0, 0.0, 0.2),
-        .diffuse = glm::vec3(0.0, 0.0, 1.0),
-        .specular = glm::vec3(1.0, 1.0, 1.0),
-        .position = glm::vec3(0.0 + 3.0, 0.0, 2.0),
-        .constant = 1.0f,
-        .linear = 0.35f,
-        .quadratic = 0.44f
-        });
-    stateTracker->lightModel->AddLight({
-        .type = LightType::PointLight,
-        .ambient = glm::vec3(0.0, 0.0, 0.2),
-        .diffuse = glm::vec3(0.0, 0.0, 1.0),
-        .specular = glm::vec3(1.0, 1.0, 1.0),
-        .position = glm::vec3(0.0 + 3.0, 0.0, -2.0),
-        .constant = 1.0f,
-        .linear = 0.35f,
-        .quadratic = 0.44f
-        });
+    //stateTracker->lightModel->AddLight({
+    //    .type = LightType::PointLight,
+    //    .ambient = glm::vec3(1.0, 0.0, 0.0),
+    //    .diffuse = glm::vec3(1.0, 0.0, 0.0),
+    //    .specular = glm::vec3(1.0, 1.0, 1.0),
+    //    .position = glm::vec3(2.0 + 3.0, 0.0, 0.0),
+    //    .constant = 1.0f,
+    //    .linear = 0.35f,
+    //    .quadratic = 0.44f
+    //    });
+    //stateTracker->lightModel->AddLight({
+    //    .type = LightType::PointLight,
+    //    .ambient = glm::vec3(1.0, 0.0, 0.0),
+    //    .diffuse = glm::vec3(1.0, 0.0, 0.0),
+    //    .specular = glm::vec3(1.0, 1.0, 1.0),
+    //    .position = glm::vec3(-2.0 + 3.0, 0.0, 6.0),
+    //    .constant = 1.0f,
+    //    .linear = 0.35f,
+    //    .quadratic = 0.44f
+    //    });
+    ////// Add y-axis green spot lights
+    //stateTracker->lightModel->AddLight({
+    //    .type = LightType::PointLight,
+    //    .ambient = glm::vec3(0.0, 0.2, 0.0),
+    //    .diffuse = glm::vec3(0.0, 0.5, 0.0),
+    //    .specular = glm::vec3(1.0, 1.0, 1.0),
+    //    .position = glm::vec3(0.0, 0.0, 0.0),
+    //    .constant = 1.0f,
+    //    .linear = 0.35f,
+    //    .quadratic = 0.44f
+    //    });
+    //stateTracker->lightModel->AddLight({
+    //    .type = LightType::PointLight,
+    //    .ambient = glm::vec3(0.0, 0.2, 0.0),
+    //    .diffuse = glm::vec3(0.0, 1.0, 0.0),
+    //    .specular = glm::vec3(1.0, 1.0, 1.0),
+    //    .position = glm::vec3(0.0 + 3.0, -2.0, 0.0),
+    //    .constant = 1.0f,
+    //    .linear = 0.35f,
+    //    .quadratic = 0.44f
+    //    });
+    ////// Add z-axis blue spot lights
+    //stateTracker->lightModel->AddLight({
+    //    .type = LightType::PointLight,
+    //    .ambient = glm::vec3(0.0, 0.0, 0.2),
+    //    .diffuse = glm::vec3(0.0, 0.0, 1.0),
+    //    .specular = glm::vec3(1.0, 1.0, 1.0),
+    //    .position = glm::vec3(0.0 + 3.0, 0.0, 2.0),
+    //    .constant = 1.0f,
+    //    .linear = 0.35f,
+    //    .quadratic = 0.44f
+    //    });
+    //stateTracker->lightModel->AddLight({
+    //    .type = LightType::PointLight,
+    //    .ambient = glm::vec3(0.0, 0.0, 0.2),
+    //    .diffuse = glm::vec3(0.0, 0.0, 1.0),
+    //    .specular = glm::vec3(1.0, 1.0, 1.0),
+    //    .position = glm::vec3(0.0 + 3.0, 0.0, -2.0),
+    //    .constant = 1.0f,
+    //    .linear = 0.35f,
+    //    .quadratic = 0.44f
+    //    });
 
-    // white lights 
-    stateTracker->lightModel->AddLight({
-    .type = LightType::PointLight,
-    .ambient = glm::vec3(0.2, 0.2, 0.2),
-    .diffuse = glm::vec3(1.0, 1.0, 1.0),
-    .specular = glm::vec3(1.0, 1.0, 1.0),
-    .position = glm::vec3(1.0 , .0, 2.0),
-    .constant = 1.0f,
-    .linear = 0.35f,
-    .quadratic = 0.44f
-        });
+    //// white lights 
+    //stateTracker->lightModel->AddLight({
+    //.type = LightType::PointLight,
+    //.ambient = glm::vec3(0.2, 0.2, 0.2),
+    //.diffuse = glm::vec3(1.0, 1.0, 1.0),
+    //.specular = glm::vec3(1.0, 1.0, 1.0),
+    //.position = glm::vec3(1.0 , .0, 2.0),
+    //.constant = 1.0f,
+    //.linear = 0.35f,
+    //.quadratic = 0.44f
+    //    });
 
-    stateTracker->lightModel->AddLight({
-        .type = LightType::PointLight,
-        .ambient = glm::vec3(0.0, 0.0, 0.2),
-        .diffuse = glm::vec3(1.0, 1.0, 1.0),
-        .specular = glm::vec3(1.0, 1.0, 1.0),
-        .position = glm::vec3(8.0 + 3.0, 3.0, 0.0),
-        .constant = 1.0f,
-        .linear = 0.35f,
-        .quadratic = 0.44f
-        });
+    //stateTracker->lightModel->AddLight({
+    //    .type = LightType::PointLight,
+    //    .ambient = glm::vec3(0.0, 0.0, 0.2),
+    //    .diffuse = glm::vec3(1.0, 1.0, 1.0),
+    //    .specular = glm::vec3(1.0, 1.0, 1.0),
+    //    .position = glm::vec3(8.0 + 3.0, 3.0, 0.0),
+    //    .constant = 1.0f,
+    //    .linear = 0.35f,
+    //    .quadratic = 0.44f
+    //    });
 }
 
 void RenderLoop::CheckInput(StateTracker* stateTracker, bool* quitApp, float deltaTime) {
@@ -323,6 +323,14 @@ void RenderLoop::CheckInput(StateTracker* stateTracker, bool* quitApp, float del
             case SDLK_DOWN:
                 stateTracker->camera->tiltDown = false;
                 break;
+                //case SDLK_PERIOD:
+                //    // '>' – right flipper
+                //    stateTracker->moveRightFlipper = true;
+                //    break;
+                //case SDLK_COMMA:
+                //    //'<' –  left flipper
+                //    stateTracker->moveLeftFlipper = true;
+                //    break;
             }
             break;
         }
@@ -335,7 +343,7 @@ void RenderLoop::UpdateState(StateTracker* stateTracker, float deltaTime, Quadtr
     stateTracker->camera->ProcessCameraTurning(deltaTime);
 
     // Update directional camera to align with camera forward direction
-    stateTracker->lightModel->GetLight(0)->direction = stateTracker->camera->front;
+    //stateTracker->lightModel->GetLight(0)->direction = stateTracker->camera->front;
 
     stateTracker->modelMatrix = glm::mat4(1.0f);
     stateTracker->viewMatrix = stateTracker->camera->GetViewMatrix();
@@ -357,34 +365,61 @@ void RenderLoop::UpdateState(StateTracker* stateTracker, float deltaTime, Quadtr
         //std::cout << "Cooldown" << std::endl;
     }
 
+    // update left flipper
+    if (stateTracker->moveLeftFlipper && !stateTracker->leftFlipperMoving) {
+        if (stateTracker->leftFlipper->position.y <= -3.0f) {
+            stateTracker->leftFlipper->position.y += 6 * deltaTime;
+        }
+        if (stateTracker->leftFlipper->position.y >= -3.0f)
+        {
+            stateTracker->leftFlipperMoving = true;
+        }
+    }
+
+
+    if (stateTracker->leftFlipperMoving)
+    {
+        if (stateTracker->leftFlipper->position.y > -4.0f)
+        {
+            stateTracker->leftFlipper->position.y -= 6 * deltaTime;
+        }
+        else {
+            stateTracker->leftFlipperMoving = false;
+            stateTracker->moveLeftFlipper = false;
+            stateTracker->leftFlipper->position.y = -4.0f;
+        }
+    }
+
+    if (stateTracker->moveRightFlipper && !stateTracker->rightFlipperMoving) {
+        if (stateTracker->rightFlipper->position.y <= -3.0f) {
+            stateTracker->rightFlipper->position.y += 6 * deltaTime;
+        }
+        if (stateTracker->rightFlipper->position.y >= -3.0f)
+        {
+            stateTracker->rightFlipperMoving = true;
+        }
+    }
+
+
+    if (stateTracker->rightFlipperMoving)
+    {
+        if (stateTracker->rightFlipper->position.y > -4.0f)
+        {
+            stateTracker->rightFlipper->position.y -= 6 * deltaTime;
+        }
+        else {
+            stateTracker->rightFlipperMoving = false;
+            stateTracker->moveRightFlipper = false;
+            stateTracker->rightFlipper->position.y = -4.0f;
+        }
+    }
+
     //PHYSICS
     physicsMethods->CalculateBallPhysics(stateTracker, deltaTime, quadtree);
 
     // check if ball needs to be deleted
     if (stateTracker->spheres.size() > 0)
     {
-        //auto i = std::remove_if(stateTracker->spheres.begin(), stateTracker->spheres.end(), [&](Sphere* o) {
-        //    return (o->position.x <= -200 || o.position->z <= -200 || o.position->z >= 200 || o.position->x >= 200);
-        //    });
-        //if (i != stateTracker->spheres.end()) {
-        //    stateTracker->spheres[i]->end;
-        //    stateTracker->spheres.erase(i);
-        //}
-        //stateTracker->spheres.erase(std::remove(
-        //    stateTracker->spheres.begin(), stateTracker->spheres.end(), 8), vec.end());
-        //std::vector<Sphere*>::std::iterator it;
-        //for (it2 = stateTracker->spheres.begin(); it2 != stateTracker->spheres.end();)
-        //{
-        //        if (...)
-        //        {
-        //            it2 = uc.erase(it2);
-        //        }
-        //        else
-        //        {
-        //            ++it2;
-        //        }
-        //    ...
-        //}
         std::vector<Sphere*>::iterator it = stateTracker->spheres.begin();
 
         while (it != stateTracker->spheres.end()) {
@@ -534,12 +569,18 @@ void RenderLoop::RenderFrame(StateTracker* stateTracker, Quadtree* quadtree)
         stateTracker->modelMatrix = glm::translate(stateTracker->modelMatrix, stateTracker->spheres[i]->position);
         stateTracker->modelMatrix = glm::scale(stateTracker->modelMatrix, stateTracker->spheres[i]->scale);
         stateTracker->sphereShader->SetMat4("modelMatrixUniform", stateTracker->modelMatrix);
-        stateTracker->spheres[i]->Render(stateTracker->sphereShader, stateTracker->skyBox->cubemapTexture, stateTracker->sphereMatrices);
+        if (stateTracker->spheres[i]->isPeg) {
+            stateTracker->cylinder->Render(stateTracker->sphereShader);
+        }
+        else {
+            stateTracker->spheres[i]->Render(stateTracker->sphereShader, stateTracker->skyBox->cubemapTexture, stateTracker->sphereMatrices);
+        }
 
-        //sphere normal
-    /*    stateTracker->normalShader->Use();
-        stateTracker->normalShader->SetMat4("modelMatrixUniform", stateTracker->modelMatrix);
-        stateTracker->spheres[i]->Render(stateTracker->normalShader, stateTracker->skyBox->cubemapTexture);*/
+
+        // sphere normal
+     /*    stateTracker->normalShader->Use();
+         stateTracker->normalShader->SetMat4("modelMatrixUniform", stateTracker->modelMatrix);
+         stateTracker->spheres[i]->Render(stateTracker->normalShader, stateTracker->skyBox->cubemapTexture);*/
     }
     //cylinder
     //stateTracker->sphereShader->Use();
@@ -558,7 +599,7 @@ void RenderLoop::RenderFrame(StateTracker* stateTracker, Quadtree* quadtree)
     stateTracker->lightingShader->Use();
     stateTracker->lightingShader->SetMat4("viewMatrixUniform", stateTracker->viewMatrix);
     stateTracker->lightingShader->SetMat4("projectionMatrixUniform", stateTracker->projectionMatrix);
-
+    stateTracker->lightingShader->SetBool("fixedColor", false);
     glBindVertexArray(stateTracker->cube->vertexArray);
 
 
@@ -601,35 +642,29 @@ void RenderLoop::RenderFrame(StateTracker* stateTracker, Quadtree* quadtree)
 
 
     //// set directional light
-    //stateTracker->directionalLightShader->Use();
-    //stateTracker->modelMatrix = glm::mat4(1.0f);
-    //stateTracker->modelMatrix = glm::translate(stateTracker->modelMatrix, stateTracker->lightModel->GetLight(0)->position);
-    //stateTracker->directionalLightShader->SetMat4("projectionMatrixUniform", stateTracker->projectionMatrix);
-    //stateTracker->directionalLightShader->SetMat4("viewMatrixUniform", stateTracker->viewMatrix);
-    //stateTracker->directionalLightShader->SetMat4("modelMatrixUniform", stateTracker->modelMatrix);
+    stateTracker->directionalLightShader->Use();
+    stateTracker->modelMatrix = glm::mat4(1.0f);
+    stateTracker->modelMatrix = glm::translate(stateTracker->modelMatrix, stateTracker->lightModel->GetLight(0)->position);
+    stateTracker->directionalLightShader->SetMat4("projectionMatrixUniform", stateTracker->projectionMatrix);
+    stateTracker->directionalLightShader->SetMat4("viewMatrixUniform", stateTracker->viewMatrix);
+    stateTracker->directionalLightShader->SetMat4("modelMatrixUniform", stateTracker->modelMatrix);
 
-    //stateTracker->directionalLightShader->SetVec3("endVector", stateTracker->lightModel->GetLight(0)->direction);
-    //stateTracker->directionalLightShader->SetVec3("lineColor", glm::vec3(1, 0, 0));
-    //stateTracker->debugObject->Render(stateTracker->directionalLightShader);
+    stateTracker->directionalLightShader->SetVec3("endVector", stateTracker->lightModel->GetLight(0)->direction);
+    stateTracker->directionalLightShader->SetVec3("lineColor", glm::vec3(1, 0, 0));
+    stateTracker->debugObject->Render(stateTracker->directionalLightShader);
 
-
-    //directional light direction shader
-    //stateTracker->directionalLightShader->Use();
-    //stateTracker->directionalLightShader->SetMat4("projectionMatrixUniform", stateTracker->projectionMatrix);
-    //stateTracker->directionalLightShader->SetMat4("viewMatrixUniform", stateTracker->viewMatrix);
-    //stateTracker->directionalLightShader->SetMat4("modelMatrixUniform", stateTracker->modelMatrix);
-    //// set directional light
-    //stateTracker->directionalLightShader->SetLight("lightUniform", *stateTracker->lightModel->GetLight(0));
-    //stateTracker->cube->Render(stateTracker->directionalLightShader);
     //glUseProgram(0);
     glActiveTexture(0);
     //glMatrixMode(GL_MODELVIEW);
     //WHATEVER THE LAST SHADER IS
+    stateTracker->lightingShader->Use();
+    stateTracker->lightingShader->SetBool("fixedColor", true);
     //glLoadIdentity();
     //glPushMatrix();
-    quadtree->DrawQuadTree(stateTracker->lightingShader);
+    quadtree->DrawQuadTree(stateTracker->directionalLightShader);
     //glPopMatrix();
     //quadtree->DrawQuadTree();
+
 
     // draw skybox as last
     glDepthFunc(GL_LESS); // set depth function back to default
@@ -677,24 +712,25 @@ void RenderLoop::RenderFrame(StateTracker* stateTracker, Quadtree* quadtree)
 
 
 
-    //glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    //glBindFramebuffer(GL_FRAMEBUFFER, stateTracker->hdrFBO);
+    //stateTracker->lightingShader->Use();
+    ////glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     //glActiveTexture(0);
-    //glMatrixMode(GL_MODELVIEW);
-    //glLoadIdentity();
-    //debug quadtree
-    //float mat_ambient[] = { 0.2, 0.0, 0.0, 1.0 };
-    //float mat_colour[] = { 0.2, 0.0, 0.0, 1.0 };
-    //float mat_specular[] = { 1.0, 0.0, 0.0, 0.0 };
-    //float mat_shininess[] = { 100.0 };
-    //glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient);
-    //glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_colour);
-    //glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
-    //glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
-    //glPushMatrix();
-    //glColor3d(1, 0, 0);
-    //stateTracker->quadtree->DrawQuadTree();
-    //glPopMatrix();
+    ////glMatrixMode(GL_MODELVIEW);
+    ////glLoadIdentity();
+    ////debug quadtree
+    ////float mat_ambient[] = { 0.2, 0.2, 0.2, 1.0 };
+    ////float mat_colour[] = { 0.5, 0.5, 0.5, 1.0 };
+    ////float mat_specular[] = { 1.0, 1.0, 1.0, 1.0 };
+    ////float mat_shininess[] = { 100.0 };
+    ////glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient);
+    ////glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_colour);
+    ////glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
+    ////glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
+    ////glPushMatrix();
+    ////glColor3d(1, 0, 0);
+    //quadtree->DrawQuadTree(stateTracker->lightingShader);
+    ////glPopMatrix();
 }
 
 void RenderLoop::RenderScene(StateTracker* stateTracker)

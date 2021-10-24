@@ -22,7 +22,7 @@ void Block::InitConstructorValues()
     glm::vec3 length = glm::vec3(1.0, 1.0, 1.0);
     glm::vec2 rep = glm::vec2(1.0, 1.0);
 
-    float xl = length.x/ 2.0f;
+    float xl = length.x / 2.0f;
     float yl = length.y / 2.0f;
     float zl = length.z / 2.0f;
     float rr = rep.r;
@@ -164,7 +164,7 @@ unsigned int Block::LoadTexture(std::string* path) {
     int height = 0;
     int nrChannels = 0;
     //stbi_set_flip_vertically_on_load(true); // tell stb_image.h to flip loaded texture's on the y-axis.
-     unsigned char* data = stbi_load(path->c_str(), &width, &height, &nrChannels, 0);
+    unsigned char* data = stbi_load(path->c_str(), &width, &height, &nrChannels, 0);
     //unsigned char* data = stbi_load(skyBoxFaces[i].c_str(), &width, &height, &nrChannels, 0);
     if (data)
     {
@@ -207,12 +207,19 @@ const char* Block::GetName() {
 }
 
 bool Block::IsContainedWithin(Rectangle* boundary) {
-    // collision x-axis?
-    bool collisionX = this->position.x + this->scale.x/2 >= boundary->x &&
-        boundary->x + boundary->width >= this->position.x;
-    // collision y-axis?
-    bool collisionY = this->position.y + this->scale.y/2 >= boundary->y &&
-        boundary->y + boundary->width >= this->position.y;
-    // collision only if on both axes
-    return collisionX && collisionY;
+    float rectALeft = boundary->left;
+    float rectARight = boundary->right;
+    float rectBLeft = this->position.x - this->scale.x / 2;
+    float rectBRight = this->position.x + this->scale.x / 2;
+
+    bool x = rectALeft < rectBRight && rectARight > rectBLeft;
+
+    float rectATop = boundary->top;
+    float rectABottom = boundary->bottom;
+    float rectBTop = this->position.y + this->scale.y / 2;
+    float rectBBottom = this->position.y - this->scale.y / 2;
+
+    bool y = rectATop > rectBBottom && rectABottom < rectBTop;
+
+    return x && y;
 }

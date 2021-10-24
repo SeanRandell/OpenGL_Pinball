@@ -1,5 +1,5 @@
 #version 460
-out vec4 FragmentColor;
+layout (location = 0) out vec4 FragmentColor;
 
 uniform vec3 lineColor;
 

@@ -6,20 +6,23 @@ void Physics::CalculateBallPhysics(StateTracker* stateTracker, float deltaTime, 
     for (auto& ball : stateTracker->spheres) {
         quadtree->Insert(ball);
     }
-
+    std::vector<Object*> rogueBlocks;
     for (auto& block : stateTracker->blocks) {
-        quadtree->Insert(block);
+        bool wasInserted = quadtree->Insert(block);
+        if (!wasInserted) {
+            rogueBlocks.push_back(block);
+        }
     }
+
+    std::cout << rogueBlocks.size() << std::endl;
 
     for (auto& ball : stateTracker->spheres) {
         std::vector<Object*> quadtreeResult = quadtree->Query(ball);
         std::cout << quadtreeResult.size() << std::endl;
+        //PhyiscsPerSphere(ball, quadtreeResult, deltaTime);
     }
 
-    auto DoCirclesOverLap = [](float x1, float y1, float radius1, float x2, float y2, float radius2) {
-        return sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2)) <= (radius1 + radius2);
-    };
-
+    //return;
     // vector for the balls that have collided
     std::vector<std::pair<Sphere*, Sphere*>> vectorCollidingPairs;
 
@@ -173,6 +176,151 @@ void Physics::CalculateBallPhysics(StateTracker* stateTracker, float deltaTime, 
     }
 }
 
+void Physics::PhyiscsPerSphere(Sphere* ball, std::vector<Object*> objectList, float deltaTime)
+{
+    std::vector<Sphere*> sphereList;
+    std::vector<Block*> blockList;
+
+    for (Object* object : objectList)
+    {
+        if (object->GetName() == "Sphere") {
+
+            sphereList.push_back((Sphere*)object);
+        }
+        if (object->GetName() == "Block") {
+
+            blockList.push_back((Block*)object);
+        }
+    }
+
+    // vector for the balls that have collided
+    std::vector<std::pair<Sphere*, Sphere*>> vectorCollidingPairs;
+
+    //Update ball positions
+
+        //friction
+    ball->acceleration.x = -ball->velocity.x * 0.01f;
+    ball->acceleration.y = -ball->velocity.y * 0.01f;
+
+    // velocities
+    ball->velocity.x += ball->acceleration.x * deltaTime;
+    ball->velocity.y += ball->acceleration.y * deltaTime;
+
+    //positions
+    ball->position.x += ball->velocity.x * deltaTime;
+    ball->position.y += ball->velocity.y * deltaTime;
+
+    // test every ball against every other ball
+    // current ball
+
+            // target ball
+    for (auto& target : sphereList)
+    {
+        // filter out self collisions
+        if (ball->id != target->id)
+        {
+            if (DoCirclesOverLap(ball->position.x, ball->position.y, ball->radius, target->position.x, target->position.y, target->radius))
+            {
+                //collission has occured
+                vectorCollidingPairs.push_back({ ball, target });
+
+                // Distance between ball centers
+                float distance = sqrtf((ball->position.x - target->position.x) * (ball->position.x - target->position.x) + (ball->position.y - target->position.y) * (ball->position.y - target->position.y));
+
+                float overlap = 0.5f * (distance - ball->radius - target->radius);
+
+                //collision has occured
+                vectorCollidingPairs.push_back({ ball, target });
+
+                //Displace current ball
+                ball->position.x -= overlap * (ball->position.x - target->position.x) / distance;
+                ball->position.y -= overlap * (ball->position.y - target->position.y) / distance;
+
+                //Displace target ball
+                target->position.x += overlap * (ball->position.x - target->position.x) / distance;
+                target->position.y += overlap * (ball->position.y - target->position.y) / distance;
+            }
+        }
+    }
+
+    //test every ball against every other block
+
+        // target ball
+    for (auto& currentBlock : blockList)
+    {
+        Collision collision = CheckCollision(*ball, *currentBlock);
+        if (std::get<0>(collision)) // if collision is true
+        {
+            // collision resolution
+            Direction dir = std::get<1>(collision);
+            glm::vec2 diff_vector = std::get<2>(collision);
+            if (dir == LEFT || dir == RIGHT) // horizontal collision
+            {
+                ball->velocity.x = -ball->velocity.x; // reverse horizontal velocity
+                // relocate
+                float penetration = ball->radius - std::abs(diff_vector.x);
+                if (dir == LEFT)
+                    ball->position.x += penetration; // move ball to right
+                else
+                    ball->position.x -= penetration; // move ball to left;
+            }
+            else // vertical collision
+            {
+                ball->velocity.y = -ball->velocity.y; // reverse vertical velocity
+                // relocate
+                float penetration = ball->radius - std::abs(diff_vector.y);
+                if (dir == UP)
+                    ball->position.y -= penetration; // move ball bback up
+                else
+                    ball->position.y += penetration; // move ball back down
+            }
+        }
+    }
+
+
+    // work out dynamic collisions
+    for (auto collidedSpheres : vectorCollidingPairs)
+    {
+        Sphere* ball1 = collidedSpheres.first;
+        Sphere* ball2 = collidedSpheres.second;
+
+        // Distance between ball centers
+        float distance = sqrtf((ball1->position.x - ball2->position.x) * (ball1->position.x - ball2->position.x) + (ball1->position.y - ball2->position.y) * (ball1->position.y - ball2->position.y));
+
+        //Normal 
+        float nx = (ball2->position.x - ball1->position.x) / distance;
+        float ny = (ball2->position.y - ball1->position.y) / distance;
+
+        //Tangent
+        float tx = -ny;
+        float ty = nx;
+
+        // Dot Product Tangent
+        float dpTan1 = ball1->velocity.x * tx + ball1->velocity.y * ty;
+        float dpTan2 = ball2->velocity.x * tx + ball2->velocity.y * ty;
+
+        //TODO if a do not do this if it is a peg that the ball is colliding with.
+        float dpNormal1 = ball1->velocity.x * nx + ball1->velocity.y * ny;
+        float dpNormal2 = ball2->velocity.x * nx + ball2->velocity.y * ny;
+
+        //conservation of momentum in 1D
+        float momentum1 = (dpNormal1 * (ball1->mass - ball2->mass) + 2.0f * ball2->mass * dpNormal2) / (ball1->mass + ball2->mass);
+        float momentum2 = (dpNormal2 * (ball2->mass - ball1->mass) + 2.0f * ball1->mass * dpNormal1) / (ball1->mass + ball2->mass);
+
+        // update velocities
+        ball1->velocity.x = tx * dpTan1 + nx * momentum1;
+        ball1->velocity.y = ty * dpTan1 + ny * momentum1;
+
+        //TODO if a ball and not a peg
+        ball2->velocity.x = tx * dpTan2 + nx * momentum2;
+        ball2->velocity.y = ty * dpTan2 + ny * momentum2;
+    }
+}
+
+bool Physics::DoCirclesOverLap(float x1, float y1, float radius1, float x2, float y2, float radius2)
+{
+    return sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2)) <= (radius1 + radius2);
+}
 
 Collision Physics::CheckCollision(Sphere& one, Block& two) // AABB - Circle collision
 {

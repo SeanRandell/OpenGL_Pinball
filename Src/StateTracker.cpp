@@ -7,30 +7,32 @@ StateTracker::StateTracker(int screenWidth, int screenHeight)
 
     //TODO fix this so that it does not break non fullscreen
     windowWidth = screenWidth;
-    windowHeight = windowHeight;
+    windowHeight = screenHeight;
 
     particleAmountPerBall = 500;
 
     this->camera = new Camera(0, 2.0, 10.0, 0.0, 1.0, 0.0, -90.0f, 0.0f, screenWidth, screenHeight);
-    //this->sponge = new Sponge();
 
     lightModel = new LightingModel();
     particleGenerator = new ParticleGenerator(particleAmountPerBall);
-
-    //boundary = new Rectangle(0, 0, 10 , 10);
-    //quadtree = new Quadtree(boundary, 4);
 
     cube = new Cube();
     cylinder = new Cylinder();
     skyBox = new SkyBox();
     debugObject = new Debug();
     quad = new Quad();
+    testSphere = new Sphere(-10);
 
-    bloomExposure = 0.5f;
+    leftFlipper = new Block();
+    rightFlipper = new Block();
+
+    bloomExposure = 1.0f;
     isBloomOn = true;
     canLaunchBall = false;
     moveLeftFlipper = false;
     moveRightFlipper = false;
+    leftFlipperMoving = false;
+    rightFlipperMoving = false;
     isDebugOn = false;
 
     launchCooldown = 1.0f;
@@ -109,8 +111,6 @@ StateTracker::~StateTracker()
     delete debugDepthQuadShader;
     delete particleShader;
     delete lightModel;
-    //delete boundary;
-    //delete quadtree;
 
 
     cube->End();
@@ -211,6 +211,14 @@ void StateTracker::BuildGameObjects()
     //blocks.push_back(block13);
     //blocks.push_back(block14);
 
+
+    leftFlipper->scale = glm::vec3(2.0, 1.0, 1.0);
+    rightFlipper->scale = glm::vec3(2.0, 1.0, 1.0);
+    leftFlipper->position = glm::vec3(-3.0, -4.0, 0.0);
+    rightFlipper->position = glm::vec3(3.0, -4.0, 0.0);
+    blocks.push_back(leftFlipper);
+    blocks.push_back(rightFlipper);
+
     for (size_t i = 0; i < blocks.size(); i++)
     {
         blocks[i]->Init();
@@ -233,7 +241,9 @@ void StateTracker::BuildGameObjects()
     ball5->position = glm::vec3(1.0, 2.0, 0.0);
     Sphere* ball6 = new Sphere(-7);
     ball6->position = glm::vec3(0.0, 3.0, 0.0);
-
+    Sphere* peg1 = new Sphere(-8, true);
+    ball6->position = glm::vec3(-3.0, 3.0, 0.0);
+    spheres.push_back(peg1);
     //spheres.push_back(ball2);
     //spheres.push_back(ball3);
     //spheres.push_back(ball4);
@@ -246,7 +256,7 @@ void StateTracker::BuildGameObjects()
     }
 
     //sphere building
-    //testSphere = new Sphere(-10);
+
     //testSphere->Init();
     //
     //glGenBuffers(1, &sphereVertexBuffer);
@@ -257,7 +267,7 @@ void StateTracker::BuildGameObjects()
     //glBindVertexArray(sphereVertexArray);
 
     //// bind vbo for smooth sphere (center and right)
-    //glBindBuffer(GL_ARRAY_BUFFER, sphereVertexBuffer);
+    ////glBindBuffer(GL_ARRAY_BUFFER, sphereVertexBuffer);
 
     //// set attrib arrays using glVertexAttribPointer()
     //glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
