@@ -57,7 +57,7 @@ bool Application::Tick()
     quitApp = false;
     CheckInput();
     Rectangle* boundary = new Rectangle(0, 0, 10 , 10);
-    Quadtree* quadtree = new Quadtree(boundary, 4);
+    Quadtree* quadtree = new Quadtree(boundary, 1);
     UpdateState(quadtree);
     //update models and shaders here
 

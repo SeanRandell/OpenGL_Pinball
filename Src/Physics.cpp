@@ -13,8 +13,8 @@ void Physics::CalculateBallPhysics(StateTracker* stateTracker, float deltaTime, 
 
     for (auto& ball : stateTracker->spheres) {
         std::vector<Object*> quadtreeResult = quadtree->Query(ball);
+        std::cout << quadtreeResult.size() << std::endl;
     }
-
 
     auto DoCirclesOverLap = [](float x1, float y1, float radius1, float x2, float y2, float radius2) {
         return sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2)) <= (radius1 + radius2);

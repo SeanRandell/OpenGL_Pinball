@@ -180,9 +180,9 @@ void StateTracker::BuildGameObjects()
     Block* block8 = new Block();
     block8->position = glm::vec3(3.6, -5.6, 0.0);
     Block* block9 = new Block();
-    block9->position = glm::vec3(-2.0, -2.0, 0.0);
+    block9->position = glm::vec3(2.0, 2.0, 0.0);
     Block* block10 = new Block();
-    block10->position = glm::vec3(0.0, 3.0, 0.0);
+    block10->position = glm::vec3(3.0, 2.0, 0.0);
     Block* block11 = new Block();
     block11->position = glm::vec3(3.0, 3.0, 0.0);
     Block* block12 = new Block();
@@ -196,7 +196,7 @@ void StateTracker::BuildGameObjects()
     //block6->position = glm::vec3(0.0, 3.0, 0.0);
     //block4->scale = glm::vec3(1.0, 0.0, 1.0);
     //blocks.push_back(floorBlock);
-    blocks.push_back(block1);
+    //blocks.push_back(block1);
     blocks.push_back(block2);
     blocks.push_back(block3);
     blocks.push_back(block4);
@@ -204,7 +204,7 @@ void StateTracker::BuildGameObjects()
     blocks.push_back(block6);
     blocks.push_back(block7);
     blocks.push_back(block8);
-    //blocks.push_back(block9);
+    blocks.push_back(block9);
     blocks.push_back(block10);
     //blocks.push_back(block11);
     //blocks.push_back(block12);

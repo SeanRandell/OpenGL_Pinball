@@ -3,7 +3,7 @@
 
 Quadtree::Quadtree(Rectangle* boundary, int capacity)
 {
-    //this->level = 
+    this->level = 0;
     this->boundary = boundary;
     this->capacity = capacity;
     this->divided = false;
@@ -40,9 +40,13 @@ void Quadtree::SubDivide()
     Rectangle* se = new Rectangle(x + width / 4, y + height / 4, width / 2, height / 2);
     Rectangle* sw = new Rectangle(x - width / 4, y + height / 4, width / 2, height / 2);
     northeast = new Quadtree(ne, capacity);
+    northeast->level = level + 1;
     northwest = new Quadtree(nw, capacity);
+    northwest->level = level + 1;
     southeast = new Quadtree(se, capacity);
+    southeast->level = level + 1;
     southwest = new Quadtree(sw, capacity);
+    southwest->level = level + 1;
 
     divided = true;
 }
@@ -77,11 +81,7 @@ std::vector<Object*> Quadtree::Query(Sphere* circle)
     if (level > MAX_LEVELS) {
         return objects;
     }
-    // for every object in current 
 
-    //split the gameboard into 4
-
-    //find out which quadrant the ball is in
     if (!divided)
     {
         return objects;
@@ -91,10 +91,6 @@ std::vector<Object*> Quadtree::Query(Sphere* circle)
     {
         return std::vector<Object*>();
     }
-    // get a list of everything in that quadrant
-    //std::vector<Sphere*> objectList = currentQuadrant->objects;
-    //currentQuadrant->objects = objectList;
-    currentQuadrant->level += 1;
 
     return currentQuadrant->Query(circle);
 }
