@@ -17,7 +17,7 @@ struct Circle {
 class Quadtree {
 public:
     //int MAX_OBJECTS = 10;
-    int MAX_LEVELS = 5;
+    int MAX_LEVELS = 100;
     int capacity;
     bool divided;
     int level;
@@ -39,7 +39,7 @@ public:
     bool Insert(Object* block);
     std::vector<Rectangle> Retrieve();
     std::vector<Object*> Query(Sphere* circle);
-    Quadtree* FindQuadrant(Sphere* circle);
+    std::vector<Quadtree*> FindQuadrant(Sphere* circle);
     std::vector<Object*> GetObjectList(Quadtree* currentQuadtree);
     void DrawQuadTree(RTRShader* shader);    
     void DrawQuadTree();

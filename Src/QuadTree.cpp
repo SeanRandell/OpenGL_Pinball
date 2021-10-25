@@ -57,23 +57,31 @@ bool Quadtree::Insert(Object* object) {
         return false;
     }
     // if the rectangle has less than capacity than 
-    if (objects.size() < capacity) {
+    if (objects.size() < capacity && !divided) {
         objects.push_back(object);
         return true;
     }
     // divide quad tree
-    else {
-        if (!divided) {
-            SubDivide();
-        }
-        // then add to child rectangles
-        bool insertIntoNortheast = northeast->Insert(object);
-        bool insertIntoNorthwest = northwest->Insert(object);
-        bool insertIntoSoutheast = southeast->Insert(object);
-        bool insertIntoSouthwest = southwest->Insert(object);
+    if (!divided) {
+        SubDivide();
 
-        return(insertIntoNortheast || insertIntoNorthwest || insertIntoSoutheast || insertIntoSouthwest);
+        for (int i = 0; i < objects.size(); i++)
+        {
+            // then add to child rectangles
+            northeast->Insert(objects[i]);
+            northwest->Insert(objects[i]);
+            southeast->Insert(objects[i]);
+            southwest->Insert(objects[i]);
+        }
+        objects = std::vector<Object*>();
     }
+
+    // then add to child rectangles
+    bool insertIntoNortheast = northeast->Insert(object);
+    bool insertIntoNorthwest = northwest->Insert(object);
+    bool insertIntoSoutheast = southeast->Insert(object);
+    bool insertIntoSouthwest = southwest->Insert(object);
+    return(insertIntoNortheast || insertIntoNorthwest || insertIntoSoutheast || insertIntoSouthwest);
 }
 
 std::vector<Object*> Quadtree::Query(Sphere* circle)
@@ -86,47 +94,35 @@ std::vector<Object*> Quadtree::Query(Sphere* circle)
     {
         return objects;
     }
-    Quadtree* currentQuadrant = FindQuadrant(circle);
-    if (currentQuadrant == NULL)
+    std::vector <Quadtree*> quadrantList = FindQuadrant(circle);
+    std::vector<Object*> objectList;
+    for (Quadtree* quadrant : quadrantList)
     {
-        return std::vector<Object*>();
-    }
-
-    return currentQuadrant->Query(circle);
-}
-
-Quadtree* Quadtree::FindQuadrant(Sphere* circle)
-{
-    if (circle->IsContainedWithin(northeast->boundary)) {
-        return northeast;
-    }
-    if (circle->IsContainedWithin(northwest->boundary)) {
-        return northwest;
-    }
-    if (circle->IsContainedWithin(southeast->boundary)) {
-        return southeast;
-    }
-    if (circle->IsContainedWithin(southwest->boundary)) {
-        return southwest;
-    }
-}
-
-std::vector<Object*> Quadtree::GetObjectList(Quadtree* currentQuadtree)
-{
-    std::vector<Object*> resultVector;
-
-    //for each of the objects in this quadtree
-    // is it in the bounds of the quadtree passsed in
-    // if it is. Add to result vector
-    for (Object* currentObject : objects)
-    {
-        if (currentObject->IsContainedWithin(currentQuadtree->boundary))
+        std::vector<Object*> innerObjectList = quadrant->Query(circle);
+        for (Object* innerObject : innerObjectList)
         {
-            resultVector.push_back(currentObject);
+            objectList.push_back(innerObject);
         }
     }
+    return objectList;
+}
 
-    return resultVector;
+std::vector<Quadtree*> Quadtree::FindQuadrant(Sphere* circle)
+{
+    std::vector<Quadtree*> resultList;
+    if (circle->IsContainedWithin(northeast->boundary)) {
+        resultList.push_back(northeast);
+    }
+    if (circle->IsContainedWithin(northwest->boundary)) {
+        resultList.push_back(northwest);
+    }
+    if (circle->IsContainedWithin(southeast->boundary)) {
+        resultList.push_back(southeast);
+    }
+    if (circle->IsContainedWithin(southwest->boundary)) {
+        resultList.push_back(southwest);
+    }
+    return resultList;
 }
 
 void Quadtree::DrawQuadTree(RTRShader* shader)

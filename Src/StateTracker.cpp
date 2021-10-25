@@ -191,7 +191,8 @@ void StateTracker::BuildGameObjects()
     block13->position = glm::vec3(3.0, -3.0, 0.0);
     Block* block14= new Block();
     block14->position = glm::vec3(-3.0, -3.0, 0.0);
-
+    Block* block15 = new Block();
+    block15->position = glm::vec3(-2.0, 2.0, 0.0);
     //Block* block6 = new Block();
     //block6->position = glm::vec3(0.0, 3.0, 0.0);
     //block4->scale = glm::vec3(1.0, 0.0, 1.0);
@@ -210,6 +211,7 @@ void StateTracker::BuildGameObjects()
     //blocks.push_back(block12);
     //blocks.push_back(block13);
     //blocks.push_back(block14);
+    blocks.push_back(block15);
 
 
     leftFlipper->scale = glm::vec3(2.0, 1.0, 1.0);
@@ -243,7 +245,7 @@ void StateTracker::BuildGameObjects()
     ball6->position = glm::vec3(0.0, 3.0, 0.0);
     Sphere* peg1 = new Sphere(-8, true);
     ball6->position = glm::vec3(-3.0, 3.0, 0.0);
-    spheres.push_back(peg1);
+    //spheres.push_back(peg1);
     //spheres.push_back(ball2);
     //spheres.push_back(ball3);
     //spheres.push_back(ball4);
@@ -313,7 +315,7 @@ void StateTracker::LaunchBall()
     int newSphereId = spheres.size();
     Sphere* newball = new Sphere(newSphereId);
     newball->Init();
-    newball->velocity = glm::vec2(8.0, 4.0);
+    newball->velocity = glm::vec2(4.0, -2.0);
     //newball->scale = glm::vec3(2.0f, 2.0f, 2.0f);
     spheres.push_back(newball);
     spherePositions.push_back(newball->position);

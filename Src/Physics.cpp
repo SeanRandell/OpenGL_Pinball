@@ -14,15 +14,22 @@ void Physics::CalculateBallPhysics(StateTracker* stateTracker, float deltaTime, 
         }
     }
 
-    std::cout << rogueBlocks.size() << std::endl;
+    //std::cout << rogueBlocks.size() << std::endl;
+    int o = quadtree->objects.size();
+    int ne = quadtree->northeast->objects.size();
+    int nw = quadtree->northwest->objects.size();
+    int se = quadtree->southeast->objects.size();
+    int sw = quadtree->southwest->objects.size();
+
+    std::cout << o << ", " << ne << ", " << nw << ", " << se << ", " << sw << ", " << std::endl;
 
     for (auto& ball : stateTracker->spheres) {
         std::vector<Object*> quadtreeResult = quadtree->Query(ball);
-        std::cout << quadtreeResult.size() << std::endl;
-        //PhyiscsPerSphere(ball, quadtreeResult, deltaTime);
+        //std::cout << quadtreeResult.size() << std::endl;
+        PhyiscsPerSphere(ball, quadtreeResult, deltaTime);
     }
 
-    //return;
+    return;
     // vector for the balls that have collided
     std::vector<std::pair<Sphere*, Sphere*>> vectorCollidingPairs;
 
@@ -194,7 +201,7 @@ void Physics::PhyiscsPerSphere(Sphere* ball, std::vector<Object*> objectList, fl
     }
 
     // vector for the balls that have collided
-    std::vector<std::pair<Sphere*, Sphere*>> vectorCollidingPairs;
+     std::vector<std::pair<Sphere*, Sphere*>> vectorCollidingPairs;
 
     //Update ball positions
 
