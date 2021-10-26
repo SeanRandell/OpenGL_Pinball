@@ -30,6 +30,8 @@ void Console::End()
 void Console::Render(const char *title, int fps, 
     float positionX, float positionY, float positionZ, float pitch, float yaw, StateTracker* stateTracker)
 {
+std::string ballReadyString = IsBallReady(stateTracker);
+
     gltBeginDraw();
 
     sprintf_s(stringToSet, MAX_STRING, title);
@@ -44,11 +46,21 @@ void Console::Render(const char *title, int fps,
         "Cam Yaw: %.2f\n"
         "Cam Pitch: %.2f\n"
         "Quadtree: %s\n" 
-        "Plunger Charge: %.0f\n"  
-        , fps, positionX, positionY, positionZ, yaw, pitch, stateTracker->GetSettingString(stateTracker->isQuadTreeOn).c_str(),100.00f);
+        "Ball Launcher: %s\n"  
+        , fps, positionX, positionY, positionZ, yaw, pitch, stateTracker->GetSettingString(stateTracker->isQuadTreeOn).c_str(), ballReadyString.c_str());
     gltSetText(onScreenDisplay, stringToSet);
     gltColor(0.5f, 0.5f, 0.5f, 1.0f);
     gltDrawText2D(onScreenDisplay, 10, 10, 2.0);
     gltEndDraw();
     glUseProgram(0);
+}
+
+std::string Console::IsBallReady(StateTracker* stateTracker)
+{
+    std::string returnString = "Off";
+    if (stateTracker->launchCountdown >= stateTracker->launchCooldown)
+    {
+        returnString = "On";
+    }
+    return returnString;
 }

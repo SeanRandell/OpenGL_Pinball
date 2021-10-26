@@ -321,7 +321,6 @@ void RenderLoop::UpdateState(StateTracker* stateTracker, float deltaTime, Quadtr
     stateTracker->modelMatrix = glm::mat4(1.0f);
     stateTracker->viewMatrix = stateTracker->camera->GetViewMatrix();
 
-
     if (stateTracker->launchCountdown >= stateTracker->launchCooldown) {
         if (stateTracker->canLaunchBall)
         {
