@@ -33,8 +33,8 @@ public:
 
     std::vector<Block*> blocks;
     std::vector<Sphere*> spheres;
+    std::vector<Cylinder*> pegs;
 
-    Cylinder* cylinder;
     Debug* debugObject;
     Quad* quad;
 
@@ -51,12 +51,14 @@ public:
     bool leftFlipperMoving;
     bool rightFlipperMoving;
 
+
     int particleAmountPerBall;
 
 
     //int lightSourcesCount;
     //int maxPointLightCount;
 
+    bool isQuadTreeOn;
 
     //bool isLightingOn;
     //bool isDepthTestingOn;

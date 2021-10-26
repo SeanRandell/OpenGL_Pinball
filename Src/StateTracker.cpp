@@ -11,23 +11,23 @@ StateTracker::StateTracker(int screenWidth, int screenHeight)
 
     particleAmountPerBall = 500;
 
-    this->camera = new Camera(0, 2.0, 10.0, 0.0, 1.0, 0.0, -90.0f, 0.0f, screenWidth, screenHeight);
+    this->camera = new Camera(0, 2.0, 20.0, 0.0, 1.0, 0.0, -90.0f, 0.0f, screenWidth, screenHeight);
 
     lightModel = new LightingModel();
     particleGenerator = new ParticleGenerator(particleAmountPerBall);
 
     cube = new Cube();
-    cylinder = new Cylinder();
     skyBox = new SkyBox();
     debugObject = new Debug();
     quad = new Quad();
     testSphere = new Sphere(-10);
 
-    leftFlipper = new Block();
-    rightFlipper = new Block();
+    leftFlipper = new Block(true);
+    rightFlipper = new Block(true);
 
     bloomExposure = 1.0f;
     isBloomOn = true;
+    isQuadTreeOn = true;
     canLaunchBall = false;
     moveLeftFlipper = false;
     moveRightFlipper = false;
@@ -35,8 +35,8 @@ StateTracker::StateTracker(int screenWidth, int screenHeight)
     rightFlipperMoving = false;
     isDebugOn = false;
 
-    launchCooldown = 1.0f;
-    launchCountdown = 1.0f;
+    launchCooldown = 0.5f;
+    launchCountdown = 0.5f;
 }
 
 void StateTracker::Init()
@@ -128,11 +128,14 @@ StateTracker::~StateTracker()
         delete spheres[i];
     }
 
+    for (int i = 0; i < pegs.size(); i++)
+    {
+        pegs[i]->End();
+        delete pegs[i];
+    }
+
     testSphere->End();
     delete testSphere;
-
-    cylinder->End();
-    delete cylinder;
 
     skyBox->End();
     delete skyBox;
@@ -153,71 +156,34 @@ void StateTracker::BuildGameObjects()
 
     skyBox->Init();
 
-    //glm::vec3 vector1 = glm::vec3(0.0, -4.0, 0.0);
-    //glm::vec3 vector2 = glm::vec3(0.0, 0.0, 0.0);
-    //glm::vec3 vector3 = glm::vec3(12.5f, 0.5f, 12.5f);
-    Block* floorBlock = new Block(glm::vec3(0.0, -4.0, 0.0), glm::vec3(0.0, 0.0, 0.0), glm::vec3(12.5f, 0.5f, 12.5f));
-    //Block* floorBlock = new Block(vector1, vector2, vector3);
-    Block* block1 = new Block();
-    block1->position = glm::vec3(0.0, 2.0, 0.0);
-    //block1->scale = glm::vec3(2.0, 2.0, 2.0);
-    //block1->scale = glm::vec3(1.0, 1.0, 1.0);
-    Block* block2 = new Block();
-    block2->position = glm::vec3(0.0, 7.1, 0.0);
-    block2->scale = glm::vec3(12.0, 4.0f, 1.0);
-    Block* block3 = new Block();
-    block3->position = glm::vec3(-7.1, 0.0, 0.0);
-    block3->scale = glm::vec3(4.0, 10.0f, 1.0);
-    Block* block4 = new Block();
-    block4->position = glm::vec3(7.1, 0.0, 0.0);
-    block4->scale = glm::vec3(4.0, 10.0f, 1.0);
-    Block* block5 = new Block();
-    block5->position = glm::vec3(-4.6, -5.6, 0.0);
-    Block* block6 = new Block();
-    block6->position = glm::vec3(-3.6, -5.6, 0.0);
-    Block* block7 = new Block();
-    block7->position = glm::vec3(4.6, -5.6, 0.0);
-    Block* block8 = new Block();
-    block8->position = glm::vec3(3.6, -5.6, 0.0);
-    Block* block9 = new Block();
-    block9->position = glm::vec3(2.0, 2.0, 0.0);
-    Block* block10 = new Block();
-    block10->position = glm::vec3(3.0, 2.0, 0.0);
-    Block* block11 = new Block();
-    block11->position = glm::vec3(3.0, 3.0, 0.0);
-    Block* block12 = new Block();
-    block12->position = glm::vec3(-3.0, 3.0, 0.0);
-    Block* block13 = new Block();
-    block13->position = glm::vec3(3.0, -3.0, 0.0);
-    Block* block14= new Block();
-    block14->position = glm::vec3(-3.0, -3.0, 0.0);
-    Block* block15 = new Block();
-    block15->position = glm::vec3(-2.0, 2.0, 0.0);
-    //Block* block6 = new Block();
-    //block6->position = glm::vec3(0.0, 3.0, 0.0);
-    //block4->scale = glm::vec3(1.0, 0.0, 1.0);
-    //blocks.push_back(floorBlock);
-    //blocks.push_back(block1);
-    blocks.push_back(block2);
-    blocks.push_back(block3);
-    blocks.push_back(block4);
-    blocks.push_back(block5);
-    blocks.push_back(block6);
-    blocks.push_back(block7);
-    blocks.push_back(block8);
-    blocks.push_back(block9);
-    blocks.push_back(block10);
-    //blocks.push_back(block11);
-    //blocks.push_back(block12);
-    //blocks.push_back(block13);
-    //blocks.push_back(block14);
-    blocks.push_back(block15);
+    Block* floorBlock = new Block(glm::vec3(0.0, 0.0, -1.0), glm::vec3(0.0, 0.0, 0.0), glm::vec3(23.0f, 23.0f, 0.0f), true);
 
+    Block* TopBlock = new Block();
+    TopBlock->position = glm::vec3(1.0, 11.0, 0.0);
+    TopBlock->scale = glm::vec3(26.0, 6.0f, 1.0);
 
-    leftFlipper->scale = glm::vec3(2.0, 1.0, 1.0);
-    rightFlipper->scale = glm::vec3(2.0, 1.0, 1.0);
-    leftFlipper->position = glm::vec3(-3.0, -4.0, 0.0);
-    rightFlipper->position = glm::vec3(3.0, -4.0, 0.0);
+    Block* leftWallBlock = new Block();
+    leftWallBlock->position = glm::vec3(-9.1, -1.0, 0.0);
+    leftWallBlock->scale = glm::vec3(4.0, 18.0f, 1.0);
+
+    Block* rightLaunchWall = new Block();
+    rightLaunchWall->position = glm::vec3(13.1, 0.0, 0.0);
+    rightLaunchWall->scale = glm::vec3(4.0, 16.0f, 1.0);
+
+    Block* leftLaunchWallBlock = new Block();
+    leftLaunchWallBlock->position = glm::vec3(8.1, -4.1, 0.0);
+    leftLaunchWallBlock->scale = glm::vec3(2.0, 12.0f, 1.0);
+
+    blocks.push_back(floorBlock);
+    blocks.push_back(TopBlock);
+    blocks.push_back(leftWallBlock);
+    blocks.push_back(rightLaunchWall);
+    blocks.push_back(leftLaunchWallBlock);
+
+    leftFlipper->scale = glm::vec3(4.0, 3.0, 1.0);
+    rightFlipper->scale = glm::vec3(4.0, 3.0, 1.0);
+    leftFlipper->position = glm::vec3(-5.0, -8.0, 0.0);
+    rightFlipper->position = glm::vec3(5.0, -8.0, 0.0);
     blocks.push_back(leftFlipper);
     blocks.push_back(rightFlipper);
 
@@ -226,88 +192,55 @@ void StateTracker::BuildGameObjects()
         blocks[i]->Init();
     }
 
-    //Sphere* ball1 = new Sphere(-1);
-    //ball1->position = glm::vec3(0.5f, 5.0f, 0.0f);
-    //ball1->velocity = glm::vec2(0.5, -1.0);
-    //Sphere* ball2 = new Sphere(-2);
-    //ball2->position = glm::vec3(3.0f, 5.0f, 0.0f);
-    //ball2->velocity = glm::vec2(-2, 1.0);
+    Cylinder* TopPeg1 = new Cylinder();
+    Cylinder* TopPeg2 = new Cylinder();
+    Cylinder* TopPeg3 = new Cylinder();
+    Cylinder* TopPeg4 = new Cylinder();
+    Cylinder* MiddlePeg1 = new Cylinder();
+    Cylinder* MiddlePeg2 = new Cylinder();
+    Cylinder* MiddlePeg3 = new Cylinder();
+    Cylinder* BottomPeg1 = new Cylinder();
+    Cylinder* BottomPeg2 = new Cylinder();
+    Cylinder* BottomPeg3 = new Cylinder();
+    Cylinder* BottomPeg4 = new Cylinder();
+    Cylinder* launchPeg = new Cylinder();
 
-    Sphere* ball2 = new Sphere(-3);
-    ball2->position = glm::vec3(0.0, 0.0, 0.0);
-    Sphere* ball3 = new Sphere(-4);
-    ball3->position = glm::vec3(3.0, 0.0, 0.0);
-    Sphere* ball4 = new Sphere(-5);
-    ball4->position = glm::vec3(2.0, 1.0, 0.0);
-    Sphere* ball5 = new Sphere(-6);
-    ball5->position = glm::vec3(1.0, 2.0, 0.0);
-    Sphere* ball6 = new Sphere(-7);
-    ball6->position = glm::vec3(0.0, 3.0, 0.0);
-    Sphere* peg1 = new Sphere(-8, true);
-    ball6->position = glm::vec3(-3.0, 3.0, 0.0);
-    //spheres.push_back(peg1);
-    //spheres.push_back(ball2);
-    //spheres.push_back(ball3);
-    //spheres.push_back(ball4);
-    //spheres.push_back(ball5);
-    //spheres.push_back(ball6);
+    TopPeg1->position = glm::vec3(-4.5, 3.0, 0.0);
+    TopPeg2->position = glm::vec3(-1.5, 3.0, 0.0);
+    TopPeg3->position = glm::vec3(1.5, 3.0, 0.0);
+    TopPeg4->position = glm::vec3(4.5, 3.0, 0.0);
 
-    for (int i = 0; i < spheres.size(); i++)
+    MiddlePeg1->position = glm::vec3(-3.0, 0.0, 0.0);
+    MiddlePeg2->position = glm::vec3(0.0, 0.0, 0.0);
+    MiddlePeg3->position = glm::vec3(3.0, 0.0, 0.0);
+
+    BottomPeg1->position = glm::vec3(-4.5, -3.0, 0.0);
+    BottomPeg2->position = glm::vec3(-1.5, -3.0, 0.0);
+    BottomPeg3->position = glm::vec3(1.5, -3.0, 0.0);
+    BottomPeg4->position = glm::vec3(4.5, -3.0, 0.0);
+
+    launchPeg->position = glm::vec3(11.0, 6.0, -0.1);
+
+    pegs.push_back(TopPeg1);
+    pegs.push_back(TopPeg2);
+    pegs.push_back(TopPeg3);
+    pegs.push_back(TopPeg4);
+    pegs.push_back(MiddlePeg1);
+    pegs.push_back(MiddlePeg2);
+    pegs.push_back(MiddlePeg3);
+    pegs.push_back(BottomPeg1);
+    pegs.push_back(BottomPeg2);
+    pegs.push_back(BottomPeg3);
+    pegs.push_back(BottomPeg4);
+    pegs.push_back(launchPeg);
+
+    for (int i = 0; i < pegs.size(); i++)
     {
-        spheres[i]->Init();
+        pegs[i]->Init();
     }
 
-    //sphere building
-
-    //testSphere->Init();
-    //
-    //glGenBuffers(1, &sphereVertexBuffer);
-    //glBindBuffer(GL_ARRAY_BUFFER, sphereVertexBuffer);
-    //glBufferData(GL_ARRAY_BUFFER, testSphere->GetInterleavedVertexSize() + (sizeof(glm::mat4) * 1), testSphere->GetInterleavedVertices(), GL_DYNAMIC_DRAW);
-    ////glBufferSubData(GL_ARRAY_BUFFER, GetInterleavedVertexSize() + sizeof(normals), sizeof(tex),GL_DYNAMIC_DRAW);
-    //glGenVertexArrays(1, &sphereVertexArray);
-    //glBindVertexArray(sphereVertexArray);
-
-    //// bind vbo for smooth sphere (center and right)
-    ////glBindBuffer(GL_ARRAY_BUFFER, sphereVertexBuffer);
-
-    //// set attrib arrays using glVertexAttribPointer()
-    //glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
-    //glEnableVertexAttribArray(0);
-
-    //// normals
-    //glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-    //glEnableVertexAttribArray(1);
-    ////glVertexAttribPointer(attribVertexTexCoord, 2, GL_FLOAT, false, stride, (void*)(6 * sizeof(float)));
-
-    ////modelmatrix
-    //// set attribute pointers for matrix (4 times vec4)
-
-    //glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(glm::vec4), (void*)0);
-    //glEnableVertexAttribArray(2);
-
-    //glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(glm::vec4), (void*)(sizeof(glm::vec4)));
-    //glEnableVertexAttribArray(3);
-
-    //glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(glm::vec4), (void*)(2 * sizeof(glm::vec4)));
-    //glEnableVertexAttribArray(4);
-
-    //glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(glm::vec4), (void*)(3 * sizeof(glm::vec4)));
-    //glEnableVertexAttribArray(5);
-
-    //glVertexAttribDivisor(2, 1);
-    //glVertexAttribDivisor(3, 1);
-    //glVertexAttribDivisor(4, 1);
-    //glVertexAttribDivisor(5, 1);
-
-    //glGenBuffers(1, &sphereFaceElementBuffer);
-    //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, sphereFaceElementBuffer);
-    //glBufferData(GL_ELEMENT_ARRAY_BUFFER, testSphere->GetIndexSize(), testSphere->GetIndices(), GL_STATIC_DRAW);
-    //glBindVertexArray(0);
-
-    cylinder->Init();
     debugObject->Init();
-    quad->Init(); 
+    quad->Init();
 }
 
 void StateTracker::LaunchBall()
@@ -315,8 +248,9 @@ void StateTracker::LaunchBall()
     int newSphereId = spheres.size();
     Sphere* newball = new Sphere(newSphereId);
     newball->Init();
-    newball->velocity = glm::vec2(4.0, -2.0);
+    newball->velocity = glm::vec2(0.0, 40.0);
     //newball->scale = glm::vec3(2.0f, 2.0f, 2.0f);
+    newball->position = glm::vec3(10.5f, -8.0f, 0.0f);
     spheres.push_back(newball);
     spherePositions.push_back(newball->position);
 }
@@ -386,23 +320,70 @@ void StateTracker::InitBuffers(int screenWidth, int screenHeight)
 
     // configure depth map FBO
 // -----------------------
-    glGenFramebuffers(1, &depthMapFBO);
-    // create depth texture
-    glGenTextures(1, &depthMap);
-    glBindTexture(GL_TEXTURE_2D, depthMap);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-    float borderColor[] = { 1.0, 1.0, 1.0, 1.0 };
-    glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
-    // attach depth texture as FBO's depth buffer
-    glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMap, 0);
-    glDrawBuffer(GL_NONE);
-    glReadBuffer(GL_NONE);
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    //glGenFramebuffers(1, &depthMapFBO);
+    //// create depth texture
+    //glGenTextures(1, &depthMap);
+    //glBindTexture(GL_TEXTURE_2D, depthMap);
+    //glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+    //float borderColor[] = { 1.0, 1.0, 1.0, 1.0 };
+    //glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
+    //// attach depth texture as FBO's depth buffer
+    //glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+    //glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMap, 0);
+    //glDrawBuffer(GL_NONE);
+    //glReadBuffer(GL_NONE);
+    //glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 
+//sphere building
+
+//testSphere->Init();
+//
+//glGenBuffers(1, &sphereVertexBuffer);
+//glBindBuffer(GL_ARRAY_BUFFER, sphereVertexBuffer);
+//glBufferData(GL_ARRAY_BUFFER, testSphere->GetInterleavedVertexSize() + (sizeof(glm::mat4) * 1), testSphere->GetInterleavedVertices(), GL_DYNAMIC_DRAW);
+////glBufferSubData(GL_ARRAY_BUFFER, GetInterleavedVertexSize() + sizeof(normals), sizeof(tex),GL_DYNAMIC_DRAW);
+//glGenVertexArrays(1, &sphereVertexArray);
+//glBindVertexArray(sphereVertexArray);
+
+//// bind vbo for smooth sphere (center and right)
+////glBindBuffer(GL_ARRAY_BUFFER, sphereVertexBuffer);
+
+//// set attrib arrays using glVertexAttribPointer()
+//glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+//glEnableVertexAttribArray(0);
+
+//// normals
+//glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+//glEnableVertexAttribArray(1);
+////glVertexAttribPointer(attribVertexTexCoord, 2, GL_FLOAT, false, stride, (void*)(6 * sizeof(float)));
+
+////modelmatrix
+//// set attribute pointers for matrix (4 times vec4)
+
+//glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(glm::vec4), (void*)0);
+//glEnableVertexAttribArray(2);
+
+//glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(glm::vec4), (void*)(sizeof(glm::vec4)));
+//glEnableVertexAttribArray(3);
+
+//glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(glm::vec4), (void*)(2 * sizeof(glm::vec4)));
+//glEnableVertexAttribArray(4);
+
+//glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(glm::vec4), (void*)(3 * sizeof(glm::vec4)));
+//glEnableVertexAttribArray(5);
+
+//glVertexAttribDivisor(2, 1);
+//glVertexAttribDivisor(3, 1);
+//glVertexAttribDivisor(4, 1);
+//glVertexAttribDivisor(5, 1);
+
+//glGenBuffers(1, &sphereFaceElementBuffer);
+//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, sphereFaceElementBuffer);
+//glBufferData(GL_ELEMENT_ARRAY_BUFFER, testSphere->GetIndexSize(), testSphere->GetIndices(), GL_STATIC_DRAW);
+//glBindVertexArray(0);

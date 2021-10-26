@@ -37,7 +37,7 @@ struct Light {
 //    float OuterCutoff;
 };
 
-#define MAX_NUMBER_OF_LIGHTS 10
+#define MAX_NUMBER_OF_LIGHTS 12
 
 #define DirectionalLight    0
 #define PointLight          1
@@ -60,8 +60,8 @@ void main()
     vec3 reflectionVector = reflect(viewDirectionVector, normalize(fragmentShaderIn.Normal));
     vec3 finalColor = texture(skyBoxUniform, reflectionVector).rgb;
 
-    float brightness = dot(finalColor, vec3(0.3126, 0.8152, 0.0822));
-    if(brightness > 1.0)
+    float brightness = dot(finalColor, vec3(0.4126, 0.9152, 0.0922));
+    if(brightness > 3.0)
     {
         BrightColor = vec4(finalColor, 1.0);
     }

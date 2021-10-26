@@ -18,6 +18,16 @@ const int MIN_CYLINDER_STACK_COUNT = 1;
 class Cylinder : public Object
 {
 public:
+    // memeber vars
+    float baseRadius;
+    float topRadius;
+    float mass;
+    glm::vec2 velocity;
+    glm::vec2 acceleration;
+
+    //ObjectMaterial material = { {1, 1, 1 }, { 1, 1, 1 }, { 1, 1, 1 }, 128.0 };
+    
+
     // ctor/dtor
     Cylinder(float baseRadius = 0.5f, float topRadius = 0.5f, float height = 1.0f,
         int sectorCount = 36, int stackCount = 1, bool smooth = true);
@@ -57,10 +67,8 @@ public:
     unsigned int GetBaseStartIndex() const { return baseIndex; }
     unsigned int GetTopStartIndex() const { return topIndex; }
     unsigned int GetSideStartIndex() const { return 0; }   // side starts from the begining
-
-    // debug
-    void printSelf() const;
-
+    const char* GetName();
+    bool IsContainedWithin(Rectangle* boundary);
 protected:
 
 private:
@@ -77,9 +85,7 @@ private:
         float x2, float y2, float z2,
         float x3, float y3, float z3);
 
-    // memeber vars
-    float baseRadius;
-    float topRadius;
+
     float height;
     int sectorCount;                        // # of slices
     int stackCount;                         // # of stacks

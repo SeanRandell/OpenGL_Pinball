@@ -254,6 +254,7 @@
     <Image Include="Src\left.jpg" />
     <Image Include="Src\particle.png" />
     <Image Include="Src\right.jpg" />
+    <Image Include="Src\SpaceFloor.jpg" />
     <Image Include="Src\top.jpg" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

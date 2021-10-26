@@ -22,6 +22,7 @@ Object::Object() {
     vertexPoints = nullptr;
     faces = nullptr;
     material = { {0.19225, 0.19225, 0.19225 }, { 0.50754, 0.50754, 0.50754 }, { 0.508273, 0.508273, 0.508273 }, 128.0 };
+    //material = { {1, 1, 1 }, { 1, 1, 1 }, { 1, 1, 1 }, 64.0f };
     vertexBuffer = 0;
     vertexArray = 0;
     faceElementBuffer = 0;

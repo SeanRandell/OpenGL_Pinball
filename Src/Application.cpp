@@ -56,8 +56,8 @@ bool Application::Tick()
 {
     quitApp = false;
     CheckInput();
-    Rectangle* boundary = new Rectangle(0, 0, 20 , 20);
-    Quadtree* quadtree = new Quadtree(boundary, 2);
+    Rectangle* boundary = new Rectangle(0, 0, 25 , 25);
+    Quadtree* quadtree = new Quadtree(boundary, 4);
     UpdateState(quadtree);
     //update models and shaders here
 
@@ -85,7 +85,7 @@ void Application::RenderFrame(Quadtree* quadtree)
 
     console->Render("DEBUG", fps,
         stateTracker->camera->position.x, stateTracker->camera->position.y, stateTracker->camera->position.z,
-        stateTracker->camera->yaw, stateTracker->camera->pitch);
+        stateTracker->camera->yaw, stateTracker->camera->pitch, stateTracker);
 
     SDL_GL_SwapWindow(SDLWindow);
 }

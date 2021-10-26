@@ -16,9 +16,12 @@ public:
     unsigned int reflectionMap;
     std::string diffusePath;
     std::string specularPath;
-
+    bool isBumper;
+    bool isScenery;
+    
     Block();
-    Block(glm::vec3 postion, glm::vec3 rotation, glm::vec3 scale);
+    Block(bool isBumper);
+    Block(glm::vec3 postion, glm::vec3 rotation, glm::vec3 scale, bool isBumper);
     //Block(float positionX, float positionY, float positionZ, 
     //    float rotationX, float rotationY, float rotationZ,
 

@@ -7,20 +7,8 @@ Sphere::Sphere(int id)
     smooth = true;
     stackCount = 18;
     this->velocity = glm::vec2(0.0f);
+    this->acceleration = glm::vec2(0.0f);
     this->id = id;
-    this->isPeg = false;
-    InitConstructorValues();
-}
-
-Sphere::Sphere(int id, bool isPeg)
-{
-    radius = 0.5f;
-    sectorCount = 36;
-    smooth = true;
-    stackCount = 18;
-    this->velocity = glm::vec2(0.0f);
-    this->id = id;
-    this->isPeg = isPeg;
     InitConstructorValues();
 }
 
@@ -31,10 +19,9 @@ Sphere::Sphere(float radius, float mass, glm::vec2 velocity, int sectors, int st
     this->smooth = smooth;
 
     this->velocity = velocity;
+    this->acceleration = glm::vec2(0.0f);
     this->id = id;
-    this->isPeg = false;
     InitConstructorValues();
-
 }
 
 void Sphere::InitConstructorValues()

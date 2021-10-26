@@ -14,15 +14,12 @@ const glm::vec2 STARTING_VELOCITY = glm::vec2(0.0f, 1.0f);
 class Sphere : public Object
 {
 public:
-    bool waitingForLaunch;
     glm::vec2 velocity;
     glm::vec2 acceleration;
     float radius;
     float mass;
     int id;
-    bool isPeg;
     Sphere(int id);
-    Sphere(int id, bool isPeg);
     Sphere(float radius, float mass, glm::vec2 velocity, int sectors, int stacks, bool smooth, int id);
     ~Sphere() {}
     virtual void Init();

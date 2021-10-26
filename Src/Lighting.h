@@ -6,7 +6,7 @@
 #pragma once
 #include <glm/glm.hpp>
 
-constexpr auto MAX_LIGHTS = 10;
+constexpr auto MAX_LIGHTS = 12;
 
 enum class LightType : int
 {
@@ -53,12 +53,7 @@ public:
     ~LightingModel() {}
     int GetNumberOfLights();
     Light* GetLight(int index);
-    int AddLight(Light light) {
-        if (numberOfLights == MAX_LIGHTS) return -1;
-        lights[numberOfLights] = light;
-        numberOfLights++;
-        return 0;
-    }
+    int AddLight(Light light);
 
 protected:
     int numberOfLights;

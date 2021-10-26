@@ -16,7 +16,7 @@ ParticleGenerator::~ParticleGenerator()
     delete particleQuad;
 }
 
-void ParticleGenerator::Update(float dt, Sphere& object, unsigned int newParticles, glm::vec2 offset)
+void ParticleGenerator::Update(float deltaTime, Sphere& object, unsigned int newParticles, glm::vec2 offset)
 {
     // add new particles 
     for (unsigned int i = 0; i < newParticles; ++i)
@@ -27,12 +27,12 @@ void ParticleGenerator::Update(float dt, Sphere& object, unsigned int newParticl
     // update all particles
     for (unsigned int i = 0; i < this->amount; ++i)
     {
-        Particle& p = this->particles[i];
-        p.life -= dt; // reduce life
-        if (p.life > 0.0f)
+        Particle& currentParticle = this->particles[i];
+        currentParticle.life -= deltaTime; // reduce life
+        if (currentParticle.life > 0.0f)
         {	// particle is alive, thus update
-            p.position -= p.velocity * dt;
-            p.color.a -= dt * 2.5f;
+            currentParticle.position -= currentParticle.velocity * deltaTime;
+            currentParticle.color.a -= deltaTime * 2.5f;
         }
     }
 }

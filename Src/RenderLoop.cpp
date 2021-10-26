@@ -60,36 +60,56 @@ void RenderLoop::Init(StateTracker* stateTracker, int screenWidth, int screenHei
         .diffuse = glm::vec3(0.5, 0.5, 0.5),
         .specular = glm::vec3(1.0, 1.0, 1.0),
         .direction = glm::vec3(0.0, 0.0, -1.0),
-        .position = glm::vec3(0.0, 8.0, 5.0)
+        .position = glm::vec3(0.0, 8.0, 10.0)
         });
     // Add x-axis red spot lights (palce all at x+3.0 so they are positioned around shaded cube)
     //stateTracker->lightModel->AddLight({
     //    .type = LightType::PointLight,
-    //    .ambient = glm::vec3(1.0, 0.0, 0.0),
-    //    .diffuse = glm::vec3(1.0, 0.0, 0.0),
-    //    .specular = glm::vec3(1.0, 1.0, 1.0),
-    //    .position = glm::vec3(2.0 + 3.0, 0.0, 0.0),
+    //    .ambient = glm::vec3(0.2, 0.0, 0.0),
+    //    .diffuse = glm::vec3(0.5, 0.0, 0.0),
+    //    .specular = glm::vec3(1.0,1.0, 1.0),
+    //    .position = glm::vec3(-4.5, 3.0, 1.0),
     //    .constant = 1.0f,
     //    .linear = 0.35f,
     //    .quadratic = 0.44f
     //    });
     //stateTracker->lightModel->AddLight({
     //    .type = LightType::PointLight,
-    //    .ambient = glm::vec3(1.0, 0.0, 0.0),
-    //    .diffuse = glm::vec3(1.0, 0.0, 0.0),
+    //    .ambient = glm::vec3(0.2, 0.0, 0.0),
+    //    .diffuse = glm::vec3(0.5, 0.0, 0.0),
     //    .specular = glm::vec3(1.0, 1.0, 1.0),
-    //    .position = glm::vec3(-2.0 + 3.0, 0.0, 6.0),
+    //    .position = glm::vec3(0.0, 0.0, 1.0),
     //    .constant = 1.0f,
     //    .linear = 0.35f,
     //    .quadratic = 0.44f
     //    });
-    ////// Add y-axis green spot lights
+    //stateTracker->lightModel->AddLight({
+    //    .type = LightType::PointLight,
+    //    .ambient = glm::vec3(0.2, 0.0, 0.0),
+    //    .diffuse = glm::vec3(0.5, 0.0, 0.0),
+    //    .specular = glm::vec3(1.0, 0.0, 0.0),
+    //    .position = glm::vec3(4.5, -3.0, 1.0),
+    //    .constant = 1.0f,
+    //    .linear = 0.35f,
+    //    .quadratic = 0.44f
+    //    });
+    //// Add y-axis green spot lights
+    stateTracker->lightModel->AddLight({
+        .type = LightType::PointLight,
+        .ambient = glm::vec3(0.0, 0.2, 0.0),
+        .diffuse = glm::vec3(0.0, 0.5, 0.0),
+        .specular = glm::vec3(0.0, 1.0, 0.0),
+        .position = glm::vec3(4.5, 3.0, 1.0),
+        .constant = 1.0f,
+        .linear = 0.14f,
+        .quadratic = 0.07f
+        });
     //stateTracker->lightModel->AddLight({
     //    .type = LightType::PointLight,
     //    .ambient = glm::vec3(0.0, 0.2, 0.0),
     //    .diffuse = glm::vec3(0.0, 0.5, 0.0),
     //    .specular = glm::vec3(1.0, 1.0, 1.0),
-    //    .position = glm::vec3(0.0, 0.0, 0.0),
+    //    .position = glm::vec3(-4.5, -3.0, 1.0),
     //    .constant = 1.0f,
     //    .linear = 0.35f,
     //    .quadratic = 0.44f
@@ -97,20 +117,20 @@ void RenderLoop::Init(StateTracker* stateTracker, int screenWidth, int screenHei
     //stateTracker->lightModel->AddLight({
     //    .type = LightType::PointLight,
     //    .ambient = glm::vec3(0.0, 0.2, 0.0),
-    //    .diffuse = glm::vec3(0.0, 1.0, 0.0),
+    //    .diffuse = glm::vec3(0.0, 0.5, 0.0),
     //    .specular = glm::vec3(1.0, 1.0, 1.0),
-    //    .position = glm::vec3(0.0 + 3.0, -2.0, 0.0),
+    //    .position = glm::vec3(1.5, -3.0, 1.0),
     //    .constant = 1.0f,
     //    .linear = 0.35f,
     //    .quadratic = 0.44f
     //    });
-    ////// Add z-axis blue spot lights
+    //// blue point lights
     //stateTracker->lightModel->AddLight({
     //    .type = LightType::PointLight,
     //    .ambient = glm::vec3(0.0, 0.0, 0.2),
-    //    .diffuse = glm::vec3(0.0, 0.0, 1.0),
+    //    .diffuse = glm::vec3(0.0, 0.0, 0.5),
     //    .specular = glm::vec3(1.0, 1.0, 1.0),
-    //    .position = glm::vec3(0.0 + 3.0, 0.0, 2.0),
+    //    .position = glm::vec3(-1.5, 3.0, 1.0),
     //    .constant = 1.0f,
     //    .linear = 0.35f,
     //    .quadratic = 0.44f
@@ -118,99 +138,49 @@ void RenderLoop::Init(StateTracker* stateTracker, int screenWidth, int screenHei
     //stateTracker->lightModel->AddLight({
     //    .type = LightType::PointLight,
     //    .ambient = glm::vec3(0.0, 0.0, 0.2),
-    //    .diffuse = glm::vec3(0.0, 0.0, 1.0),
+    //    .diffuse = glm::vec3(0.0, 0.0, 0.5),
     //    .specular = glm::vec3(1.0, 1.0, 1.0),
-    //    .position = glm::vec3(0.0 + 3.0, 0.0, -2.0),
+    //    .position = glm::vec3(3.0, 0.0, 1.0),
+    //    .constant = 1.0f,
+    //    .linear = 0.35f,
+    //    .quadratic = 0.44f
+    //    });
+    //stateTracker->lightModel->AddLight({
+    //    .type = LightType::PointLight,
+    //    .ambient = glm::vec3(0.0, 0.0, 0.2),
+    //    .diffuse = glm::vec3(0.0, 0.0, 0.5),
+    //    .specular = glm::vec3(1.0, 1.0, 1.0),
+    //    .position = glm::vec3(-1.5, -3.0, 1.0),
     //    .constant = 1.0f,
     //    .linear = 0.35f,
     //    .quadratic = 0.44f
     //    });
 
-    //// white lights 
-    //stateTracker->lightModel->AddLight({
-    //.type = LightType::PointLight,
-    //.ambient = glm::vec3(0.2, 0.2, 0.2),
-    //.diffuse = glm::vec3(1.0, 1.0, 1.0),
-    //.specular = glm::vec3(1.0, 1.0, 1.0),
-    //.position = glm::vec3(1.0 , .0, 2.0),
-    //.constant = 1.0f,
-    //.linear = 0.35f,
-    //.quadratic = 0.44f
-    //    });
-
-    //stateTracker->lightModel->AddLight({
-    //    .type = LightType::PointLight,
-    //    .ambient = glm::vec3(0.0, 0.0, 0.2),
-    //    .diffuse = glm::vec3(1.0, 1.0, 1.0),
-    //    .specular = glm::vec3(1.0, 1.0, 1.0),
-    //    .position = glm::vec3(8.0 + 3.0, 3.0, 0.0),
-    //    .constant = 1.0f,
-    //    .linear = 0.35f,
-    //    .quadratic = 0.44f
-    //    });
+    // purple point lights 
+  /*  stateTracker->lightModel->AddLight({
+        .type = LightType::PointLight,
+        .ambient = glm::vec3(0.2, 0.0, 0.2),
+        .diffuse = glm::vec3(0.5, 0.0, 0.5),
+        .specular = glm::vec3(1.0, 1.0, 1.0),
+        .position = glm::vec3(1.5, 3.0, 1.0),
+        .constant = 1.0f,
+        .linear = 0.35f,
+        .quadratic = 0.44f
+        });
+    stateTracker->lightModel->AddLight({
+        .type = LightType::PointLight,
+        .ambient = glm::vec3(0.2, 0.0, 0.2),
+        .diffuse = glm::vec3(0.5, 0.0, 0.5),
+        .specular = glm::vec3(1.0, 1.0, 1.0),
+        .position = glm::vec3(-3.0, 0.0, 1.0),
+        .constant = 1.0f,
+        .linear = 0.35f,
+        .quadratic = 0.44f
+        });*/
 }
 
 void RenderLoop::CheckInput(StateTracker* stateTracker, bool* quitApp, float deltaTime) {
-    //const Uint8* keys;
-    //SDL_PumpEvents();
-    //if (keys = SDL_GetKeyboardState(nullptr)) {
-    //    if (keys[SDL_SCANCODE_ESCAPE]) {
-    //        quitApp = true;
-    //    }
-    //    if (keys[SDL_SCANCODE_A]) {
-    //        //fprintf(stderr, "left pressed in first event\n");
-    //        stateTracker->camera->moveLeft = true;
-    //    }
-    //    //stateTracker->camera->moveLeft = false;
-    //    if (keys[SDL_SCANCODE_D]) {
-    //        //fprintf(stderr, "left pressed in first event\n");
-    //        stateTracker->camera->moveRight = true;
-    //    }
-    //    //stateTracker->camera->moveRight = false;
-    //    if (keys[SDL_SCANCODE_W]) {
-    //        //fprintf(stderr, "left pressed in first event\n");
-    //        stateTracker->camera->moveFoward = true;
-    //    }
-    //    //stateTracker->camera->moveFoward = false;
-    //    if (keys[SDL_SCANCODE_S]) {
-    //        //fprintf(stderr, "left pressed in first event\n");
-    //        stateTracker->camera->moveBackward = true;
-    //    }
-    //    //stateTracker->camera->moveBackward = false;
-    //}
-
-           //if (stateTracker->camera->moveFoward) {
-       //    std::cout << "move forward Second" << std::boolalpha << stateTracker->camera->moveFoward << std::endl;
-       //}
-
-
     SDL_Event keyEvent;
-
-    //while (SDL_PollEvent(&keyEvent)) {
-    //    if (keyEvent.type == SDL_MOUSEMOTION) {
-    //        //fprintf(stderr, "mouse x: %d, y: %d\n", keyEvent.button.x, keyEvent.button.y);
-    //        //SDL_GetMouseState(&xpos, &ypos);
-
-    //        static int xPosition = stateTracker->camera->lastX;
-    //        static int yPosition = stateTracker->camera->lastY;
-    //        xPosition += keyEvent.motion.xrel;
-    //        yPosition += keyEvent.motion.yrel;
-
-    //        if (stateTracker->camera->firstMouse && (stateTracker->camera->lastX = xPosition) && (stateTracker->camera->lastY = yPosition)) {
-    //            stateTracker->camera->lastX = xPosition;
-    //            stateTracker->camera->lastY = yPosition;
-    //            stateTracker->camera->firstMouse = false;
-    //        }
-
-    //        float xOffSet = xPosition - stateTracker->camera->lastX;
-    //        float yOffSet = stateTracker->camera->lastY - yPosition;
-
-    //        stateTracker->camera->lastX = xPosition;
-    //        stateTracker->camera->lastY = yPosition;
-
-    //        stateTracker->camera->ProcessMouseMovement(xOffSet, yOffSet, deltaTime, true);
-    //    }
-    //}
     if (SDL_PollEvent(&keyEvent))
     {
         switch (keyEvent.type)
@@ -284,7 +254,7 @@ void RenderLoop::CheckInput(StateTracker* stateTracker, bool* quitApp, float del
             case SDLK_SPACE:
                 //TODO - launch ball after time
                 stateTracker->canLaunchBall = true;
-                std::cout << "space pressed" << std::endl;
+
                 break;
             case SDLK_PERIOD:
                 // '>' – right flipper
@@ -293,6 +263,9 @@ void RenderLoop::CheckInput(StateTracker* stateTracker, bool* quitApp, float del
             case SDLK_COMMA:
                 //'<' –  left flipper
                 stateTracker->moveLeftFlipper = true;
+                break;
+            case SDLK_q:
+                stateTracker->isQuadTreeOn = !stateTracker->isQuadTreeOn;
                 break;
             }
             break;
@@ -362,55 +335,61 @@ void RenderLoop::UpdateState(StateTracker* stateTracker, float deltaTime, Quadtr
     }
     else {
         stateTracker->launchCountdown += deltaTime;
+        stateTracker->canLaunchBall = false;
         //std::cout << "Cooldown" << std::endl;
     }
 
     // update left flipper
-    if (stateTracker->moveLeftFlipper && !stateTracker->leftFlipperMoving) {
-        if (stateTracker->leftFlipper->position.y <= -3.0f) {
-            stateTracker->leftFlipper->position.y += 6 * deltaTime;
+    if (stateTracker->moveLeftFlipper && !stateTracker->leftFlipperMoving)
+    {
+        // if less then launch peak
+        if (stateTracker->leftFlipper->position.y <= -7.0f)
+        {
+            stateTracker->leftFlipper->position.y += 8 * deltaTime;
         }
-        if (stateTracker->leftFlipper->position.y >= -3.0f)
+        // if at peak
+        if (stateTracker->leftFlipper->position.y >= -7.0f)
         {
             stateTracker->leftFlipperMoving = true;
         }
     }
-
-
+    // if still moving
     if (stateTracker->leftFlipperMoving)
     {
-        if (stateTracker->leftFlipper->position.y > -4.0f)
+        // if higher than default
+        if (stateTracker->leftFlipper->position.y > -8.0f)
         {
-            stateTracker->leftFlipper->position.y -= 6 * deltaTime;
+            stateTracker->leftFlipper->position.y -= 10 * deltaTime;
         }
         else {
+            // reset and ready for next trigger
             stateTracker->leftFlipperMoving = false;
             stateTracker->moveLeftFlipper = false;
-            stateTracker->leftFlipper->position.y = -4.0f;
+            stateTracker->leftFlipper->position.y = -8.0f;
         }
     }
 
-    if (stateTracker->moveRightFlipper && !stateTracker->rightFlipperMoving) {
-        if (stateTracker->rightFlipper->position.y <= -3.0f) {
-            stateTracker->rightFlipper->position.y += 6 * deltaTime;
+    if (stateTracker->moveRightFlipper && !stateTracker->rightFlipperMoving)
+    {
+        if (stateTracker->rightFlipper->position.y <= -7.0f)
+        {
+            stateTracker->rightFlipper->position.y += 8 * deltaTime;
         }
-        if (stateTracker->rightFlipper->position.y >= -3.0f)
+        if (stateTracker->rightFlipper->position.y >= -7.0f)
         {
             stateTracker->rightFlipperMoving = true;
         }
     }
-
-
     if (stateTracker->rightFlipperMoving)
     {
-        if (stateTracker->rightFlipper->position.y > -4.0f)
+        if (stateTracker->rightFlipper->position.y > -8.0f)
         {
-            stateTracker->rightFlipper->position.y -= 6 * deltaTime;
+            stateTracker->rightFlipper->position.y -= 10 * deltaTime;
         }
         else {
             stateTracker->rightFlipperMoving = false;
             stateTracker->moveRightFlipper = false;
-            stateTracker->rightFlipper->position.y = -4.0f;
+            stateTracker->rightFlipper->position.y = -8.0f;
         }
     }
 
@@ -528,40 +507,6 @@ void RenderLoop::RenderFrame(StateTracker* stateTracker, Quadtree* quadtree)
     stateTracker->sphereShader->SetCamera("cameraUniform", *stateTracker->camera);
     stateTracker->sphereShader->SetLightingModel(*stateTracker->lightModel);
 
-    //--------------------
-    //stateTracker->sphereMatrices.clear();
-    //for (int i = 0; i < stateTracker->spherePositions.size(); i++)
-    //{
-    //    glm::mat4 newMatrix = glm::mat4(1.0f);
-    //    glm::translate(newMatrix, stateTracker->spherePositions[i]);
-    //    stateTracker->sphereMatrices.push_back(newMatrix);
-    //}
-    //if (stateTracker->spherePositions.size() > 0) {
-    //    glBindBuffer(GL_ARRAY_BUFFER, stateTracker->sphereVertexBuffer);
-    //    glBufferSubData(GL_ARRAY_BUFFER,
-    //        stateTracker->testSphere->GetInterleavedVertexSize(),
-    //        stateTracker->sphereMatrices.size() * sizeof(glm::mat4),
-    //        stateTracker->sphereMatrices.data());
-    //    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    //    glBindVertexArray(stateTracker->sphereVertexArray);
-
-
-
-    //    glActiveTexture(GL_TEXTURE0);
-    //    glBindTexture(GL_TEXTURE_CUBE_MAP, stateTracker->skyBox->cubemapTexture);
-    //    //glDrawArrays(GL_TRIANGLES, 0, numberOfVertices);
-
-
-    //    // draw center sphere
-    //    glDrawElementsInstanced(GL_TRIANGLES,            // primitive type
-    //        stateTracker->testSphere->GetIndexCount(), // # of indices
-    //        GL_UNSIGNED_INT,         // data type
-    //        (void*)0,                // ptr to indices
-    //        stateTracker->spherePositions.size());
-
-    //    glBindVertexArray(0);
-    //}
-    //-------------------------
 
     for (unsigned int i = 0; i < stateTracker->spheres.size(); i++)
     {
@@ -569,12 +514,7 @@ void RenderLoop::RenderFrame(StateTracker* stateTracker, Quadtree* quadtree)
         stateTracker->modelMatrix = glm::translate(stateTracker->modelMatrix, stateTracker->spheres[i]->position);
         stateTracker->modelMatrix = glm::scale(stateTracker->modelMatrix, stateTracker->spheres[i]->scale);
         stateTracker->sphereShader->SetMat4("modelMatrixUniform", stateTracker->modelMatrix);
-        if (stateTracker->spheres[i]->isPeg) {
-            stateTracker->cylinder->Render(stateTracker->sphereShader);
-        }
-        else {
-            stateTracker->spheres[i]->Render(stateTracker->sphereShader, stateTracker->skyBox->cubemapTexture, stateTracker->sphereMatrices);
-        }
+        stateTracker->spheres[i]->Render(stateTracker->sphereShader, stateTracker->skyBox->cubemapTexture, stateTracker->sphereMatrices);
 
 
         // sphere normal
@@ -583,17 +523,25 @@ void RenderLoop::RenderFrame(StateTracker* stateTracker, Quadtree* quadtree)
          stateTracker->spheres[i]->Render(stateTracker->normalShader, stateTracker->skyBox->cubemapTexture);*/
     }
     //cylinder
-    //stateTracker->sphereShader->Use();
-    //stateTracker->modelMatrix = glm::translate(stateTracker->modelMatrix, glm::vec3(9.0, 0.0, 0.0));
-    //stateTracker->sphereShader->SetMat4("modelMatrixUniform", stateTracker->modelMatrix);
-    //stateTracker->cylinder->Render(stateTracker->sphereShader);
+    stateTracker->cubeShader->Use();
 
-    //stateTracker->normalShader->Use();
-    //stateTracker->normalShader->SetMat4("projectionMatrixUniform", stateTracker->projectionMatrix);
-    //stateTracker->normalShader->SetMat4("viewMatrixUniform", stateTracker->viewMatrix);
-    //stateTracker->normalShader->SetMat4("modelMatrixUniform", stateTracker->modelMatrix);
-    //stateTracker->cylinder->Render(stateTracker->normalShader);
+    stateTracker->cubeShader->SetMat4("viewMatrixUniform", stateTracker->viewMatrix);
+    stateTracker->cubeShader->SetMat4("projectionMatrixUniform", stateTracker->projectionMatrix);
+    stateTracker->cubeShader->SetCamera("cameraUniform", *stateTracker->camera);
+    stateTracker->cubeShader->SetLightingModel(*stateTracker->lightModel);
+    for (int i = 0; i < stateTracker->pegs.size(); i++)
+    {
+        stateTracker->modelMatrix = glm::mat4(1.0f);
+        stateTracker->modelMatrix = glm::translate(stateTracker->modelMatrix, stateTracker->pegs[i]->position);
+        stateTracker->cubeShader->SetMat4("modelMatrixUniform", stateTracker->modelMatrix);
+        stateTracker->pegs[i]->Render(stateTracker->cubeShader);
 
+        //stateTracker->normalShader->Use();
+        //stateTracker->normalShader->SetMat4("projectionMatrixUniform", stateTracker->projectionMatrix);
+        //stateTracker->normalShader->SetMat4("viewMatrixUniform", stateTracker->viewMatrix);
+        //stateTracker->normalShader->SetMat4("modelMatrixUniform", stateTracker->modelMatrix);
+        //stateTracker->cylinder->Render(stateTracker->normalShader);
+    }
 
     //Lights
     stateTracker->lightingShader->Use();
@@ -603,17 +551,17 @@ void RenderLoop::RenderFrame(StateTracker* stateTracker, Quadtree* quadtree)
     glBindVertexArray(stateTracker->cube->vertexArray);
 
 
-    //float mat_ambient[] = { 0.2, 0.0, 0.0, 1.0 };
-    //float mat_colour[] = { 0.2, 0.0, 0.0, 1.0 };
-    //float mat_specular[] = { 1.0, 0.0, 0.0, 0.0 };
-    //float mat_shininess[] = { 100.0 };
-    //glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient);
-    //glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_colour);
-    //glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
-    //glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
-    //glm::vec3 testVector = glm::normalize(stateTracker->lightModel->GetLight(0)->direction);
-    //glm::vec3 testVector = stateTracker->lightModel->GetLight(0)->direction;
-    //glm::vec3 posVector = stateTracker->lightModel->GetLight(0)->position;
+    ////float mat_ambient[] = { 0.2, 0.0, 0.0, 1.0 };
+    ////float mat_colour[] = { 0.2, 0.0, 0.0, 1.0 };
+    ////float mat_specular[] = { 1.0, 0.0, 0.0, 0.0 };
+    ////float mat_shininess[] = { 100.0 };
+    ////glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient);
+    ////glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_colour);
+    ////glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
+    ////glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
+    ////glm::vec3 testVector = glm::normalize(stateTracker->lightModel->GetLight(0)->direction);
+    ////glm::vec3 testVector = stateTracker->lightModel->GetLight(0)->direction;
+    ////glm::vec3 posVector = stateTracker->lightModel->GetLight(0)->position;
 
     for (unsigned int i = 0; i < stateTracker->lightModel->GetNumberOfLights(); i++)
     {
@@ -631,15 +579,6 @@ void RenderLoop::RenderFrame(StateTracker* stateTracker, Quadtree* quadtree)
 
     //unbind cube vertex array
     glBindVertexArray(0);
-
-    //QUAD TEST
-    //stateTracker->blurShader->Use();
-    //stateTracker->blurShader->SetMat4("viewMatrixUniform", stateTracker->viewMatrix);
-    //stateTracker->blurShader->SetMat4("projectionMatrixUniform", stateTracker->projectionMatrix);
-    //stateTracker->modelMatrix = glm::mat4(1.0f);
-    //stateTracker->lightingShader->SetMat4("modelMatrixUniform", stateTracker->modelMatrix);
-    //stateTracker->quad->Render(stateTracker->lightingShader);
-
 
     //// set directional light
     stateTracker->directionalLightShader->Use();
@@ -709,28 +648,6 @@ void RenderLoop::RenderFrame(StateTracker* stateTracker, Quadtree* quadtree)
     stateTracker->bloomShader->SetBool("bloom", stateTracker->isBloomOn);
     stateTracker->bloomShader->SetFloat("exposure", stateTracker->bloomExposure);
     stateTracker->quad->Render(stateTracker->bloomShader);
-
-
-
-    //glBindFramebuffer(GL_FRAMEBUFFER, stateTracker->hdrFBO);
-    //stateTracker->lightingShader->Use();
-    ////glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    //glActiveTexture(0);
-    ////glMatrixMode(GL_MODELVIEW);
-    ////glLoadIdentity();
-    ////debug quadtree
-    ////float mat_ambient[] = { 0.2, 0.2, 0.2, 1.0 };
-    ////float mat_colour[] = { 0.5, 0.5, 0.5, 1.0 };
-    ////float mat_specular[] = { 1.0, 1.0, 1.0, 1.0 };
-    ////float mat_shininess[] = { 100.0 };
-    ////glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient);
-    ////glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_colour);
-    ////glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
-    ////glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
-    ////glPushMatrix();
-    ////glColor3d(1, 0, 0);
-    //quadtree->DrawQuadTree(stateTracker->lightingShader);
-    ////glPopMatrix();
 }
 
 void RenderLoop::RenderScene(StateTracker* stateTracker)
@@ -738,3 +655,38 @@ void RenderLoop::RenderScene(StateTracker* stateTracker)
 
 }
 
+// SPHERE INSTANCING TEST
+//--------------------
+//stateTracker->sphereMatrices.clear();
+//for (int i = 0; i < stateTracker->spherePositions.size(); i++)
+//{
+//    glm::mat4 newMatrix = glm::mat4(1.0f);
+//    glm::translate(newMatrix, stateTracker->spherePositions[i]);
+//    stateTracker->sphereMatrices.push_back(newMatrix);
+//}
+//if (stateTracker->spherePositions.size() > 0) {
+//    glBindBuffer(GL_ARRAY_BUFFER, stateTracker->sphereVertexBuffer);
+//    glBufferSubData(GL_ARRAY_BUFFER,
+//        stateTracker->testSphere->GetInterleavedVertexSize(),
+//        stateTracker->sphereMatrices.size() * sizeof(glm::mat4),
+//        stateTracker->sphereMatrices.data());
+//    glBindBuffer(GL_ARRAY_BUFFER, 0);
+//    glBindVertexArray(stateTracker->sphereVertexArray);
+
+
+
+//    glActiveTexture(GL_TEXTURE0);
+//    glBindTexture(GL_TEXTURE_CUBE_MAP, stateTracker->skyBox->cubemapTexture);
+//    //glDrawArrays(GL_TRIANGLES, 0, numberOfVertices);
+
+
+//    // draw center sphere
+//    glDrawElementsInstanced(GL_TRIANGLES,            // primitive type
+//        stateTracker->testSphere->GetIndexCount(), // # of indices
+//        GL_UNSIGNED_INT,         // data type
+//        (void*)0,                // ptr to indices
+//        stateTracker->spherePositions.size());
+
+//    glBindVertexArray(0);
+//}
+//-------------------------

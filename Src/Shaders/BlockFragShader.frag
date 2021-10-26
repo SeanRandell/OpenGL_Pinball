@@ -40,7 +40,7 @@ struct Light {
 //    float OuterCutoff;
 };
 
-#define MAX_NUMBER_OF_LIGHTS 10
+#define MAX_NUMBER_OF_LIGHTS 12
 
 #define DirectionalLight    0
 #define PointLight          1
@@ -146,11 +146,10 @@ void main()
 
         vec3 reflection = vec3(texture(skyBoxUniform, reflectionVector).rgb * texture(objectMaterialUniform.reflectionMap, fragmentShaderIn.TextureCoordinates).rgb);
 
-//        vec3 reflection = vec3(texture(skyboxUniform, reflectionVector).rgb * texture(objectMaterialUniform.reflectionMap, fragmentShaderIn.TextureCoordinates).rgb);
         specularVector*= 2;
         specularVector += (reflection * 3) ;
 
-        finalColor += (ambient + attenuation*(diffuseVector + specularVector));
+        finalColor += (attenuation*(ambient + diffuseVector + specularVector));
 //        finalColor += (ambient + attenuation*(diffuseVector + specularVector));
     }
     // check whether result is higher than some threshold, if so, output as bloom threshold color

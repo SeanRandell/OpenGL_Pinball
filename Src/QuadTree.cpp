@@ -1,6 +1,5 @@
 #include "QuadTree.h"
 
-
 Quadtree::Quadtree(Rectangle* boundary, int capacity)
 {
     this->level = 0;

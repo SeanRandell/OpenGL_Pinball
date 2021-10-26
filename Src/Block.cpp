@@ -5,15 +5,28 @@ Block::Block()
     position = OBJECT_DEFAULT_POSITION;
     rotation = OBJECT_DEFAULT_ROTATION;
     scale = OBJECT_DEFAULT_SCALE;
+    isBumper = false;
+    this->isScenery = false;
     InitConstructorValues();
 }
 
-Block::Block(glm::vec3 newPosition, glm::vec3 rotation, glm::vec3 scale)
+Block::Block(bool isBumper)
+{
+    position = OBJECT_DEFAULT_POSITION;
+    rotation = OBJECT_DEFAULT_ROTATION;
+    scale = OBJECT_DEFAULT_SCALE;
+    this->isBumper = isBumper;
+    this->isScenery = false;
+    InitConstructorValues();
+}
+
+Block::Block(glm::vec3 newPosition, glm::vec3 rotation, glm::vec3 scale, bool isScenery)
 {
     this->position = newPosition;
     this->rotation = rotation;
     this->scale = scale;
-
+    this->isBumper = false;
+    this->isScenery = isScenery;
     InitConstructorValues();
 }
 

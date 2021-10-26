@@ -7,7 +7,7 @@ Cylinder::Cylinder(float baseRadius, float topRadius, float height, int sectors,
     this->topRadius = topRadius;
     this->height = height;
     this->sectorCount = sectors;
-    if (sectors < MIN_CYLINDER_SECTOR_COUNT) 
+    if (sectors < MIN_CYLINDER_SECTOR_COUNT)
     {
         this->sectorCount = MIN_CYLINDER_SECTOR_COUNT;
     }
@@ -17,6 +17,10 @@ Cylinder::Cylinder(float baseRadius, float topRadius, float height, int sectors,
         this->stackCount = MIN_CYLINDER_STACK_COUNT;
     }
     this->smooth = smooth;
+
+    this->mass = 1.0f;
+    this->velocity = glm::vec2(0.0, 0.0);
+    this->acceleration = glm::vec2(0.0, 0.0);
 
     // generate unit circle vertices first
     BuildUnitCircleVertices();
@@ -54,6 +58,7 @@ void Cylinder::Init()
 //void Cylinder::Render(RTRShader* shader, unsigned int cubeMapTexture)
 void Cylinder::Render(RTRShader* shader)
 {
+    shader->SetMaterial("objectMaterialUniform", material);
     glBindVertexArray(vertexArray);
     //glActiveTexture(GL_TEXTURE0);
     //glBindTexture(GL_TEXTURE_CUBE_MAP, cubeMapTexture);
@@ -73,23 +78,6 @@ void Cylinder::End()
 {
     Object::End();
 }
-
-void Cylinder::printSelf() const
-{
-    std::cout << "===== Cylinder =====\n"
-        << "   Base Radius: " << baseRadius << "\n"
-        << "    Top Radius: " << topRadius << "\n"
-        << "        Height: " << height << "\n"
-        << "  Sector Count: " << sectorCount << "\n"
-        << "   Stack Count: " << stackCount << "\n"
-        << "Smooth Shading: " << (smooth ? "true" : "false") << "\n"
-        << "Triangle Count: " << GetTriangleCount() << "\n"
-        << "   Index Count: " << GetIndexCount() << "\n"
-        << "  Vertex Count: " << GetVertexCount() << "\n"
-        << "  Normal Count: " << GetNormalCount() << "\n"
-        << "TexCoord Count: " << GetTexCoordCount() << std::endl;
-}
-
 
 ///////////////////////////////////////////////////////////////////////////////
 // draw lines only
@@ -401,4 +389,18 @@ std::vector<float> Cylinder::ComputeFaceNormal(float x1, float y1, float z1,  //
     }
 
     return normal;
+}
+
+const char* Cylinder::GetName()
+{
+    return "Peg";
+}
+
+bool Cylinder::IsContainedWithin(Rectangle* boundary) {
+    return (
+        this->position.x + this->topRadius >= boundary->x - boundary->width &&
+        this->position.x + this->topRadius <= boundary->x + boundary->width &&
+        this->position.y + this->topRadius >= boundary->y - boundary->width &&
+        this->position.y + this->topRadius <= boundary->y + boundary->width
+        );
 }

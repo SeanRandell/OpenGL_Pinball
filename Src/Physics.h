@@ -16,7 +16,9 @@ class Physics {
 public:
 	Collision CheckCollision(Sphere& one, Block& two);
     void CalculateBallPhysics(StateTracker* stateTracker, float deltaTime, Quadtree* quadtree);
-	void PhyiscsPerSphere(Sphere* ball, std::vector<Object*> objectList, float deltaTime);
+	void BuildQuadtree(StateTracker* stateTracker, float deltaTime, Quadtree* quadtree);
+	//void PhyiscsPerSphere(Sphere* ball, std::vector<Object*> objectList, float deltaTime);
+	void PhyiscsPerSphere(Sphere* ball, std::vector<Sphere*> sphereList, std::vector<Block*> blockList, std::vector<Cylinder*> pegList, float deltaTime);
 	bool DoCirclesOverLap(float x1, float y1, float radius1, float x2, float y2, float radius2);
 	Direction VectorDirection(glm::vec2 target);
 };

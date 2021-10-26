@@ -40,6 +40,7 @@ public:
 private:
 
     // state
+    //std::vector<std::pair<Sphere*,std::vector<Particle>>> particles;
     std::vector<Particle> particles;
     unsigned int amount;
 

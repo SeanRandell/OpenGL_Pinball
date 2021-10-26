@@ -309,5 +309,8 @@
     <Image Include="Src\particle.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="Src\SpaceFloor.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>
