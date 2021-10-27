@@ -6,7 +6,7 @@
 #pragma once
 #include "Lighting.h"
 #include "RTRShader.h"
-#include <stb/stb_image.h>
+#include "TextureObject.h"
 #include "Rectangle.h"
 
 const glm::vec3 OBJECT_DEFAULT_POSITION = glm::vec3(0.0f, 0.0f, 0.0f);

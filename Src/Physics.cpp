@@ -343,3 +343,62 @@ Direction Physics::VectorDirection(glm::vec2 target)
     }
     return (Direction)best_match;
 }
+
+void Physics::FipperPhysics(StateTracker* stateTracker, float deltaTime)
+{
+    // update left flipper
+    if (stateTracker->moveLeftFlipper && !stateTracker->leftFlipperMoving)
+    {
+        // if less then launch peak
+        if (stateTracker->leftFlipper->position.y <= -7.0f)
+        {
+            stateTracker->leftFlipper->position.y += 8 * deltaTime;
+            stateTracker->leftFlipper->isActiveFlipper = true;
+        }
+        // if at peak
+        if (stateTracker->leftFlipper->position.y >= -7.0f)
+        {
+            stateTracker->leftFlipperMoving = true;
+        }
+    }
+    // if still moving
+    if (stateTracker->leftFlipperMoving)
+    {
+        // if higher than default
+        if (stateTracker->leftFlipper->position.y > -8.0f)
+        {
+            stateTracker->leftFlipper->position.y -= 10 * deltaTime;
+        }
+        else {
+            // reset and ready for next trigger
+            stateTracker->leftFlipperMoving = false;
+            stateTracker->moveLeftFlipper = false;
+            stateTracker->leftFlipper->position.y = -8.0f;
+        }
+    }
+
+    if (stateTracker->moveRightFlipper && !stateTracker->rightFlipperMoving)
+    {
+        if (stateTracker->rightFlipper->position.y <= -7.0f)
+        {
+            stateTracker->rightFlipper->position.y += 8 * deltaTime;
+            stateTracker->rightFlipper->isActiveFlipper = true;
+        }
+        if (stateTracker->rightFlipper->position.y >= -7.0f)
+        {
+            stateTracker->rightFlipperMoving = true;
+        }
+    }
+    if (stateTracker->rightFlipperMoving)
+    {
+        if (stateTracker->rightFlipper->position.y > -8.0f)
+        {
+            stateTracker->rightFlipper->position.y -= 10 * deltaTime;
+        }
+        else {
+            stateTracker->rightFlipperMoving = false;
+            stateTracker->moveRightFlipper = false;
+            stateTracker->rightFlipper->position.y = -8.0f;
+        }
+    }
+}

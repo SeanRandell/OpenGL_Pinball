@@ -18,6 +18,7 @@ public:
     std::string specularPath;
     bool isBumper;
     bool isScenery;
+    bool isActiveFlipper;
     
     Block();
     Block(bool isBumper);

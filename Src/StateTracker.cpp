@@ -11,7 +11,7 @@ StateTracker::StateTracker(int screenWidth, int screenHeight)
 
     particleAmountPerBall = 500;
 
-    this->camera = new Camera(0, 2.0, 20.0, 0.0, 1.0, 0.0, -90.0f, 0.0f, screenWidth, screenHeight);
+    this->camera = new Camera(0.0, 2.0, 30.0, 0.0, 1.0, 0.0, -90.0f, 0.0f, screenWidth, screenHeight);
 
     lightModel = new LightingModel();
     particleGenerator = new ParticleGenerator(particleAmountPerBall);
@@ -34,6 +34,8 @@ StateTracker::StateTracker(int screenWidth, int screenHeight)
     leftFlipperMoving = false;
     rightFlipperMoving = false;
     isDebugOn = false;
+    isDebugHUDOn = false;
+    localIsDebugHUDOnToggle = false;
 
     launchCooldown = 0.5f;
     launchCountdown = 0.5f;

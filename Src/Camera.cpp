@@ -1,5 +1,6 @@
 #include "Camera.h"
 
+
 Camera::Camera(
     float posX, float posY, float posZ, float upX, float upY, float upZ, float yaw, float pitch, int screenWidth, int screenHeight)
 {
@@ -132,5 +133,16 @@ void Camera::ProcessCameraTurning(float deltaTime) {
         yaw = 0;
     }
 
+    UpdateCameraVectors();
+}
+
+void Camera::ResetCamera()
+{
+    position = DEFAULT_POSITION;
+    yaw = DEFAULT_YAW;
+    pitch = DEFAULT_PITCH;
+    front = DEFAULT_FRONT;
+    right = DEFAULT_RIGHT;
+    up = worldUp;
     UpdateCameraVectors();
 }

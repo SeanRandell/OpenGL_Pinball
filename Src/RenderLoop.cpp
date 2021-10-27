@@ -180,6 +180,177 @@ void RenderLoop::Init(StateTracker* stateTracker, int screenWidth, int screenHei
 }
 
 void RenderLoop::CheckInput(StateTracker* stateTracker, bool* quitApp, float deltaTime) {
+    //const Uint8* keystate = SDL_GetKeyboardState(NULL);
+
+    ////continuous-response keys
+    //if (keystate[SDL_SCANCODE_LEFT])
+    //{
+    //    stateTracker->camera->turnLeft = true;
+    //}
+    //else
+    //{
+    //    stateTracker->camera->turnLeft = false;
+    //}
+    //if (keystate[SDL_SCANCODE_RIGHT])
+    //{
+    //    stateTracker->camera->turnRight = true;
+    //}
+    //else
+    //{
+    //    stateTracker->camera->turnRight = false;
+    //}
+    //if (keystate[SDL_SCANCODE_UP])
+    //{
+    //    stateTracker->camera->tiltUp = true;
+    //}
+    //else
+    //{
+    //    stateTracker->camera->tiltUp = false;
+    //}
+    //if (keystate[SDL_SCANCODE_DOWN])
+    //{
+    //    stateTracker->camera->tiltDown = true;
+    //}
+    //else
+    //{
+    //    stateTracker->camera->tiltDown = false;
+    //}
+
+    //float xOffSet = 0;
+    //float yOffSet = 0;
+    //SDL_Event keyEvent;
+    ////single-hit keys, mouse, and other general SDL events (eg. windowing)
+    //while (SDL_PollEvent(&keyEvent))
+    //{
+    //    switch (keyEvent.type)
+    //    {
+    //    case SDL_MOUSEMOTION:
+    //        //fprintf(stderr, "mouse x: %d, y: %d\n", keyEvent.button.x, keyEvent.button.y);
+    //        //SDL_GetMouseState(&xpos, &ypos);
+
+    //        static int xPosition = stateTracker->camera->lastX;
+    //        static int yPosition = stateTracker->camera->lastY;
+    //        xPosition += keyEvent.motion.xrel;
+    //        yPosition += keyEvent.motion.yrel;
+
+    //        if (stateTracker->camera->firstMouse && (stateTracker->camera->lastX = xPosition) && (stateTracker->camera->lastY = yPosition)) {
+    //            stateTracker->camera->lastX = xPosition;
+    //            stateTracker->camera->lastY = yPosition;
+    //            stateTracker->camera->firstMouse = false;
+    //        }
+
+    //        xOffSet = xPosition - stateTracker->camera->lastX;
+    //        yOffSet = stateTracker->camera->lastY - yPosition;
+
+    //        stateTracker->camera->lastX = xPosition;
+    //        stateTracker->camera->lastY = yPosition;
+
+    //        stateTracker->camera->ProcessMouseMovement(xOffSet, yOffSet, deltaTime, true);
+    //        break;
+    //    case SDL_QUIT:
+    //        *quitApp = true;
+    //        break;
+    //    case SDLK_SPACE:
+    //        //TODO - launch ball after time
+    //        stateTracker->canLaunchBall = true;
+
+    //        break;
+    //    case SDL_KEYDOWN:
+    //        switch (keyEvent.key.keysym.sym)
+    //        {
+    //        case SDLK_ESCAPE:
+    //            *quitApp = true;
+    //            break;
+    //        case SDLK_w:
+    //            stateTracker->camera->moveFoward = true;
+    //            std::cout << "move forward First" << std::boolalpha << stateTracker->camera->moveFoward << std::endl;
+    //            break;
+    //        case SDLK_s:
+    //            stateTracker->camera->moveBackward = true;
+    //            break;
+    //        case SDLK_a:
+    //            stateTracker->camera->moveLeft = true;
+    //            break;
+    //        case SDLK_d:
+    //            stateTracker->camera->moveRight = true;
+    //            break;
+    //            /*                   case SDLK_LEFT:
+    //                                   stateTracker->camera->turnLeft = true;
+    //                                   break;
+    //                               case SDLK_RIGHT:
+    //                                   stateTracker->camera->turnRight = true;
+    //                                   break;
+    //                               case SDLK_UP:
+    //                                   stateTracker->camera->tiltUp = true;
+    //                                   break;
+    //                               case SDLK_DOWN:
+    //                                   stateTracker->camera->tiltDown = true;
+    //                                   break;*/
+    //        case SDLK_b:
+    //            stateTracker->isDebugOn = !stateTracker->isDebugOn;
+    //            //TODO - reset camera turn debug stuff off
+    //            break;
+    //        case SDLK_m:
+    //            stateTracker->camera->mouseControls = !stateTracker->camera->mouseControls;
+    //            break;
+    //        //case SDLK_SPACE:
+    //        //    //TODO - launch ball after time
+    //        //    stateTracker->canLaunchBall = true;
+
+    //        //    break;
+    //        case SDLK_PERIOD:
+    //            // '>' – right flipper
+    //            stateTracker->moveRightFlipper = true;
+    //            break;
+    //        case SDLK_COMMA:
+    //            //'<' –  left flipper
+    //            stateTracker->moveLeftFlipper = true;
+    //            break;
+    //        case SDLK_q:
+    //            stateTracker->isQuadTreeOn = !stateTracker->isQuadTreeOn;
+    //            break;
+    //        }
+    //        break;
+    //    case SDL_KEYUP:
+    //        switch (keyEvent.key.keysym.sym)
+    //        {
+    //        case SDLK_w:
+    //            stateTracker->camera->moveFoward = false;
+    //            break;
+    //        case SDLK_s:
+    //            stateTracker->camera->moveBackward = false;
+    //            break;
+    //        case SDLK_a:
+    //            stateTracker->camera->moveLeft = false;
+    //            break;
+    //        case SDLK_d:
+    //            stateTracker->camera->moveRight = false;
+    //            break;
+    //            /*               case SDLK_LEFT:
+    //                               stateTracker->camera->turnLeft = false;
+    //                               break;
+    //                           case SDLK_RIGHT:
+    //                               stateTracker->camera->turnRight = false;
+    //                               break;
+    //                           case SDLK_UP:
+    //                               stateTracker->camera->tiltUp = false;
+    //                               break;
+    //                           case SDLK_DOWN:
+    //                               stateTracker->camera->tiltDown = false;
+    //                               break;*/
+    //                               //case SDLK_PERIOD:
+    //                               //    // '>' – right flipper
+    //                               //    stateTracker->moveRightFlipper = true;
+    //                               //    break;
+    //                               //case SDLK_COMMA:
+    //                               //    //'<' –  left flipper
+    //                               //    stateTracker->moveLeftFlipper = true;
+    //                               //    break;
+    //        }
+    //        break;
+    //    }
+
+    //}
     SDL_Event keyEvent;
     if (SDL_PollEvent(&keyEvent))
     {
@@ -247,6 +418,15 @@ void RenderLoop::CheckInput(StateTracker* stateTracker, bool* quitApp, float del
             case SDLK_b:
                 stateTracker->isDebugOn = !stateTracker->isDebugOn;
                 //TODO - reset camera turn debug stuff off
+                if (stateTracker->isDebugOn)
+                {
+                    stateTracker->localIsDebugHUDOnToggle = true;
+                }
+                else
+                {
+                    stateTracker->camera->ResetCamera();
+                    stateTracker->localIsDebugHUDOnToggle = true;
+                }
                 break;
             case SDLK_m:
                 stateTracker->camera->mouseControls = !stateTracker->camera->mouseControls;
@@ -266,6 +446,10 @@ void RenderLoop::CheckInput(StateTracker* stateTracker, bool* quitApp, float del
                 break;
             case SDLK_q:
                 stateTracker->isQuadTreeOn = !stateTracker->isQuadTreeOn;
+                break;
+            case SDLK_h:
+                stateTracker->isDebugHUDOn = !stateTracker->isDebugHUDOn;
+                stateTracker->localIsDebugHUDOnToggle = !stateTracker->localIsDebugHUDOnToggle;
                 break;
             }
             break;
@@ -312,14 +496,19 @@ void RenderLoop::CheckInput(StateTracker* stateTracker, bool* quitApp, float del
 
 void RenderLoop::UpdateState(StateTracker* stateTracker, float deltaTime, Quadtree* quadtree)
 {
-    stateTracker->camera->ProcessCameraMoving(deltaTime);
-    stateTracker->camera->ProcessCameraTurning(deltaTime);
+    if (stateTracker->isDebugOn)
+    {
+        stateTracker->camera->ProcessCameraMoving(deltaTime);
+        stateTracker->camera->ProcessCameraTurning(deltaTime);
 
+    }
+    stateTracker->viewMatrix = stateTracker->camera->GetViewMatrix();
     // Update directional camera to align with camera forward direction
     //stateTracker->lightModel->GetLight(0)->direction = stateTracker->camera->front;
 
     stateTracker->modelMatrix = glm::mat4(1.0f);
-    stateTracker->viewMatrix = stateTracker->camera->GetViewMatrix();
+
+
 
     if (stateTracker->launchCountdown >= stateTracker->launchCooldown) {
         if (stateTracker->canLaunchBall)
@@ -338,59 +527,7 @@ void RenderLoop::UpdateState(StateTracker* stateTracker, float deltaTime, Quadtr
         //std::cout << "Cooldown" << std::endl;
     }
 
-    // update left flipper
-    if (stateTracker->moveLeftFlipper && !stateTracker->leftFlipperMoving)
-    {
-        // if less then launch peak
-        if (stateTracker->leftFlipper->position.y <= -7.0f)
-        {
-            stateTracker->leftFlipper->position.y += 8 * deltaTime;
-        }
-        // if at peak
-        if (stateTracker->leftFlipper->position.y >= -7.0f)
-        {
-            stateTracker->leftFlipperMoving = true;
-        }
-    }
-    // if still moving
-    if (stateTracker->leftFlipperMoving)
-    {
-        // if higher than default
-        if (stateTracker->leftFlipper->position.y > -8.0f)
-        {
-            stateTracker->leftFlipper->position.y -= 10 * deltaTime;
-        }
-        else {
-            // reset and ready for next trigger
-            stateTracker->leftFlipperMoving = false;
-            stateTracker->moveLeftFlipper = false;
-            stateTracker->leftFlipper->position.y = -8.0f;
-        }
-    }
-
-    if (stateTracker->moveRightFlipper && !stateTracker->rightFlipperMoving)
-    {
-        if (stateTracker->rightFlipper->position.y <= -7.0f)
-        {
-            stateTracker->rightFlipper->position.y += 8 * deltaTime;
-        }
-        if (stateTracker->rightFlipper->position.y >= -7.0f)
-        {
-            stateTracker->rightFlipperMoving = true;
-        }
-    }
-    if (stateTracker->rightFlipperMoving)
-    {
-        if (stateTracker->rightFlipper->position.y > -8.0f)
-        {
-            stateTracker->rightFlipper->position.y -= 10 * deltaTime;
-        }
-        else {
-            stateTracker->rightFlipperMoving = false;
-            stateTracker->moveRightFlipper = false;
-            stateTracker->rightFlipper->position.y = -8.0f;
-        }
-    }
+    physicsMethods->FipperPhysics(stateTracker, deltaTime);
 
     //PHYSICS
     physicsMethods->CalculateBallPhysics(stateTracker, deltaTime, quadtree);
@@ -454,7 +591,8 @@ void RenderLoop::RenderFrame(StateTracker* stateTracker, Quadtree* quadtree)
     // -----------------------------------------------
     glBindFramebuffer(GL_FRAMEBUFFER, stateTracker->hdrFBO);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+    glEnable(GL_LINE_WIDTH);
+    glLineWidth(3.0f);
     //block
     stateTracker->blockShader->Use();
     //stateTracker->blockShader->SetVec3("objectMaterialUniform.ambient", stateTracker->block->material.ambient);
@@ -466,6 +604,7 @@ void RenderLoop::RenderFrame(StateTracker* stateTracker, Quadtree* quadtree)
 
     for (unsigned int i = 0; i < stateTracker->blocks.size(); i++)
     {
+        stateTracker->blockShader->SetBool("debugUniform", false);
         stateTracker->modelMatrix = glm::mat4(1.0f);
         glm::vec3 testVector = glm::vec3(stateTracker->blocks[i]->position.x, stateTracker->blocks[i]->position.y, stateTracker->blocks[i]->position.z);
         stateTracker->modelMatrix = glm::translate(stateTracker->modelMatrix, testVector);
@@ -473,8 +612,17 @@ void RenderLoop::RenderFrame(StateTracker* stateTracker, Quadtree* quadtree)
         stateTracker->blockShader->SetMat4("modelMatrixUniform", stateTracker->modelMatrix);
         stateTracker->blocks[i]->Render(stateTracker->blockShader, stateTracker->skyBox, stateTracker->modelMatrix);
 
-        //stateTracker->blockShader->SetVec3(("offsets[" + std::to_string(i) + "]")), stateTracker->[i]);
-        //stateTracker->blocks[i]->Render();
+
+        if (stateTracker->isDebugOn)
+        {
+            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+            glPolygonOffset(0, -1);
+            glEnable(GL_POLYGON_OFFSET_FILL);
+            stateTracker->blockShader->SetBool("debugUniform", true);
+            stateTracker->blocks[i]->Render(stateTracker->blockShader, stateTracker->skyBox, stateTracker->modelMatrix);
+            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+            glPolygonOffset(1, 0);
+        }
     }
 
     //block normal
@@ -591,18 +739,14 @@ void RenderLoop::RenderFrame(StateTracker* stateTracker, Quadtree* quadtree)
     stateTracker->directionalLightShader->SetVec3("lineColor", glm::vec3(1, 0, 0));
     stateTracker->debugObject->Render(stateTracker->directionalLightShader);
 
-    //glUseProgram(0);
-    glActiveTexture(0);
-    //glMatrixMode(GL_MODELVIEW);
-    //WHATEVER THE LAST SHADER IS
-    stateTracker->lightingShader->Use();
-    stateTracker->lightingShader->SetBool("fixedColor", true);
-    //glLoadIdentity();
-    //glPushMatrix();
-    quadtree->DrawQuadTree(stateTracker->directionalLightShader);
-    //glPopMatrix();
-    //quadtree->DrawQuadTree();
-
+    if (stateTracker->isDebugOn)
+    {
+        glActiveTexture(0);
+        //WHATEVER THE LAST SHADER IS
+        stateTracker->lightingShader->Use();
+        stateTracker->lightingShader->SetBool("fixedColor", true);
+        quadtree->DrawQuadTree(stateTracker->directionalLightShader);
+    }
 
     // draw skybox as last
     glDepthFunc(GL_LESS); // set depth function back to default

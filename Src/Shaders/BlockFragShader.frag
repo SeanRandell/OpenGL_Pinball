@@ -63,6 +63,8 @@ uniform sampler2D shadowMap;
 
 uniform Light directionalLight;
 
+uniform bool debugUniform;
+
 float ShadowCalculation(vec4 fragPosLightSpace)
 {
     // perform perspective divide
@@ -162,6 +164,10 @@ void main()
     else
     {
         BrightColor = vec4(0.0, 0.0, 0.0, 1.0);
+    }
+    if(debugUniform)
+    {
+        finalColor = vec3(1.0,1.0,0.0);
     }
 
     FragmentColor = vec4(finalColor, 1.0);

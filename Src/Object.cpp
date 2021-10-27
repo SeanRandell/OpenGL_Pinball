@@ -3,8 +3,6 @@
 //-----------------------------------------------------------------------------
 // RMIT University, COSC1226: Real-Time Rendering and 3D Game Programming
 //-----------------------------------------------------------------------------
-#include <iostream>
-#define STB_IMAGE_IMPLEMENTATION
 #include "Object.h"
 
 // README / TODO - This is just a simple start.

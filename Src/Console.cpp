@@ -38,7 +38,7 @@ std::string ballReadyString = IsBallReady(stateTracker);
     gltSetText(onScreenDisplay, stringToSet);
     gltColor(1.0f, 1.0f, 1.0f, 1.0f);
     gltDrawText2D(onScreenDisplay, 10, 10, 2.0);
-
+    if ((stateTracker->isDebugHUDOn || stateTracker->isDebugOn) && stateTracker->localIsDebugHUDOnToggle) {
     sprintf_s(stringToSet, MAX_STRING,
         "\n"
         "FPS: %d\n"
@@ -48,6 +48,15 @@ std::string ballReadyString = IsBallReady(stateTracker);
         "Quadtree: %s\n" 
         "Ball Launcher: %s\n"  
         , fps, positionX, positionY, positionZ, yaw, pitch, stateTracker->GetSettingString(stateTracker->isQuadTreeOn).c_str(), ballReadyString.c_str());
+    }
+    else
+    {
+        sprintf_s(stringToSet, MAX_STRING,
+            "Press H for debug HUD\n"
+            "Ball Launcher: %s\n"
+            , ballReadyString.c_str());
+    }
+
     gltSetText(onScreenDisplay, stringToSet);
     gltColor(0.5f, 0.5f, 0.5f, 1.0f);
     gltDrawText2D(onScreenDisplay, 10, 10, 2.0);

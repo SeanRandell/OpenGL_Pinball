@@ -59,6 +59,8 @@ public:
     //int maxPointLightCount;
 
     bool isQuadTreeOn;
+    bool isDebugHUDOn;
+    bool localIsDebugHUDOnToggle;
 
     //bool isLightingOn;
     //bool isDepthTestingOn;

@@ -5,8 +5,9 @@ Block::Block()
     position = OBJECT_DEFAULT_POSITION;
     rotation = OBJECT_DEFAULT_ROTATION;
     scale = OBJECT_DEFAULT_SCALE;
-    isBumper = false;
+    this->isBumper = false;
     this->isScenery = false;
+    this->isActiveFlipper = false;
     InitConstructorValues();
 }
 
@@ -17,6 +18,7 @@ Block::Block(bool isBumper)
     scale = OBJECT_DEFAULT_SCALE;
     this->isBumper = isBumper;
     this->isScenery = false;
+    this->isActiveFlipper = false;
     InitConstructorValues();
 }
 
@@ -26,6 +28,7 @@ Block::Block(glm::vec3 newPosition, glm::vec3 rotation, glm::vec3 scale, bool is
     this->rotation = rotation;
     this->scale = scale;
     this->isBumper = false;
+    this->isActiveFlipper = false;
     this->isScenery = isScenery;
     InitConstructorValues();
 }

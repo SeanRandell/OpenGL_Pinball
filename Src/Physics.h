@@ -21,4 +21,5 @@ public:
 	void PhyiscsPerSphere(Sphere* ball, std::vector<Sphere*> sphereList, std::vector<Block*> blockList, std::vector<Cylinder*> pegList, float deltaTime);
 	bool DoCirclesOverLap(float x1, float y1, float radius1, float x2, float y2, float radius2);
 	Direction VectorDirection(glm::vec2 target);
+	void FipperPhysics(StateTracker* stateTracker, float deltaTime);
 };

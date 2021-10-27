@@ -7,12 +7,12 @@
 #include <glad/glad.h>
 
 // Default camera values
-const glm::vec3 DEFAULT_POSITION = glm::vec3(0.0f, 0.0f, 0.0f);
+const glm::vec3 DEFAULT_POSITION = glm::vec3(0.0f, 2.0f, 30.0f);
 const glm::vec3 DEFAULT_FRONT = glm::vec3(0.0f, 0.0f, -1.0f);
 const glm::vec3 DEFAULT_UP = glm::vec3(0.0f, 1.0f, 0.0f);
 const glm::vec3 DEFAULT_RIGHT = glm::vec3(1.0f, 0.0f, 0.0f);
-const float YAW = -90.0f;
-const float PITCH = 0.0f;
+const float DEFAULT_YAW = -90.0f;
+const float DEFAULT_PITCH = 0.0f;
 const float DEFAULT_MOVE_SPEED = 20.0f;          // units per second
 const float DEFAULT_STRAFE_SPEED = 20.0f;          // units per second
 const float DEFAULT_TURN_SPEED = 60.0f;         // degrees per second
@@ -68,6 +68,7 @@ public:
     void ProcessCameraMoving(float deltaTime);
     void ProcessCameraTurning(float deltaTime);
     void ProcessMouseMovement(float xoffset, float yoffset, float deltaTime, GLboolean constrainPitch = true);
+    void ResetCamera();
 private:
     void UpdateCameraVectors();
 };
