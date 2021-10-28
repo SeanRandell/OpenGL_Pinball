@@ -137,22 +137,18 @@ void Block::Render(
     // bind diffuse map
     glActiveTexture(GL_TEXTURE0);
     diffuseMap->Bind();
-    //glBindTexture(GL_TEXTURE_2D, diffuseMap);
 
     // bind specular map
     glActiveTexture(GL_TEXTURE1);
     specularMap->Bind();
-    //glBindTexture(GL_TEXTURE_2D, specularMap);
 
     glActiveTexture(GL_TEXTURE2);
     reflectionMap->Bind();
-    //glBindTexture(GL_TEXTURE_2D, reflectionMap);
 
     glActiveTexture(GL_TEXTURE3);
     glBindTexture(GL_TEXTURE_CUBE_MAP, skybox->cubemapTexture);
 
     glBindVertexArray(vertexArray);
-    //glDrawElements(GL_TRIANGLES, numberOfFaces * 3, GL_UNSIGNED_INT, 0);
     glDrawArrays(GL_TRIANGLES, 0, numberOfVertices);
     glBindVertexArray(0);
 }

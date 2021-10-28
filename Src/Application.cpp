@@ -60,7 +60,7 @@ bool Application::Tick()
     Quadtree* quadtree = new Quadtree(boundary, 4);
     UpdateState(quadtree);
     //update models and shaders here
-
+    std::cout << timeDelta << std::endl;
     RenderFrame(quadtree);
 
     delete boundary;
@@ -177,7 +177,7 @@ int Application::InitTest() {
     glFrontFace(GL_CCW);
 
     glEnable(GL_LINE_WIDTH);
-    glLineWidth(3.0f);
+    glLineWidth(2.0f);
 
     std::cout << "RTR:MESSAGE: OpenGL version " << GLVersion.major << "." << GLVersion.minor << " initialised." << std::endl;
 

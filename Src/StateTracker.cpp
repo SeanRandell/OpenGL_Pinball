@@ -99,19 +99,21 @@ void StateTracker::InitShadersAndTextures()
     std::string diffuseMapPath = "../Assignment2/Src/Textures/container2.png";
     std::string specularMapPath = "../Assignment2/Src/Textures/container2_specular.png";
     std::string reflectionMapPath = "../Assignment2/Src/Textures/container2_specular.png";
-    std::string bumperBlockTexture = "../Assignment2/Src/Textures/SpaceFloor.jpg";
-
+    std::string bumperBlockTexturePath = "../Assignment2/Src/Textures/SpaceFloor.jpg";
+    std::string wallBlockTexturePath = "../Assignment2/Src/Textures/Concrete.jpg";
 
 
     this->diffuseMapTexture = new TextureObject(&diffuseMapPath);
     this->specularMapTexture = new TextureObject(&specularMapPath);
     this->reflectionMaptexture = new TextureObject(&reflectionMapPath);
-    this->bumperBlockTexture = new TextureObject(&bumperBlockTexture);
+    this->bumperBlockTexture = new TextureObject(&bumperBlockTexturePath);
+    this->wallBlockTexture = new TextureObject(&wallBlockTexturePath);
 
     this->diffuseMapTexture->SetTextureID();
     this->specularMapTexture->SetTextureID();
     this->reflectionMaptexture->SetTextureID();
     this->bumperBlockTexture->SetTextureID();
+    this->wallBlockTexture->SetTextureID();
 }
 
 StateTracker::~StateTracker()
@@ -135,6 +137,7 @@ StateTracker::~StateTracker()
     delete specularMapTexture;
     delete reflectionMaptexture;
     delete bumperBlockTexture;
+    delete wallBlockTexture;
 
 
     cube->End();
@@ -180,23 +183,23 @@ void StateTracker::BuildGameObjects()
 
     skyBox->Init();
 
-    Block* floorBlock = new Block(glm::vec3(0.0, 0.0, -1.0), glm::vec3(0.0, 0.0, 0.0), glm::vec3(23.0f, 23.0f, 0.0f), true);
+    Block* floorBlock = new Block(glm::vec3(0.0, 0.0, -1.1), glm::vec3(0.0, 0.0, 0.0), glm::vec3(23.0f, 23.0f, 0.0f), true);
 
     Block* TopBlock = new Block();
-    TopBlock->position = glm::vec3(1.0, 11.0, 0.0);
-    TopBlock->scale = glm::vec3(26.0, 6.0f, 1.0);
+    TopBlock->position = glm::vec3(2.1, 11.0, 0.0);
+    TopBlock->scale = glm::vec3(30.5, 6.0f, 2.0);
 
     Block* leftWallBlock = new Block();
-    leftWallBlock->position = glm::vec3(-9.1, -1.0, 0.0);
-    leftWallBlock->scale = glm::vec3(4.0, 18.0f, 1.0);
+    leftWallBlock->position = glm::vec3(-10.1, -1.0, 0.0);
+    leftWallBlock->scale = glm::vec3(6.0, 18.0f, 2.0);
 
     Block* rightLaunchWall = new Block();
-    rightLaunchWall->position = glm::vec3(13.1, 0.0, 0.0);
-    rightLaunchWall->scale = glm::vec3(4.0, 16.0f, 1.0);
+    rightLaunchWall->position = glm::vec3(14.4, 0.0, 0.0);
+    rightLaunchWall->scale = glm::vec3(6.0, 16.0f, 2.0);
 
     Block* leftLaunchWallBlock = new Block();
     leftLaunchWallBlock->position = glm::vec3(8.1, -4.1, 0.0);
-    leftLaunchWallBlock->scale = glm::vec3(2.0, 12.0f, 1.0);
+    leftLaunchWallBlock->scale = glm::vec3(2.0, 12.0f, 2.0);
 
     blocks.push_back(floorBlock);
     blocks.push_back(TopBlock);
@@ -279,18 +282,6 @@ void StateTracker::LaunchBall()
     spherePositions.push_back(newball->position);
 }
 
-std::string StateTracker::GetSettingString(bool boolToCheck)
-{
-    std::string returnString;
-    if (boolToCheck) {
-        returnString.append("On");
-    }
-    else {
-        returnString.append("Off");
-    }
-    return returnString;
-}
-
 void StateTracker::InitBuffers(int screenWidth, int screenHeight)
 {
     glGenFramebuffers(1, &hdrFBO);
@@ -362,6 +353,19 @@ void StateTracker::InitBuffers(int screenWidth, int screenHeight)
     //glReadBuffer(GL_NONE);
     //glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
+
+std::string StateTracker::GetSettingString(bool boolToCheck)
+{
+    std::string returnString;
+    if (boolToCheck) {
+        returnString.append("On");
+    }
+    else {
+        returnString.append("Off");
+    }
+    return returnString;
+}
+
 
 
 //sphere building

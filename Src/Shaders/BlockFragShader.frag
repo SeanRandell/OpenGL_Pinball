@@ -197,7 +197,7 @@ void main()
     }
     if(debugUniform)
     {
-        finalColor = vec3(1.0,1.0,0.0);
+        finalColor = vec3(0.0,1.0,0.0);
     }
 
     FragmentColor = vec4(finalColor, 1.0);

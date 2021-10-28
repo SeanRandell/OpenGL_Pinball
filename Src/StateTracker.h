@@ -82,6 +82,7 @@ public:
     TextureObject* specularMapTexture{ nullptr };
     TextureObject* reflectionMaptexture{ nullptr };
     TextureObject* bumperBlockTexture{ nullptr };
+    TextureObject* wallBlockTexture{ nullptr };
 
     LightingModel* lightModel;
     ParticleGenerator* particleGenerator;

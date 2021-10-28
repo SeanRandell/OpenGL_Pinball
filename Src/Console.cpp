@@ -45,9 +45,11 @@ std::string ballReadyString = IsBallReady(stateTracker);
         "Cam Pos: %.2f, %.2f, %.2f\n"
         "Cam Yaw: %.2f\n"
         "Cam Pitch: %.2f\n"
-        "Quadtree: %s\n" 
+        "Quadtree: %s\n"
         "Ball Launcher: %s\n"  
-        , fps, positionX, positionY, positionZ, yaw, pitch, stateTracker->GetSettingString(stateTracker->isQuadTreeOn).c_str(), ballReadyString.c_str());
+        , fps, positionX, positionY, positionZ, yaw, pitch, 
+        stateTracker->GetSettingString(stateTracker->isQuadTreeOn).c_str(), 
+        ballReadyString.c_str());
     }
     else
     {
@@ -73,3 +75,9 @@ std::string Console::IsBallReady(StateTracker* stateTracker)
     }
     return returnString;
 }
+
+/*
+*         "Show Bounding Boxes: %s\n"
+        "Show Vertice Normals: &s\n"
+        "Show Light Boxes: %s\n"
+*/

@@ -64,64 +64,61 @@ void Physics::PhyiscsPerSphere(Sphere* ball, std::vector<Sphere*> sphereList, st
     std::vector<std::pair<Sphere*, Sphere*>> vectorSphereCollidingPairs;
     std::vector<std::pair<Sphere*, Cylinder*>> vectorPegCollidingPairs;
 
-    //Update ball positions
-    for (auto& ball : sphereList) {
+    //Update ball position
 
         //positions
         //gravity and friction
-        ball->acceleration.x = -ball->velocity.x * 0.4f;
-        ball->acceleration.y = -ball->velocity.y * 0.8f - 25.0f;
+    ball->acceleration.x = -ball->velocity.x * 0.4f;
+    ball->acceleration.y = -ball->velocity.y * 0.8f - 25.0f;
 
-        // velocities
-        ball->velocity.x += ball->acceleration.x * deltaTime;
-        ball->velocity.y += ball->acceleration.y * deltaTime;
+    // velocities
+    ball->velocity.x += ball->acceleration.x * deltaTime;
+    ball->velocity.y += ball->acceleration.y * deltaTime;
 
 
-        ball->position.x += ball->velocity.x * deltaTime;
-        ball->position.y += ball->velocity.y * deltaTime;
-        // wrap around the screen
-        //if (ball->position.x < 0) ball->position.x += float(stateTracker->screenWidth);
-        //if (ball->position.x >= stateTracker->screenWidth) ball->position.x -= float(stateTracker->screenWidth);
-        //if (ball->position.y < 0) ball->position.y += float(stateTracker->screenHeight);
-        //if (ball->position.y >= 0) ball->position.y -= float(stateTracker->screenHeight);
+    ball->position.x += ball->velocity.x * deltaTime;
+    ball->position.y += ball->velocity.y * deltaTime;
+    // wrap around the screen
+    //if (ball->position.x < 0) ball->position.x += float(stateTracker->screenWidth);
+    //if (ball->position.x >= stateTracker->screenWidth) ball->position.x -= float(stateTracker->screenWidth);
+    //if (ball->position.y < 0) ball->position.y += float(stateTracker->screenHeight);
+    //if (ball->position.y >= 0) ball->position.y -= float(stateTracker->screenHeight);
 
-        //if ball is approaching zero then stop it
-        //if (fabs(ball->velocity.x * ball->velocity.x + ball->velocity.y * ball->velocity.y) < 0.01f) {
-        //    ball->velocity.x = 0;
-        //    ball->velocity.y = 0;
-        //}
-    }
+    //if ball is approaching zero then stop it
+    //if (fabs(ball->velocity.x * ball->velocity.x + ball->velocity.y * ball->velocity.y) < 0.01f) {
+    //    ball->velocity.x = 0;
+    //    ball->velocity.y = 0;
+    //}
 
-    // test every ball against every other ball
-    // current ball
-    for (auto& ball : sphereList)
+// test every ball against every other ball
+// current ball
+
+    // target ball
+    for (auto& target : sphereList)
     {
-        // target ball
-        for (auto& target : sphereList)
+        // filter out self collisions
+        if (ball->id != target->id)
         {
-            // filter out self collisions
-            if (ball->id != target->id)
+            if (DoCirclesOverLap(ball->position.x, ball->position.y, ball->radius, target->position.x, target->position.y, target->radius))
             {
-                if (DoCirclesOverLap(ball->position.x, ball->position.y, ball->radius, target->position.x, target->position.y, target->radius))
-                {
-                    //collission has occured
-                    vectorSphereCollidingPairs.push_back({ ball, target });
+                //collission has occured
+                vectorSphereCollidingPairs.push_back({ ball, target });
 
-                    // Distance between ball centers
-                    float distance = sqrtf((ball->position.x - target->position.x) * (ball->position.x - target->position.x) + (ball->position.y - target->position.y) * (ball->position.y - target->position.y));
-                    float  overlap = 0.5f * (distance - ball->radius - target->radius);
+                // Distance between ball centers
+                float distance = sqrtf((ball->position.x - target->position.x) * (ball->position.x - target->position.x) + (ball->position.y - target->position.y) * (ball->position.y - target->position.y));
+                float  overlap = 0.5f * (distance - ball->radius - target->radius);
 
-                    //Displace current ball
-                    ball->position.x -= overlap * (ball->position.x - target->position.x) / distance;
-                    ball->position.y -= overlap * (ball->position.y - target->position.y) / distance;
+                //Displace current ball
+                ball->position.x -= overlap * (ball->position.x - target->position.x) / distance;
+                ball->position.y -= overlap * (ball->position.y - target->position.y) / distance;
 
-                    //Displace target ball
-                    target->position.x += overlap * (ball->position.x - target->position.x) / distance;
-                    target->position.y += overlap * (ball->position.y - target->position.y) / distance;
-                }
+                //Displace target ball
+                target->position.x += overlap * (ball->position.x - target->position.x) / distance;
+                target->position.y += overlap * (ball->position.y - target->position.y) / distance;
             }
         }
     }
+
 
     // work out dynamic collisions
     for (auto collidedSpheres : vectorSphereCollidingPairs)
@@ -171,28 +168,27 @@ void Physics::PhyiscsPerSphere(Sphere* ball, std::vector<Sphere*> sphereList, st
 
     // test every ball against every other peg
     // current ball
-    for (auto& ball : sphereList)
-    {
+
         // target peg
-        for (auto& target : pegList)
+    for (auto& target : pegList)
+    {
+        if (DoCirclesOverLap(ball->position.x, ball->position.y, ball->radius, target->position.x, target->position.y, target->topRadius))
         {
-            if (DoCirclesOverLap(ball->position.x, ball->position.y, ball->radius, target->position.x, target->position.y, target->topRadius))
-            {
-                //collission has occured
-                vectorPegCollidingPairs.push_back({ ball, target });
+            //collission has occured
+            vectorPegCollidingPairs.push_back({ ball, target });
 
-                // Distance between ball and peg centers
-                float distance = sqrtf((ball->position.x - target->position.x) * (ball->position.x - target->position.x) + (ball->position.y - target->position.y) * (ball->position.y - target->position.y));
-                float overlap = 0;
+            // Distance between ball and peg centers
+            float distance = sqrtf((ball->position.x - target->position.x) * (ball->position.x - target->position.x) + (ball->position.y - target->position.y) * (ball->position.y - target->position.y));
+            float overlap = 0;
 
-                overlap = 1.0f * (distance - ball->radius - target->topRadius);
+            overlap = 1.0f * (distance - ball->radius - target->topRadius);
 
-                //Displace current ball
-                ball->position.x -= overlap * (ball->position.x - target->position.x) / distance;
-                ball->position.y -= overlap * (ball->position.y - target->position.y) / distance;
-            }
+            //Displace current ball
+            ball->position.x -= overlap * (ball->position.x - target->position.x) / distance;
+            ball->position.y -= overlap * (ball->position.y - target->position.y) / distance;
         }
     }
+
 
     // work out dynamic collisions with Pegs
     for (auto collidedObjects : vectorPegCollidingPairs)
@@ -229,52 +225,68 @@ void Physics::PhyiscsPerSphere(Sphere* ball, std::vector<Sphere*> sphereList, st
     }
 
     //test every ball against every other block
-    for (auto& ball : sphereList)
-    {
         // target ball
-        for (auto& currentBlock : blockList)
+    for (auto& currentBlock : blockList)
+    {
+        if (currentBlock->isScenery == false)
         {
-            if (currentBlock->isScenery == false) {
-                Collision collision = CheckCollision(*ball, *currentBlock);
-                if (std::get<0>(collision)) // if collision is true
+            Collision collision = CheckCollision(*ball, *currentBlock);
+            if (std::get<0>(collision)) // if collision is true
+            {
+                // collision resolution
+                Direction dir = std::get<1>(collision);
+                glm::vec2 diff_vector = std::get<2>(collision);
+                if (dir == LEFT || dir == RIGHT) // horizontal collision
                 {
-                    // collision resolution
-                    Direction dir = std::get<1>(collision);
-                    glm::vec2 diff_vector = std::get<2>(collision);
-                    if (dir == LEFT || dir == RIGHT) // horizontal collision
+                    if (currentBlock->isBumper)
                     {
-                        if (currentBlock->isBumper) {
-                            ball->velocity.x = -ball->velocity.x; // reverse horizontal velocity
-                            //ball->acceleration.x += 20.0f;
+                        ball->velocity.x = -ball->velocity.x; // reverse horizontal velocity
+                        //ball->acceleration.x += 20.0f;
+                        if (currentBlock->isActiveFlipper)
+                        {
                             ball->velocity.x += 12.0f;
                         }
-                        else {
-                            ball->velocity.x = -ball->velocity.x; // reverse horizontal velocity
-                        }
-
-                        // relocate
-                        float penetration = ball->radius - std::abs(diff_vector.x);
-                        if (dir == LEFT)
-                            ball->position.x += penetration; // move ball to right
-                        else
-                            ball->position.x -= penetration; // move ball to left;
                     }
-                    else // vertical collision
+                    else
                     {
-                        if (currentBlock->isBumper) {
-                            ball->velocity.y = -ball->velocity.y; // reverse vertical velocity
-                            //ball->acceleration.y += 5.0f;
+                        ball->velocity.x = -ball->velocity.x; // reverse horizontal velocity
+                    }
+
+                    // relocate
+                    float penetration = ball->radius - std::abs(diff_vector.x);
+                    if (dir == LEFT)
+                    {
+                        ball->position.x += penetration; // move ball to right
+                    }
+                    else
+                    {
+                        ball->position.x -= penetration; // move ball to left;
+                    }
+                }
+                else // vertical collision
+                {
+                    if (currentBlock->isBumper)
+                    {
+                        ball->velocity.y = -ball->velocity.y; // reverse vertical velocity
+                        //ball->acceleration.y += 5.0f;
+                        if (currentBlock->isActiveFlipper)
+                        {
                             ball->velocity.y += 12.0f;
                         }
-                        else {
-                            ball->velocity.y = -ball->velocity.y; // reverse vertical velocity
-                        }
-                        // relocate
-                        float penetration = ball->radius - std::abs(diff_vector.y);
-                        if (dir == UP)
-                            ball->position.y -= penetration; // move ball bback up
-                        else
-                            ball->position.y += penetration; // move ball back down
+                    }
+                    else
+                    {
+                        ball->velocity.y = -ball->velocity.y; // reverse vertical velocity
+                    }
+                    // relocate
+                    float penetration = ball->radius - std::abs(diff_vector.y);
+                    if (dir == UP)
+                    {
+                        ball->position.y -= penetration; // move ball bback up
+                    }
+                    else
+                    {
+                        ball->position.y += penetration; // move ball back down
                     }
                 }
             }
@@ -350,15 +362,16 @@ void Physics::FipperPhysics(StateTracker* stateTracker, float deltaTime)
     if (stateTracker->moveLeftFlipper && !stateTracker->leftFlipperMoving)
     {
         // if less then launch peak
-        if (stateTracker->leftFlipper->position.y <= -7.0f)
+        if (stateTracker->leftFlipper->position.y <= -6.5f)
         {
             stateTracker->leftFlipper->position.y += 8 * deltaTime;
             stateTracker->leftFlipper->isActiveFlipper = true;
         }
         // if at peak
-        if (stateTracker->leftFlipper->position.y >= -7.0f)
+        if (stateTracker->leftFlipper->position.y >= -6.5f)
         {
             stateTracker->leftFlipperMoving = true;
+            stateTracker->leftFlipper->isActiveFlipper = false;
         }
     }
     // if still moving
@@ -369,7 +382,8 @@ void Physics::FipperPhysics(StateTracker* stateTracker, float deltaTime)
         {
             stateTracker->leftFlipper->position.y -= 10 * deltaTime;
         }
-        else {
+        else
+        {
             // reset and ready for next trigger
             stateTracker->leftFlipperMoving = false;
             stateTracker->moveLeftFlipper = false;
@@ -377,25 +391,33 @@ void Physics::FipperPhysics(StateTracker* stateTracker, float deltaTime)
         }
     }
 
+    // update right flipper
     if (stateTracker->moveRightFlipper && !stateTracker->rightFlipperMoving)
     {
-        if (stateTracker->rightFlipper->position.y <= -7.0f)
+        // if less then launch peak
+        if (stateTracker->rightFlipper->position.y <= -6.5f)
         {
             stateTracker->rightFlipper->position.y += 8 * deltaTime;
             stateTracker->rightFlipper->isActiveFlipper = true;
         }
-        if (stateTracker->rightFlipper->position.y >= -7.0f)
+        // if at peak
+        if (stateTracker->rightFlipper->position.y >= -6.5f)
         {
             stateTracker->rightFlipperMoving = true;
+            stateTracker->rightFlipper->isActiveFlipper = false;
         }
     }
+    // if still moving
     if (stateTracker->rightFlipperMoving)
     {
+        // if higher than default
         if (stateTracker->rightFlipper->position.y > -8.0f)
         {
             stateTracker->rightFlipper->position.y -= 10 * deltaTime;
         }
-        else {
+        else
+        {
+            // reset and ready for next trigger
             stateTracker->rightFlipperMoving = false;
             stateTracker->moveRightFlipper = false;
             stateTracker->rightFlipper->position.y = -8.0f;
