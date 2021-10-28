@@ -52,6 +52,7 @@ uniform int numberOfLightsUniform;
 uniform Light lightsUniform[MAX_NUMBER_OF_LIGHTS];
 uniform Material objectMaterialUniform;
 uniform Camera cameraUniform;
+uniform bool debugUniform;
 
 void main() 
 {
@@ -94,7 +95,7 @@ void main()
         float specularFloat = pow(max(dot(normalVector, BlinnPhongVector), 0.0), objectMaterialUniform.shininess);
         vec3 specularVector = lightsUniform[currentLight].specular * objectMaterialUniform.specular * specularFloat;
 
-        finalColor += (ambient + attenuation*(diffuseVector + specularVector));
+        finalColor += (attenuation*(ambient + diffuseVector + specularVector));
     }
     
     FragmentColor = vec4(finalColor, 1.0);
@@ -108,7 +109,10 @@ void main()
     {
         BrightColor = vec4(0.0, 0.0, 0.0, 1.0);
     }
-
+    if(debugUniform)
+    {
+        finalColor = vec3(0.0,1.0,0.0);
+    }
     FragmentColor = vec4(finalColor, 1.0);
 //    FragmentColor = vec4(0.0, 1.0, 0.0, 1.0); 
 }

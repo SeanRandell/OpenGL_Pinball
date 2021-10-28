@@ -87,7 +87,7 @@ void Camera::ProcessCameraMoving(float deltaTime)
     if (moveFoward) {
         position += front * movementSpeed * deltaTime;
 
-        fprintf(stderr, "position: x = %.2f, y = %.2f, z = %.2f, deltaTime = %f\n", position.x, position.y, position.z, deltaTime);
+        //fprintf(stderr, "position: x = %.2f, y = %.2f, z = %.2f, deltaTime = %f\n", position.x, position.y, position.z, deltaTime);
     }
     if (moveBackward) {
         position -= front * movementSpeed * deltaTime;

@@ -125,44 +125,23 @@ std::vector<Quadtree*> Quadtree::FindQuadrant(Sphere* circle)
 }
 
 void Quadtree::DrawQuadTree(RTRShader* shader)
-//void Quadtree::DrawQuadTree()
 {
-    //glm::mat4 modelMatrix = glm::mat4(1.0f);
-    //shader->SetMat4("modelMatrixUniform", modelMatrix);
     glMatrixMode(GL_MODELVIEW);
 
     glLoadIdentity();
     glPushMatrix();
-    //float mat_ambient[] = { 0.2, 0.2, 0.2, 1.0 };
-    //float mat_colour[] = { 0.5, 0.5, 0.5, 1.0 };
-    //float mat_specular[] = { 1.0, 1.0, 1.0, 1.0 };
-    //float mat_shininess[] = { 100.0 };
-    //glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient);
-    //glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_colour);
-    //glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
-    //glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
-    //glColor3d(1, 0, 0);
     glBegin(GL_LINE_LOOP);
-    //glNormal3f(0, 0, 1);
     glVertex3f(boundary->left, boundary->bottom, 0.0f); // bottom left
     glVertex3f(boundary->right, boundary->bottom, 0.0f); // bottom right
     glVertex3f(boundary->right, boundary->top, 0.0f); // top right 
     glVertex3f(boundary->left, boundary->top, 0.0f); // top left
 
-    //glVertex3f(-1.0, 1.0f, 0.0f); // top left
-    //glVertex3f(1.0f, 1.0f, 0.0f); // top right 
-    //glVertex3f(1.0f, -1.0f, 0.0f); // bottom right
-    //glVertex3f(-1.0f, -1.0f, 0.0f); // bottom left
     glEnd();
     if (divided) {
         northeast->DrawQuadTree(shader);
         northwest->DrawQuadTree(shader);
         southeast->DrawQuadTree(shader);
         southwest->DrawQuadTree(shader);
-        /*       northeast->DrawQuadTree();
-               northwest->DrawQuadTree();
-               southeast->DrawQuadTree();
-               southwest->DrawQuadTree();*/
     }
     glPopMatrix();
 }

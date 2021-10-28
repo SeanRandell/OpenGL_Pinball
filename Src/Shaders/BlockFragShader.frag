@@ -67,7 +67,7 @@ uniform DefaultMaterial objectDefaultMaterialUniform;
 uniform Camera cameraUniform;
 uniform samplerCube skyBoxUniform;
 
-uniform sampler2D shadowMap;
+//uniform sampler2D shadowMap;
 
 uniform Light directionalLight;
 

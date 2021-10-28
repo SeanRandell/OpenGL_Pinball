@@ -61,7 +61,6 @@ unsigned int TextureObject::LoadTexture() {
     return textureID;
 }
 
-
 void TextureObject::Bind() const
 {
     glBindTexture(GL_TEXTURE_2D, this->textureID);

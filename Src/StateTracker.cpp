@@ -36,9 +36,13 @@ StateTracker::StateTracker(int screenWidth, int screenHeight)
     isDebugOn = false;
     isDebugHUDOn = false;
     localIsDebugHUDOnToggle = false;
+    isPhysicsOn = true;
+    isVertexNormalsDisplayOn = false;
+    isLightingBoxesOn = false;
+    isBoundingBoxesOn = true;
 
-    launchCooldown = 0.5f;
-    launchCountdown = 0.5f;
+    launchCooldown = 0.3f;
+    launchCountdown = 0.3f;
 }
 
 void StateTracker::InitShadersAndTextures()
@@ -101,7 +105,7 @@ void StateTracker::InitShadersAndTextures()
     std::string reflectionMapPath = "../Assignment2/Src/Textures/container2_specular.png";
     std::string bumperBlockTexturePath = "../Assignment2/Src/Textures/SpaceFloor.jpg";
     std::string wallBlockTexturePath = "../Assignment2/Src/Textures/Concrete.jpg";
-
+    //std::string particlePath = 
 
     this->diffuseMapTexture = new TextureObject(&diffuseMapPath);
     this->specularMapTexture = new TextureObject(&specularMapPath);

@@ -26,7 +26,6 @@ void Console::End()
     delete stringToSet;
 }
 
-//TODO add plunger charge stuff
 void Console::Render(const char *title, int fps, 
     float positionX, float positionY, float positionZ, float pitch, float yaw, StateTracker* stateTracker)
 {
@@ -46,9 +45,19 @@ std::string ballReadyString = IsBallReady(stateTracker);
         "Cam Yaw: %.2f\n"
         "Cam Pitch: %.2f\n"
         "Quadtree: %s\n"
+        "Physics Objects Count: %d\n"
+        "Physics: %s\n"
+        "Display Bounding Boxes: %s\n"
+        "Display Lighting Boxes %s\n"
+        "Display Vertex Normals: %s\n"
         "Ball Launcher: %s\n"  
         , fps, positionX, positionY, positionZ, yaw, pitch, 
         stateTracker->GetSettingString(stateTracker->isQuadTreeOn).c_str(), 
+        stateTracker->physicsObjectCount,
+        stateTracker->GetSettingString(stateTracker->isPhysicsOn).c_str(),
+        stateTracker->GetSettingString(stateTracker->isBoundingBoxesOn).c_str(),
+        stateTracker->GetSettingString(stateTracker->isLightingBoxesOn).c_str(),
+        stateTracker->GetSettingString(stateTracker->isVertexNormalsDisplayOn).c_str(),
         ballReadyString.c_str());
     }
     else
@@ -75,9 +84,3 @@ std::string Console::IsBallReady(StateTracker* stateTracker)
     }
     return returnString;
 }
-
-/*
-*         "Show Bounding Boxes: %s\n"
-        "Show Vertice Normals: &s\n"
-        "Show Light Boxes: %s\n"
-*/

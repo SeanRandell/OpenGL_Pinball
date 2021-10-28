@@ -57,6 +57,12 @@ public:
     bool isQuadTreeOn;
     bool isDebugHUDOn;
     bool localIsDebugHUDOnToggle;
+    bool isPhysicsOn;
+    bool isVertexNormalsDisplayOn;
+    bool isLightingBoxesOn;
+    bool isBoundingBoxesOn;
+
+    unsigned int physicsObjectCount{ 0 };
 
     RTRShader* cubeShader{ nullptr };
     RTRShader* normalShader{ nullptr };
@@ -83,12 +89,11 @@ public:
     TextureObject* reflectionMaptexture{ nullptr };
     TextureObject* bumperBlockTexture{ nullptr };
     TextureObject* wallBlockTexture{ nullptr };
+    //particle
+    //TextureObject* particleTexture{ nullptr };
 
     LightingModel* lightModel;
     ParticleGenerator* particleGenerator;
-    //Quadtree* quadtree;
-
-
 
     //bloom buffers
     unsigned int hdrFBO{0};
