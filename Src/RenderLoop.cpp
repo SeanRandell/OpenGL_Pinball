@@ -20,7 +20,7 @@ RenderLoop::~RenderLoop()
 
 void RenderLoop::Init(StateTracker* stateTracker, int screenWidth, int screenHeight)
 {
-    stateTracker->Init();
+    stateTracker->InitShadersAndTextures();
     stateTracker->BuildGameObjects();
     stateTracker->InitBuffers(screenWidth, screenHeight);
     stateTracker->particleGenerator->Init();
@@ -30,6 +30,11 @@ void RenderLoop::Init(StateTracker* stateTracker, int screenWidth, int screenHei
     stateTracker->blockShader->SetInt("objectMaterialUniform.specularMap", 1);
     stateTracker->blockShader->SetInt("objectMaterialUniform.reflectionMap", 2);
     stateTracker->blockShader->SetInt("skyBoxUniform", 3);
+    stateTracker->blockShader->SetInt("objectDefaultMaterialUniform.diffuseMap", 4);
+
+    //Subroutines
+    stateTracker->OneTextureIndex = glGetSubroutineIndex(stateTracker->blockShader->ID, GL_FRAGMENT_SHADER, "OneTexture");
+    stateTracker->ThreeTextureIndex = glGetSubroutineIndex(stateTracker->blockShader->ID, GL_FRAGMENT_SHADER, "ThreeTextures");
 
     //TODO fix for multtiShader?
     stateTracker->blockShader->SetInt("shadowMap", 4);
@@ -480,14 +485,6 @@ void RenderLoop::CheckInput(StateTracker* stateTracker, bool* quitApp, float del
             case SDLK_DOWN:
                 stateTracker->camera->tiltDown = false;
                 break;
-                //case SDLK_PERIOD:
-                //    // '>' – right flipper
-                //    stateTracker->moveRightFlipper = true;
-                //    break;
-                //case SDLK_COMMA:
-                //    //'<' –  left flipper
-                //    stateTracker->moveLeftFlipper = true;
-                //    break;
             }
             break;
         }
@@ -502,13 +499,9 @@ void RenderLoop::UpdateState(StateTracker* stateTracker, float deltaTime, Quadtr
         stateTracker->camera->ProcessCameraTurning(deltaTime);
 
     }
+
     stateTracker->viewMatrix = stateTracker->camera->GetViewMatrix();
-    // Update directional camera to align with camera forward direction
-    //stateTracker->lightModel->GetLight(0)->direction = stateTracker->camera->front;
-
     stateTracker->modelMatrix = glm::mat4(1.0f);
-
-
 
     if (stateTracker->launchCountdown >= stateTracker->launchCooldown) {
         if (stateTracker->canLaunchBall)
@@ -527,9 +520,9 @@ void RenderLoop::UpdateState(StateTracker* stateTracker, float deltaTime, Quadtr
         //std::cout << "Cooldown" << std::endl;
     }
 
+    //PHYSICS
     physicsMethods->FipperPhysics(stateTracker, deltaTime);
 
-    //PHYSICS
     physicsMethods->CalculateBallPhysics(stateTracker, deltaTime, quadtree);
 
     // check if ball needs to be deleted
@@ -591,8 +584,7 @@ void RenderLoop::RenderFrame(StateTracker* stateTracker, Quadtree* quadtree)
     // -----------------------------------------------
     glBindFramebuffer(GL_FRAMEBUFFER, stateTracker->hdrFBO);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glEnable(GL_LINE_WIDTH);
-    glLineWidth(3.0f);
+
     //block
     stateTracker->blockShader->Use();
     //stateTracker->blockShader->SetVec3("objectMaterialUniform.ambient", stateTracker->block->material.ambient);
@@ -610,27 +602,44 @@ void RenderLoop::RenderFrame(StateTracker* stateTracker, Quadtree* quadtree)
         stateTracker->modelMatrix = glm::translate(stateTracker->modelMatrix, testVector);
         stateTracker->modelMatrix = glm::scale(stateTracker->modelMatrix, stateTracker->blocks[i]->scale);
         stateTracker->blockShader->SetMat4("modelMatrixUniform", stateTracker->modelMatrix);
-        stateTracker->blocks[i]->Render(stateTracker->blockShader, stateTracker->skyBox, stateTracker->modelMatrix);
+        if (stateTracker->blocks[i]->isBumper)
+        {
+            glUniformSubroutinesuiv(GL_FRAGMENT_SHADER, 1, &stateTracker->OneTextureIndex);
+            stateTracker->blocks[i]->RenderNormalBlock(stateTracker->blockShader, stateTracker->skyBox, stateTracker->bumperBlockTexture);
+        }
+        else
+        {
+            glUniformSubroutinesuiv(GL_FRAGMENT_SHADER, 1, &stateTracker->ThreeTextureIndex);
+            stateTracker->blocks[i]->Render(stateTracker->blockShader, stateTracker->skyBox, stateTracker->diffuseMapTexture, stateTracker->specularMapTexture, stateTracker->reflectionMaptexture);
+        }
 
-
-        if (stateTracker->isDebugOn)
+        // render bounding box
+        if (stateTracker->isDebugOn && stateTracker->blocks[i]->isScenery == false)
         {
             glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
             glPolygonOffset(0, -1);
             glEnable(GL_POLYGON_OFFSET_FILL);
             stateTracker->blockShader->SetBool("debugUniform", true);
-            stateTracker->blocks[i]->Render(stateTracker->blockShader, stateTracker->skyBox, stateTracker->modelMatrix);
+            stateTracker->blocks[i]->Render(stateTracker->blockShader, stateTracker->skyBox, stateTracker->diffuseMapTexture, stateTracker->specularMapTexture, stateTracker->reflectionMaptexture);
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
             glPolygonOffset(1, 0);
         }
     }
 
     //block normal
-    //stateTracker->normalShader->Use();
-    //stateTracker->normalShader->SetMat4("projectionMatrixUniform", stateTracker->projectionMatrix);
-    //stateTracker->normalShader->SetMat4("viewMatrixUniform", stateTracker->viewMatrix);
-    //stateTracker->normalShader->SetMat4("modelMatrixUniform", stateTracker->modelMatrix);
-    //stateTracker->block->Render(stateTracker->normalShader, stateTracker->skyBox);
+    if (stateTracker->isDebugOn) {
+        stateTracker->normalShader->Use();
+        stateTracker->normalShader->SetMat4("projectionMatrixUniform", stateTracker->projectionMatrix);
+        stateTracker->normalShader->SetMat4("viewMatrixUniform", stateTracker->viewMatrix);
+        for (unsigned int i = 0; i < stateTracker->blocks.size(); i++)
+        {
+            stateTracker->modelMatrix = glm::mat4(1.0f);
+            stateTracker->modelMatrix = glm::translate(stateTracker->modelMatrix, stateTracker->blocks[i]->position);
+            stateTracker->modelMatrix = glm::scale(stateTracker->modelMatrix, stateTracker->blocks[i]->scale);
+            stateTracker->blockShader->SetMat4("modelMatrixUniform", stateTracker->modelMatrix);
+            stateTracker->blocks[i]->Render(stateTracker->normalShader, stateTracker->skyBox, stateTracker->diffuseMapTexture, stateTracker->specularMapTexture, stateTracker->reflectionMaptexture);
+        }
+    }
 
     // cube
     //stateTracker->cubeShader->Use();

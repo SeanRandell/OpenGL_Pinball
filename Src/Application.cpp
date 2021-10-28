@@ -176,6 +176,9 @@ int Application::InitTest() {
     glCullFace(GL_BACK);
     glFrontFace(GL_CCW);
 
+    glEnable(GL_LINE_WIDTH);
+    glLineWidth(3.0f);
+
     std::cout << "RTR:MESSAGE: OpenGL version " << GLVersion.major << "." << GLVersion.minor << " initialised." << std::endl;
 
     return 0;

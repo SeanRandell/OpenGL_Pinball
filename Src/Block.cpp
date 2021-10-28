@@ -44,9 +44,9 @@ void Block::InitConstructorValues()
     float rr = rep.r;
     float sr = rep.s;
     numberOfVertices = 36;
-    diffuseMap = 0;
-    specularMap = 0;
-    reflectionMap = 0;
+    //diffuseMap = 0;
+    //specularMap = 0;
+    //reflectionMap = 0;
     material = { {1, 1, 1 }, { 1, 1, 1 }, { 1, 1, 1 }, 64.0f };
     //material = { {0.19225, 0.19225, 0.19225 }, { 0.50754, 0.50754, 0.50754 }, { 0.508273, 0.508273, 0.508273 }, 64.0f };
     vertexAndTexturePoints = new VertexAndTexturePoint[]{
@@ -98,13 +98,14 @@ void Block::InitConstructorValues()
 
 void Block::Init()
 {
-    diffusePath = "../Assignment2/Src/container2.png";
-    specularPath = "../Assignment2/Src/container2_specular.png";
+    //diffusePath = "../Assignment2/Src/container2.png";
+    //specularPath = "../Assignment2/Src/container2_specular.png";
     //const char* testString = "../Assignment2/Src/container2.png";
     //const char* testString1 = "../Assignment2/Src/container2_specular.png";
-    diffuseMap = LoadTexture(&diffusePath);
-    specularMap = LoadTexture(&specularPath);
-    reflectionMap = LoadTexture(&specularPath);
+    //diffuseMap = LoadTexture(&diffusePath);
+    //specularMap = LoadTexture(&specularPath);
+    //reflectionMap = LoadTexture(&specularPath);
+
 
     glGenBuffers(1, &vertexBuffer);
 
@@ -114,8 +115,6 @@ void Block::Init()
     glGenVertexArrays(1, &vertexArray);
     glBindVertexArray(vertexArray);
 
-    //glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
 
@@ -124,7 +123,7 @@ void Block::Init()
 }
 
 void Block::Render(
-    RTRShader* shader, SkyBox* skybox, glm::mat4 modelMatrix)
+    RTRShader* shader, SkyBox* skybox, TextureObject* diffuseMap, TextureObject* specularMap, TextureObject* reflectionMap)
 {
     //shader->SetMaterial("objectMaterialUniform", material);
     shader->SetVec3("objectMaterialUniform.ambient", material.ambient);
@@ -137,15 +136,17 @@ void Block::Render(
 
     // bind diffuse map
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, diffuseMap);
+    diffuseMap->Bind();
+    //glBindTexture(GL_TEXTURE_2D, diffuseMap);
 
     // bind specular map
     glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, specularMap);
+    specularMap->Bind();
+    //glBindTexture(GL_TEXTURE_2D, specularMap);
 
     glActiveTexture(GL_TEXTURE2);
-    //glBindTexture(GL_TEXTURE_2D, skybox->cubemapTexture);
-    glBindTexture(GL_TEXTURE_2D, reflectionMap);
+    reflectionMap->Bind();
+    //glBindTexture(GL_TEXTURE_2D, reflectionMap);
 
     glActiveTexture(GL_TEXTURE3);
     glBindTexture(GL_TEXTURE_CUBE_MAP, skybox->cubemapTexture);
@@ -155,6 +156,22 @@ void Block::Render(
     glDrawArrays(GL_TRIANGLES, 0, numberOfVertices);
     glBindVertexArray(0);
 }
+
+void Block::RenderNormalBlock(RTRShader* shader, SkyBox* skybox, TextureObject* diffuseMap)
+{
+    shader->SetVec3("objectDefaultMaterialUniform.specular", material.specular);
+    shader->SetFloat("objectDefaultMaterialUniform.shininess", material.shininess);
+
+    // bind diffuse map
+    glActiveTexture(GL_TEXTURE4);
+    diffuseMap->Bind();
+
+    glBindVertexArray(vertexArray);
+    //glDrawElements(GL_TRIANGLES, numberOfFaces * 3, GL_UNSIGNED_INT, 0);
+    glDrawArrays(GL_TRIANGLES, 0, numberOfVertices);
+    glBindVertexArray(0);
+}
+
 
 void Block::End()
 {

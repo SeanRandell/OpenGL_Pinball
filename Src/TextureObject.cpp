@@ -1,9 +1,15 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "TextureObject.h"
 
-TextureObject::TextureObject(std::string filepath)
+TextureObject::TextureObject(std::string* filePath)
 {
     this->filePath = filePath;
+    this->textureID = 0;
+}
+
+void TextureObject::SetTextureID()
+{
+    this->textureID = LoadTexture();
 }
 
 unsigned int TextureObject::LoadTexture() {
@@ -17,7 +23,7 @@ unsigned int TextureObject::LoadTexture() {
     int height = 0;
     int nrChannels = 0;
     //stbi_set_flip_vertically_on_load(true); // tell stb_image.h to flip loaded texture's on the y-axis.
-    unsigned char* data = stbi_load(filePath.c_str(), &width, &height, &nrChannels, 0);
+    unsigned char* data = stbi_load(filePath->c_str(), &width, &height, &nrChannels, 0);
     //unsigned char* data = stbi_load(skyBoxFaces[i].c_str(), &width, &height, &nrChannels, 0);
     if (data)
     {
@@ -54,7 +60,6 @@ unsigned int TextureObject::LoadTexture() {
 
     return textureID;
 }
-
 
 
 void TextureObject::Bind() const

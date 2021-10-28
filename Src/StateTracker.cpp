@@ -41,7 +41,7 @@ StateTracker::StateTracker(int screenWidth, int screenHeight)
     launchCountdown = 0.5f;
 }
 
-void StateTracker::Init()
+void StateTracker::InitShadersAndTextures()
 {
     this->cubeShader = new RTRShader(
         "../Assignment2/Src/Shaders/CubeVertShader.vert",
@@ -95,6 +95,23 @@ void StateTracker::Init()
         "../Assignment2/Src/Shaders/ParticleVertShader.vert",
         "../Assignment2/Src/Shaders/ParticleFragShader.frag"
     );
+
+    std::string diffuseMapPath = "../Assignment2/Src/Textures/container2.png";
+    std::string specularMapPath = "../Assignment2/Src/Textures/container2_specular.png";
+    std::string reflectionMapPath = "../Assignment2/Src/Textures/container2_specular.png";
+    std::string bumperBlockTexture = "../Assignment2/Src/Textures/SpaceFloor.jpg";
+
+
+
+    this->diffuseMapTexture = new TextureObject(&diffuseMapPath);
+    this->specularMapTexture = new TextureObject(&specularMapPath);
+    this->reflectionMaptexture = new TextureObject(&reflectionMapPath);
+    this->bumperBlockTexture = new TextureObject(&bumperBlockTexture);
+
+    this->diffuseMapTexture->SetTextureID();
+    this->specularMapTexture->SetTextureID();
+    this->reflectionMaptexture->SetTextureID();
+    this->bumperBlockTexture->SetTextureID();
 }
 
 StateTracker::~StateTracker()
@@ -113,6 +130,11 @@ StateTracker::~StateTracker()
     delete debugDepthQuadShader;
     delete particleShader;
     delete lightModel;
+
+    delete diffuseMapTexture;
+    delete specularMapTexture;
+    delete reflectionMaptexture;
+    delete bumperBlockTexture;
 
 
     cube->End();

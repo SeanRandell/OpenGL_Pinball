@@ -54,17 +54,9 @@ public:
 
     int particleAmountPerBall;
 
-
-    //int lightSourcesCount;
-    //int maxPointLightCount;
-
     bool isQuadTreeOn;
     bool isDebugHUDOn;
     bool localIsDebugHUDOnToggle;
-
-    //bool isLightingOn;
-    //bool isDepthTestingOn;
-    //bool isFullHUDOn;
 
     RTRShader* cubeShader{ nullptr };
     RTRShader* normalShader{ nullptr };
@@ -78,6 +70,18 @@ public:
     RTRShader* simpleDepthShader{ nullptr };
     RTRShader* debugDepthQuadShader{ nullptr };
     RTRShader* particleShader{ nullptr };
+
+    //Subroutine Indexes
+    //Block subroutines
+    GLuint OneTextureIndex{ 0 };
+    GLuint ThreeTextureIndex{ 0 };
+
+    //Textures
+    // block Textures
+    TextureObject* diffuseMapTexture{ nullptr };
+    TextureObject* specularMapTexture{ nullptr };
+    TextureObject* reflectionMaptexture{ nullptr };
+    TextureObject* bumperBlockTexture{ nullptr };
 
     LightingModel* lightModel;
     ParticleGenerator* particleGenerator;
@@ -109,10 +113,11 @@ public:
     std::vector<glm::mat4> sphereMatrices;
     Sphere* testSphere;
 
+
     StateTracker(int screenWidth, int screenHeight);
     ~StateTracker();
 
-    void Init();
+    void InitShadersAndTextures();
 
     std::string GetSettingString(bool boolToCheck);
     void InitBuffers(int screenWidth, int screenHeight);
