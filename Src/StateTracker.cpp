@@ -223,6 +223,7 @@ void StateTracker::BuildGameObjects()
         blocks[i]->Init();
     }
 
+    Cylinder* launchPeg = new Cylinder();
     Cylinder* TopPeg1 = new Cylinder();
     Cylinder* TopPeg2 = new Cylinder();
     Cylinder* TopPeg3 = new Cylinder();
@@ -234,7 +235,8 @@ void StateTracker::BuildGameObjects()
     Cylinder* BottomPeg2 = new Cylinder();
     Cylinder* BottomPeg3 = new Cylinder();
     Cylinder* BottomPeg4 = new Cylinder();
-    Cylinder* launchPeg = new Cylinder();
+
+    launchPeg->position = glm::vec3(11.0, 6.0, -0.1);
 
     TopPeg1->position = glm::vec3(-4.5, 3.0, 0.0);
     TopPeg2->position = glm::vec3(-1.5, 3.0, 0.0);
@@ -250,20 +252,33 @@ void StateTracker::BuildGameObjects()
     BottomPeg3->position = glm::vec3(1.5, -3.0, 0.0);
     BottomPeg4->position = glm::vec3(4.5, -3.0, 0.0);
 
-    launchPeg->position = glm::vec3(11.0, 6.0, -0.1);
-
-    pegs.push_back(TopPeg1);
-    pegs.push_back(TopPeg2);
-    pegs.push_back(TopPeg3);
-    pegs.push_back(TopPeg4);
-    pegs.push_back(MiddlePeg1);
-    pegs.push_back(MiddlePeg2);
-    pegs.push_back(MiddlePeg3);
-    pegs.push_back(BottomPeg1);
-    pegs.push_back(BottomPeg2);
-    pegs.push_back(BottomPeg3);
-    pegs.push_back(BottomPeg4);
+    //pushed to vector in order of lights array
     pegs.push_back(launchPeg);
+    // red lights
+    pegs.push_back(TopPeg1);
+    pegs.push_back(MiddlePeg2);
+    pegs.push_back(BottomPeg4);
+
+    //green lights
+    pegs.push_back(TopPeg4);
+    pegs.push_back(BottomPeg1);
+    pegs.push_back(BottomPeg3);
+
+    // blue lights
+    pegs.push_back(TopPeg2);
+    pegs.push_back(MiddlePeg3);
+    pegs.push_back(BottomPeg2);
+
+    //purple lights
+    pegs.push_back(TopPeg3);
+    pegs.push_back(MiddlePeg1);
+
+
+
+
+
+
+
 
     for (int i = 0; i < pegs.size(); i++)
     {
@@ -279,7 +294,7 @@ void StateTracker::LaunchBall()
     int newSphereId = spheres.size();
     Sphere* newball = new Sphere(newSphereId);
     newball->Init();
-    newball->velocity = glm::vec2(0.0, 40.0);
+    newball->velocity = glm::vec2(0.0, 45.0);
     //newball->scale = glm::vec3(2.0f, 2.0f, 2.0f);
     newball->position = glm::vec3(10.5f, -8.0f, 0.0f);
     spheres.push_back(newball);

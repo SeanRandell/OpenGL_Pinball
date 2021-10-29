@@ -46,6 +46,7 @@ struct Light {
     float constant;
     float linear;
     float quadratic;
+    bool isLightOn;
 //    float cutoff;
 //    float OuterCutoff;
 };
@@ -67,10 +68,6 @@ uniform DefaultMaterial objectDefaultMaterialUniform;
 uniform Camera cameraUniform;
 uniform samplerCube skyBoxUniform;
 
-//uniform sampler2D shadowMap;
-
-uniform Light directionalLight;
-
 uniform bool debugUniform;
 
 subroutine(blockType)
@@ -80,12 +77,19 @@ vec3 OneTexture()
     
     vec3 normalVector = normalize(transpose(inverse(mat3(modelMatrixUniform))) * fragmentShaderIn.Normal);
     
-    for (int currentLight = 0; currentLight < numberOfLightsUniform; currentLight++) {
+    for (int currentLight = 0; currentLight < numberOfLightsUniform; currentLight++) 
+    {
+        if(lightsUniform[currentLight].isLightOn == false)
+        {
+            continue;
+        }
+
         float attenuation = 1.0;
 
         // calc ambient
         vec3 ambient = lightsUniform[currentLight].ambient * texture(objectDefaultMaterialUniform.diffuseMap, fragmentShaderIn.TextureCoordinates).rgb;
-    
+
+
         // calc diffuse
         vec3 lightDirectionVector;
         if (lightsUniform[currentLight].type == DirectionalLight) {
@@ -103,8 +107,9 @@ vec3 OneTexture()
         }
         lightDirectionVector = normalize(lightDirectionVector);
         float diffuseFloat = max(dot(normalVector, lightDirectionVector), 0.0);
-        vec3 diffuseVector = lightsUniform[currentLight].diffuse * diffuseFloat * texture(objectDefaultMaterialUniform.diffuseMap, fragmentShaderIn.TextureCoordinates).rgb;
-    
+
+        vec3 diffuseVector  = lightsUniform[currentLight].diffuse * diffuseFloat * texture(objectDefaultMaterialUniform.diffuseMap, fragmentShaderIn.TextureCoordinates).rgb;
+
         // calc specular
         vec3 fragmentToCameraVector = normalize(cameraUniform.Position - fragmentShaderIn.FragmentPosition);
         // Phong
@@ -113,7 +118,8 @@ vec3 OneTexture()
         // Blinn-Phong
         vec3 BlinnPhongVector = normalize(lightDirectionVector + fragmentToCameraVector);
         float specularFloat = pow(max(dot(normalVector, BlinnPhongVector), 0.0), objectMaterialUniform.shininess);
-        vec3 specularVector = lightsUniform[currentLight].specular * objectDefaultMaterialUniform.specular * specularFloat;
+
+        vec3 specularVector =  lightsUniform[currentLight].specular * specularFloat * objectDefaultMaterialUniform.specular;
 
         finalColor += (attenuation*(ambient + diffuseVector + specularVector));
     }
@@ -128,12 +134,19 @@ vec3 ThreeTextures()
 
     vec3 normalVector = normalize(transpose(inverse(mat3(modelMatrixUniform))) * fragmentShaderIn.Normal);
     
-    for (int currentLight = 0; currentLight < numberOfLightsUniform; currentLight++) {
+    for (int currentLight = 0; currentLight < numberOfLightsUniform; currentLight++) 
+    {
+        if(lightsUniform[currentLight].isLightOn == false)
+        {
+            continue;
+        }
+
         float attenuation = 1.0;
 
         // calc ambient
         vec3 ambient = lightsUniform[currentLight].ambient * texture(objectMaterialUniform.diffuseMap, fragmentShaderIn.TextureCoordinates).rgb;
-    
+
+
         // calc diffuse
         vec3 lightDirectionVector;
         if (lightsUniform[currentLight].type == DirectionalLight) {
@@ -151,8 +164,10 @@ vec3 ThreeTextures()
         }
         lightDirectionVector = normalize(lightDirectionVector);
         float diffuseFloat = max(dot(normalVector, lightDirectionVector), 0.0);
+
         vec3 diffuseVector = lightsUniform[currentLight].diffuse * diffuseFloat * texture(objectMaterialUniform.diffuseMap, fragmentShaderIn.TextureCoordinates).rgb;
-    
+
+
         // calc specular
         vec3 fragmentToCameraVector = normalize(cameraUniform.Position - fragmentShaderIn.FragmentPosition);
         // Phong
@@ -161,7 +176,8 @@ vec3 ThreeTextures()
         // Blinn-Phong
         vec3 BlinnPhongVector = normalize(lightDirectionVector + fragmentToCameraVector);
         float specularFloat = pow(max(dot(normalVector, BlinnPhongVector), 0.0), objectMaterialUniform.shininess);
-        vec3 specularVector = lightsUniform[currentLight].specular * texture(objectMaterialUniform.specularMap, fragmentShaderIn.TextureCoordinates).rgb * specularFloat;
+
+        vec3  specularVector = lightsUniform[currentLight].specular * specularFloat * texture(objectMaterialUniform.specularMap, fragmentShaderIn.TextureCoordinates).rgb;
 
         //reflection
         vec3 viewDirectionVector = normalize(fragmentShaderIn.FragmentPosition - cameraUniform.Position);
@@ -203,6 +219,9 @@ void main()
     FragmentColor = vec4(finalColor, 1.0);
 }
 
+//uniform sampler2D shadowMap;
+//
+//uniform Light directionalLight;
 /*
 float ShadowCalculation(vec4 fragPosLightSpace)
 {

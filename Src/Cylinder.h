@@ -25,8 +25,13 @@ public:
     glm::vec2 velocity;
     glm::vec2 acceleration;
 
+    // light Variables
+    float lightCooldown;
+    float cooldownTimer;
+    bool pegHasBeenHit;
+    Light* pegLight{ nullptr };
     //ObjectMaterial material = { {1, 1, 1 }, { 1, 1, 1 }, { 1, 1, 1 }, 128.0 };
-    
+
 
     // ctor/dtor
     Cylinder(float baseRadius = 0.5f, float topRadius = 0.5f, float height = 1.0f,
@@ -69,6 +74,9 @@ public:
     unsigned int GetSideStartIndex() const { return 0; }   // side starts from the begining
     const char* GetName();
     bool IsContainedWithin(Rectangle* boundary);
+    //void UpdatePegLights(Light* light, float deltaTime);
+    void UpdatePegLights(float deltaTime);
+    void ResetCooldownTimer();
 protected:
 
 private:

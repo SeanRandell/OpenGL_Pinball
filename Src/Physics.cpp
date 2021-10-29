@@ -234,6 +234,10 @@ void Physics::CollideSphereAndPeg(std::pair<Sphere*, Cylinder*>& collidedObjects
     // update velocities
     ball->velocity.x = tx * dpTan1 + nx * momentum1;
     ball->velocity.y = ty * dpTan1 + ny * momentum1;
+
+    //reset peg light
+    peg->ResetCooldownTimer();
+    peg->pegHasBeenHit = true;
 }
 
 void Physics::CollideTwoSpheres(std::pair<Sphere*, Sphere*>& collidedSpheres)

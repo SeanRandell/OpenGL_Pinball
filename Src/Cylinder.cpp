@@ -22,6 +22,11 @@ Cylinder::Cylinder(float baseRadius, float topRadius, float height, int sectors,
     this->velocity = glm::vec2(0.0, 0.0);
     this->acceleration = glm::vec2(0.0, 0.0);
 
+    // light variables
+    this->lightCooldown = 1.0;
+    this->cooldownTimer = 0.0;
+    this->pegHasBeenHit = false;
+
     // generate unit circle vertices first
     BuildUnitCircleVertices();
 
@@ -403,4 +408,42 @@ bool Cylinder::IsContainedWithin(Rectangle* boundary) {
         this->position.y + this->topRadius >= boundary->y - boundary->width &&
         this->position.y + this->topRadius <= boundary->y + boundary->width
         );
+}
+
+//void Cylinder::UpdatePegLights(Light* light, float deltaTime)
+void Cylinder::UpdatePegLights(float deltaTime)
+{
+    if (pegLight == nullptr)
+    {
+        return;
+    }
+    // if the peg bool is false and the countdown is greater than the cooldown then return
+    //light is false
+    if (!pegHasBeenHit && cooldownTimer >= lightCooldown)
+    {
+        //light->isLightOn = false;
+        pegLight->isLightOn = false;
+        return;
+    }
+    //if the peg bool has been reset = true
+    //reset the countdown to 0 and make the peg bool false
+    // light is true
+    if (pegHasBeenHit)
+    {
+        //light->isLightOn = true;
+        pegLight->isLightOn = true;
+        ResetCooldownTimer();
+        pegHasBeenHit = false;
+    }
+
+    //if countdown is less than cooldown then + deltatime to countdown 
+    if (cooldownTimer < lightCooldown)
+    {
+        cooldownTimer += deltaTime;
+    }
+}
+
+void Cylinder::ResetCooldownTimer()
+{
+    this->cooldownTimer = 0.0f;
 }

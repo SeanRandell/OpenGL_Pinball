@@ -59,8 +59,6 @@ bool Application::Tick()
     Rectangle* boundary = new Rectangle(0, 0, 25 , 25);
     Quadtree* quadtree = new Quadtree(boundary, 4);
     UpdateState(quadtree);
-    //update models and shaders here
-    std::cout << timeDelta << std::endl;
     RenderFrame(quadtree);
 
     delete boundary;
@@ -80,7 +78,6 @@ void Application::UpdateState(Quadtree* quadtree)
 
 void Application::RenderFrame(Quadtree* quadtree)
 {
-    // Print out all debug info
     renderLoop->RenderFrame(stateTracker, quadtree);
 
     console->Render("DEBUG", fps,

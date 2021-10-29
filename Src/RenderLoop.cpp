@@ -63,69 +63,76 @@ void RenderLoop::Init(StateTracker* stateTracker, int screenWidth, int screenHei
         .diffuse = glm::vec3(0.5, 0.5, 0.5),
         .specular = glm::vec3(1.0, 1.0, 1.0),
         .direction = glm::vec3(0.0, 0.0, -1.0),
-        .position = glm::vec3(0.0, 8.0, 10.0)
+        .position = glm::vec3(0.0, 8.0, 10.0),
+        .isLightOn = true
         });
-    // Add x-axis red spot lights (palce all at x+3.0 so they are positioned around shaded cube)
+    // Add red spot lights 
     stateTracker->lightModel->AddLight({
         .type = LightType::PointLight,
         .ambient = glm::vec3(0.2, 0.0, 0.0),
         .diffuse = glm::vec3(0.5, 0.0, 0.0),
         .specular = glm::vec3(1.0,1.0, 1.0),
-        .position = glm::vec3(-4.5, 3.0, 0.5),
+        .position = glm::vec3(-4.5, 3.0, 1.5),
         .constant = 1.0f,
         .linear = 0.14f,
-        .quadratic = 0.07f
+        .quadratic = 0.07f,
+        .isLightOn = false
         });
     stateTracker->lightModel->AddLight({
         .type = LightType::PointLight,
         .ambient = glm::vec3(0.2, 0.0, 0.0),
         .diffuse = glm::vec3(0.5, 0.0, 0.0),
         .specular = glm::vec3(1.0, 1.0, 1.0),
-        .position = glm::vec3(0.0, 0.0, 0.5),
+        .position = glm::vec3(0.0, 0.0, 1.5),
         .constant = 1.0f,
         .linear = 0.14f,
-        .quadratic = 0.07f
+        .quadratic = 0.07f,
+        .isLightOn = false
         });
     stateTracker->lightModel->AddLight({
         .type = LightType::PointLight,
         .ambient = glm::vec3(0.2, 0.0, 0.0),
         .diffuse = glm::vec3(0.5, 0.0, 0.0),
         .specular = glm::vec3(1.0, 0.0, 0.0),
-        .position = glm::vec3(4.5, -3.0, 0.5),
+        .position = glm::vec3(4.5, -3.0, 1.5),
         .constant = 1.0f,
         .linear = 0.14f,
-        .quadratic = 0.07f
+        .quadratic = 0.07f,
+        .isLightOn = false
         });
-    //// Add y-axis green spot lights
+    // Add green spot lights
     stateTracker->lightModel->AddLight({
         .type = LightType::PointLight,
         .ambient = glm::vec3(0.0, 0.2, 0.0),
         .diffuse = glm::vec3(0.0, 0.5, 0.0),
         .specular = glm::vec3(0.0, 1.0, 0.0),
-        .position = glm::vec3(4.5, 3.0, 0.5),
+        .position = glm::vec3(4.5, 3.0, 1.5),
         .constant = 1.0f,
         .linear = 0.14f,
-        .quadratic = 0.07f
+        .quadratic = 0.07f,
+        .isLightOn = false
         });
     stateTracker->lightModel->AddLight({
         .type = LightType::PointLight,
         .ambient = glm::vec3(0.0, 0.2, 0.0),
         .diffuse = glm::vec3(0.0, 0.5, 0.0),
         .specular = glm::vec3(1.0, 1.0, 1.0),
-        .position = glm::vec3(-4.5, -3.0,0.5),
+        .position = glm::vec3(-4.5, -3.0, 1.5),
         .constant = 1.0f,
         .linear = 0.14f,
-        .quadratic = 0.07f
+        .quadratic = 0.07f,
+        .isLightOn = false
         });
     stateTracker->lightModel->AddLight({
         .type = LightType::PointLight,
         .ambient = glm::vec3(0.0, 0.2, 0.0),
         .diffuse = glm::vec3(0.0, 0.5, 0.0),
         .specular = glm::vec3(1.0, 1.0, 1.0),
-        .position = glm::vec3(1.5, -3.0, 0.5),
+        .position = glm::vec3(1.5, -3.0, 1.5),
         .constant = 1.0f,
         .linear = 0.14f,
-        .quadratic = 0.07f
+        .quadratic = 0.07f,
+        .isLightOn = false
         });
     // blue point lights
     stateTracker->lightModel->AddLight({
@@ -133,10 +140,11 @@ void RenderLoop::Init(StateTracker* stateTracker, int screenWidth, int screenHei
         .ambient = glm::vec3(0.0, 0.0, 0.2),
         .diffuse = glm::vec3(0.0, 0.0, 0.5),
         .specular = glm::vec3(1.0, 1.0, 1.0),
-        .position = glm::vec3(-1.5, 3.0, 0.5),
+        .position = glm::vec3(-1.5, 3.0, 1.5),
         .constant = 1.0f,
         .linear = 0.14f,
-        .quadratic = 0.07f
+        .quadratic = 0.07f,
+        .isLightOn = false
         });
     stateTracker->lightModel->AddLight({
         .type = LightType::PointLight,
@@ -146,17 +154,19 @@ void RenderLoop::Init(StateTracker* stateTracker, int screenWidth, int screenHei
         .position = glm::vec3(3.0, 0.0, 0.5),
         .constant = 1.0f,
         .linear = 0.14f,
-        .quadratic = 0.07f
+        .quadratic = 0.07f,
+        .isLightOn = false
         });
     stateTracker->lightModel->AddLight({
         .type = LightType::PointLight,
         .ambient = glm::vec3(0.0, 0.0, 0.2),
         .diffuse = glm::vec3(0.0, 0.0, 0.5),
         .specular = glm::vec3(1.0, 1.0, 1.0),
-        .position = glm::vec3(-1.5, -3.0, 0.5),
+        .position = glm::vec3(-1.5, -3.0, 1.5),
         .constant = 1.0f,
         .linear = 0.14f,
-        .quadratic = 0.07f
+        .quadratic = 0.07f,
+        .isLightOn = false
         });
     // purple point lights 
     stateTracker->lightModel->AddLight({
@@ -164,21 +174,29 @@ void RenderLoop::Init(StateTracker* stateTracker, int screenWidth, int screenHei
         .ambient = glm::vec3(0.2, 0.0, 0.2),
         .diffuse = glm::vec3(0.5, 0.0, 0.5),
         .specular = glm::vec3(1.0, 1.0, 1.0),
-        .position = glm::vec3(1.5, 3.0, 0.5),
+        .position = glm::vec3(1.5, 3.0, 1.5),
         .constant = 1.0f,
         .linear = 0.14f,
-        .quadratic = 0.07f
+        .quadratic = 0.07f,
+        .isLightOn = false
         });
     stateTracker->lightModel->AddLight({
         .type = LightType::PointLight,
         .ambient = glm::vec3(0.2, 0.0, 0.2),
         .diffuse = glm::vec3(0.5, 0.0, 0.5),
         .specular = glm::vec3(1.0, 1.0, 1.0),
-        .position = glm::vec3(-3.0, 0.0, 0.5),
+        .position = glm::vec3(-3.0, 0.0, 1.5),
         .constant = 1.0f,
         .linear = 0.14f,
-        .quadratic = 0.07f
+        .quadratic = 0.07f,
+        .isLightOn = false
         });
+
+    // assign lights to pegs
+    for (int i = 1; i < stateTracker->pegs.size(); i++)
+    {
+        stateTracker->pegs[i]->pegLight = stateTracker->lightModel->GetLight(i);
+    }
 }
 
 void RenderLoop::CheckInput(StateTracker* stateTracker, bool* quitApp, float deltaTime) {
@@ -401,6 +419,15 @@ void RenderLoop::UpdateState(StateTracker* stateTracker, float deltaTime, Quadtr
 
             // Count physics objects
             stateTracker->physicsObjectCount = stateTracker->spheres.size() + stateTracker->blocks.size() + stateTracker->pegs.size();
+
+            //int j = 1;
+            //Update peg lights
+            for (int i = 1; i < stateTracker->pegs.size(); i++)
+            {
+                //stateTracker->pegs[i]->UpdatePegLights(stateTracker->lightModel->GetLight(j), deltaTime);
+                stateTracker->pegs[i]->UpdatePegLights(deltaTime);
+                //j++;
+            }
 
             // update particles
             for (int i = 0; i < stateTracker->spheres.size(); i++)

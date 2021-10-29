@@ -105,6 +105,7 @@ public:
         SetFloat(MakeStructName(name, "constant"), light.constant);
         SetFloat(MakeStructName(name, "linear"), light.linear);
         SetFloat(MakeStructName(name, "quadratic"), light.quadratic);
+        SetBool(MakeStructName(name, "isLightOn"), light.isLightOn);
         //SetFloat(MakeStructName(name, "CutOff"), light.cutoff);
         //SetFloat(MakeStructName(name, "OuterCutoff"), light.outerCutoff);
     }
@@ -121,6 +122,7 @@ public:
         SetFloat(MakeStructName(full_name, "constant"), light.constant);
         SetFloat(MakeStructName(full_name, "linear"), light.linear);
         SetFloat(MakeStructName(full_name, "quadratic"), light.quadratic);
+        SetBool(MakeStructName(full_name, "isLightOn"), light.isLightOn);
         //SetFloat(MakeStructName(full_name, "CutOff"), light.cutoff);
         //SetFloat(MakeStructName(full_name, "OuterCutoff"), light.OuterCutoff);
     }

@@ -27,6 +27,7 @@ struct Light
     float constant;         //   Point, Spot
     float linear;           //   Point, Spot
     float quadratic;        //   Point, Spot
+    bool isLightOn;
     //float Cutoff;           //   Spot
     //float OuterCutoff;      //   Spot
 };

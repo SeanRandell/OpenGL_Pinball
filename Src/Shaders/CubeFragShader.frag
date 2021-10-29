@@ -31,6 +31,7 @@ struct Light {
     float constant;
     float linear;
     float quadratic;
+    bool isLightOn;
 //    float cutoff;
 //    float OuterCutoff;
 };
@@ -60,7 +61,12 @@ void main()
     vec3 normalVector = normalize(transpose(inverse(mat3(modelMatrixUniform))) * fragmentShaderIn.Normal);
     
     vec3 finalColor = vec3(0.0, 0.0, 0.0);
-    for (int currentLight = 0; currentLight < numberOfLightsUniform; currentLight++) {
+    for (int currentLight = 0; currentLight < numberOfLightsUniform; currentLight++) 
+    {
+        if(lightsUniform[currentLight].isLightOn == false)
+        {
+            continue;
+        }
         float attenuation = 1.0;
 
         // calc ambient
@@ -83,7 +89,7 @@ void main()
         }
         lightDirectionVector = normalize(lightDirectionVector);
         float diffuseFloat = max(dot(normalVector, lightDirectionVector), 0.0);
-        vec3 diffuseVector = lightsUniform[currentLight].diffuse * objectMaterialUniform.diffuse * diffuseFloat;
+        vec3 diffuseVector = lightsUniform[currentLight].diffuse * diffuseFloat * objectMaterialUniform.diffuse;
     
         // calc specular
         vec3 fragmentToCameraVector = normalize(cameraUniform.Position - fragmentShaderIn.FragmentPosition);
@@ -93,7 +99,7 @@ void main()
         // Blinn-Phong
         vec3 BlinnPhongVector = normalize(lightDirectionVector + fragmentToCameraVector);
         float specularFloat = pow(max(dot(normalVector, BlinnPhongVector), 0.0), objectMaterialUniform.shininess);
-        vec3 specularVector = lightsUniform[currentLight].specular * objectMaterialUniform.specular * specularFloat;
+        vec3 specularVector = lightsUniform[currentLight].specular * specularFloat * objectMaterialUniform.specular;
 
         finalColor += (attenuation*(ambient + diffuseVector + specularVector));
     }
