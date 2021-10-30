@@ -535,6 +535,7 @@ void RenderLoop::RenderFrame(StateTracker* stateTracker, Quadtree* quadtree)
     stateTracker->particleShader->Use();
     stateTracker->particleShader->SetMat4("projectionMatrixUniform", stateTracker->projectionMatrix);
     stateTracker->particleShader->SetMat4("viewMatrixUniform", stateTracker->viewMatrix);
+    stateTracker->particleShader->SetCamera("cameraUniform", *stateTracker->camera);
     glActiveTexture(GL_TEXTURE0);
     //stateTracker->particleTexture->Bind();
     //for (auto ball : stateTracker->spheres)
@@ -547,7 +548,7 @@ void RenderLoop::RenderFrame(StateTracker* stateTracker, Quadtree* quadtree)
 
     //for (auto particle : stateTracker->particleGenerator->particles)
     //{
-        stateTracker->particleGenerator->Render(stateTracker->particleShader, stateTracker->diffuseMapTexture);
+        stateTracker->particleGenerator->Render(stateTracker->particleShader, stateTracker->particleTexture);
     //}
 
     // sphere
