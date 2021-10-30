@@ -105,19 +105,22 @@ void StateTracker::InitShadersAndTextures()
     std::string reflectionMapPath = "../Assignment2/Src/Textures/container2_specular.png";
     std::string bumperBlockTexturePath = "../Assignment2/Src/Textures/SpaceFloor.jpg";
     std::string wallBlockTexturePath = "../Assignment2/Src/Textures/Concrete.jpg";
-    //std::string particlePath = 
+    std::string particleTexturePath = "../Assignment2/Src/Textures/particle.png";
 
-    this->diffuseMapTexture = new TextureObject(&diffuseMapPath);
-    this->specularMapTexture = new TextureObject(&specularMapPath);
-    this->reflectionMaptexture = new TextureObject(&reflectionMapPath);
-    this->bumperBlockTexture = new TextureObject(&bumperBlockTexturePath);
-    this->wallBlockTexture = new TextureObject(&wallBlockTexturePath);
+    // TODO - Rework constructors
+    this->diffuseMapTexture = new TextureObject(&diffuseMapPath, GL_REPEAT, GL_REPEAT, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR, 0, 0, true);
+    this->specularMapTexture = new TextureObject(&specularMapPath, GL_REPEAT, GL_REPEAT, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR, 0, 0, true);
+    this->reflectionMaptexture = new TextureObject(&reflectionMapPath, GL_REPEAT, GL_REPEAT, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR, 0, 0, true);
+    this->bumperBlockTexture = new TextureObject(&bumperBlockTexturePath, GL_REPEAT, GL_REPEAT, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR, 0, 0, true);
+    this->wallBlockTexture = new TextureObject(&wallBlockTexturePath, GL_REPEAT, GL_REPEAT, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR, 0, 0, true);
+    this->particleTexture = new TextureObject(&particleTexturePath, GL_REPEAT, GL_REPEAT, GL_LINEAR, GL_LINEAR, GL_RGBA, GL_RGBA, false);
 
     this->diffuseMapTexture->SetTextureID();
     this->specularMapTexture->SetTextureID();
     this->reflectionMaptexture->SetTextureID();
     this->bumperBlockTexture->SetTextureID();
     this->wallBlockTexture->SetTextureID();
+    this->particleTexture->SetTextureID();
 }
 
 StateTracker::~StateTracker()
@@ -142,7 +145,7 @@ StateTracker::~StateTracker()
     delete reflectionMaptexture;
     delete bumperBlockTexture;
     delete wallBlockTexture;
-
+    delete particleTexture;
 
     cube->End();
     delete cube;
@@ -178,7 +181,6 @@ StateTracker::~StateTracker()
     glDeleteFramebuffers(1, &rboDepth);
     glDeleteFramebuffers(2, pingpongFBO);
     glDeleteFramebuffers(1, &depthMapFBO);
-
 }
 
 void StateTracker::BuildGameObjects()
@@ -272,13 +274,6 @@ void StateTracker::BuildGameObjects()
     //purple lights
     pegs.push_back(TopPeg3);
     pegs.push_back(MiddlePeg1);
-
-
-
-
-
-
-
 
     for (int i = 0; i < pegs.size(); i++)
     {

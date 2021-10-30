@@ -10,6 +10,7 @@ public:
     ~Quad() {}
     virtual void Init();
     virtual void Render(RTRShader* shader);
+    void RenderParticle(RTRShader* shader);
     virtual void End();
     virtual const char* GetName();
 };

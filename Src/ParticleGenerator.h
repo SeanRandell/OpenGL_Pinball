@@ -19,6 +19,11 @@ struct Particle {
     float life;
 
     Particle() : position(0.0f), velocity(0.0f), color(1.0f), life(0.0f) { }
+    Particle(glm::vec2 position, float life) : velocity(0.0f), color(1.0f), life(0.0f)
+    {
+        this->position = position;
+        this->life = life;
+    }
 };
 
 
@@ -29,19 +34,20 @@ class ParticleGenerator
 {
 public:
     unsigned int particleTexture;
+    std::vector<Particle*> particles;
     // constructor
     ParticleGenerator(unsigned int amount);
     ~ParticleGenerator();
     // update all particles
     void Update(float dt, Sphere& object, unsigned int newParticles, glm::vec2 offset = glm::vec2(0.0f, 0.0f));
     // render all particles
-    void Render(RTRShader* shader);
+    void Render(RTRShader* shader,TextureObject* particleTexture);
     void Init();
 private:
 
     // state
     //std::vector<std::pair<Sphere*,std::vector<Particle>>> particles;
-    std::vector<Particle> particles;
+
     unsigned int amount;
 
     std::string particlePath;
@@ -55,6 +61,6 @@ private:
     unsigned int FirstUnusedParticle();
     // respawns particle
     void RespawnParticle(Particle& particle, Sphere& object, glm::vec2 offset = glm::vec2(0.0f, 0.0f));
-    unsigned int LoadTexture(std::string* path);
+    //unsigned int LoadTexture(std::string* path);
 
 };

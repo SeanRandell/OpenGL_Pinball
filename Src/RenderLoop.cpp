@@ -38,6 +38,9 @@ void RenderLoop::Init(StateTracker* stateTracker, int screenWidth, int screenHei
     //TODO fix for multtiShader?
     //stateTracker->blockShader->SetInt("shadowMap", 4);
 
+    //particles
+    stateTracker->particleShader->SetInt("sprite", 0);
+
     stateTracker->skyBoxShader->Use();
     stateTracker->skyBoxShader->SetInt("skyBoxUniform", 0);
 
@@ -197,6 +200,10 @@ void RenderLoop::Init(StateTracker* stateTracker, int screenWidth, int screenHei
     {
         stateTracker->pegs[i]->pegLight = stateTracker->lightModel->GetLight(i);
     }
+
+    stateTracker->particleGenerator->particles.push_back(new Particle(glm::vec2(0, 0), 10.0f));
+    stateTracker->particleGenerator->particles.push_back(new Particle(glm::vec2(5, 0), 10.0f));
+    stateTracker->particleGenerator->particles.push_back(new Particle(glm::vec2(10, 0), 10.0f));
 }
 
 void RenderLoop::CheckInput(StateTracker* stateTracker, bool* quitApp, float deltaTime) {
@@ -432,8 +439,7 @@ void RenderLoop::UpdateState(StateTracker* stateTracker, float deltaTime, Quadtr
             // update particles
             for (int i = 0; i < stateTracker->spheres.size(); i++)
             {
-
-
+                
             }
         }
     }
@@ -524,6 +530,25 @@ void RenderLoop::RenderFrame(StateTracker* stateTracker, Quadtree* quadtree)
             stateTracker->blocks[i]->Render(stateTracker->normalShader, stateTracker->skyBox, stateTracker->diffuseMapTexture, stateTracker->specularMapTexture, stateTracker->reflectionMaptexture);
         }
     }
+
+    //Particles
+    stateTracker->particleShader->Use();
+    stateTracker->particleShader->SetMat4("projectionMatrixUniform", stateTracker->projectionMatrix);
+    stateTracker->particleShader->SetMat4("viewMatrixUniform", stateTracker->viewMatrix);
+    glActiveTexture(GL_TEXTURE0);
+    //stateTracker->particleTexture->Bind();
+    //for (auto ball : stateTracker->spheres)
+    //{
+    //    //if ball is going fast enough
+
+    //}
+
+
+
+    //for (auto particle : stateTracker->particleGenerator->particles)
+    //{
+        stateTracker->particleGenerator->Render(stateTracker->particleShader, stateTracker->diffuseMapTexture);
+    //}
 
     // sphere
     stateTracker->sphereShader->Use();

@@ -8,7 +8,8 @@
 class TextureObject {
 public:
     // constructor (sets default texture modes)
-    TextureObject(std::string* filePath);
+    TextureObject(std::string* filePath, unsigned int wrapS, unsigned int wrapT,
+        unsigned int filterMin, unsigned int filterMax, unsigned int internalFormat, unsigned int imageFormat, bool useDataForFormat);
     unsigned int LoadTexture();
     void SetTextureID();
     // binds the texture as the current active GL_TEXTURE_2D texture object
@@ -17,8 +18,12 @@ public:
 private:
     unsigned int textureID;
     std::string* filePath;
-    //unsigned int Wrap_S; // wrapping mode on S axis
-    //unsigned int Wrap_T; // wrapping mode on T axis
-    //unsigned int Filter_Min; // filtering mode if texture pixels < screen pixels
-    //unsigned int Filter_Max; // filtering mode if texture pixels > screen pixels
+    unsigned int wrapS; // wrapping mode on S axis
+    unsigned int wrapT; // wrapping mode on T axis
+    unsigned int filterMin; // filtering mode if texture pixels < screen pixels
+    unsigned int filterMax; // filtering mode if texture pixels > screen pixels
+    // texture Format
+    unsigned int internalFormat; // format of texture object
+    unsigned int imageFormat; // format of loaded image
+    bool useDataForFormat;
 };

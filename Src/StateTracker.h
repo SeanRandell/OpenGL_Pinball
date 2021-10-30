@@ -90,7 +90,7 @@ public:
     TextureObject* bumperBlockTexture{ nullptr };
     TextureObject* wallBlockTexture{ nullptr };
     //particle
-    //TextureObject* particleTexture{ nullptr };
+    TextureObject* particleTexture{ nullptr };
 
     LightingModel* lightModel;
     ParticleGenerator* particleGenerator;

@@ -19,27 +19,27 @@ ParticleGenerator::~ParticleGenerator()
 void ParticleGenerator::Update(float deltaTime, Sphere& object, unsigned int newParticles, glm::vec2 offset)
 {
     // add new particles 
-    for (unsigned int i = 0; i < newParticles; ++i)
-    {
-        int unusedParticle = this->FirstUnusedParticle();
-        this->RespawnParticle(this->particles[unusedParticle], object, offset);
-    }
-    // update all particles
-    for (unsigned int i = 0; i < this->amount; ++i)
-    {
-        Particle& currentParticle = this->particles[i];
-        currentParticle.life -= deltaTime; // reduce life
-        if (currentParticle.life > 0.0f)
-        {	// particle is alive, thus update
-            currentParticle.position -= currentParticle.velocity * deltaTime;
-            currentParticle.color.a -= deltaTime * 2.5f;
-        }
-    }
+    //for (unsigned int i = 0; i < newParticles; ++i)
+    //{
+    //    int unusedParticle = this->FirstUnusedParticle();
+    //    this->RespawnParticle(this->particles[unusedParticle], object, offset);
+    //}
+    //// update all particles
+    //for (unsigned int i = 0; i < this->amount; ++i)
+    //{
+    //    Particle& currentParticle = this->particles[i];
+    //    currentParticle.life -= deltaTime; // reduce life
+    //    if (currentParticle.life > 0.0f)
+    //    {	// particle is alive, thus update
+    //        currentParticle.position -= currentParticle.velocity * deltaTime;
+    //        currentParticle.color.a -= deltaTime * 2.5f;
+    //    }
+    //}
 }
 
 void ParticleGenerator::Init()
 {
-    particleTexture = LoadTexture(&particlePath);
+    //particleTexture = LoadTexture(&particlePath);
 
     // set up mesh and attribute properties
 
@@ -67,23 +67,24 @@ void ParticleGenerator::Init()
     //glBindVertexArray(0);
 
     // create this->amount default particle instances
-    for (unsigned int i = 0; i < this->amount; ++i)
-        this->particles.push_back(Particle());
+    //for (unsigned int i = 0; i < this->amount; ++i)
+    //    this->particles.push_back(Particle());
 }
 
 // render all particles
-void ParticleGenerator::Render(RTRShader* shader)
+void ParticleGenerator::Render(RTRShader* shader, TextureObject* particleTexture)
 {
     // use additive blending to give it a 'glow' effect
     glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-    shader->Use();
-    for (Particle particle : this->particles)
+    for (Particle* particle : this->particles)
     {
-        if (particle.life > 0.0f)
+        if (particle->life > 0.0f)
         {
-            shader->SetVec2("offset", particle.position);
-            shader->SetVec4("color", particle.color);
-            glBindTexture(GL_TEXTURE_2D, particleTexture);
+            shader->SetVec2("offset", particle->position);
+            shader->SetVec4("color", particle->color);
+            particleTexture->Bind();
+            //glBindTexture(GL_TEXTURE_2D, particleTexture);
+            
             //glBindVertexArray(this->VAO);
             //glDrawArrays(GL_TRIANGLES, 0, 6);
             //glBindVertexArray(0);
@@ -102,14 +103,14 @@ unsigned int ParticleGenerator::FirstUnusedParticle()
     unsigned int lastUsedParticle = 0;
     // first search from last used particle, this will usually return almost instantly
     for (unsigned int i = lastUsedParticle; i < this->amount; ++i) {
-        if (this->particles[i].life <= 0.0f) {
+        if (this->particles[i]->life <= 0.0f) {
             lastUsedParticle = i;
             return i;
         }
     }
     // otherwise, do a linear search
     for (unsigned int i = 0; i < lastUsedParticle; ++i) {
-        if (this->particles[i].life <= 0.0f) {
+        if (this->particles[i]->life <= 0.0f) {
             lastUsedParticle = i;
             return i;
         }
@@ -129,53 +130,53 @@ void ParticleGenerator::RespawnParticle(Particle& particle, Sphere& object, glm:
     particle.velocity = object.velocity * 0.1f;
 }
 
-unsigned int ParticleGenerator::LoadTexture(std::string* path) {
-
-    //std::cout << testString << std::endl;
-    unsigned int textureID2 = 0;
-    glGenTextures(1, &textureID2);
-
-    // load image, create texture and generate mipmaps
-    int width = 0;
-    int height = 0;
-    int nrChannels = 0;
-    //stbi_set_flip_vertically_on_load(true); // tell stb_image.h to flip loaded texture's on the y-axis.
-    unsigned char* data = stbi_load(path->c_str(), &width, &height, &nrChannels, 0);
-    //unsigned char* data = stbi_load(skyBoxFaces[i].c_str(), &width, &height, &nrChannels, 0);
-    if (data)
-    {
-        GLenum format;
-        if (nrChannels == 1) {
-            format = GL_RED;
-        }
-        else if (nrChannels == 3) {
-            format = GL_RGB;
-        }
-        else if (nrChannels == 4) {
-            format = GL_RGBA;
-        }
-
-        glBindTexture(GL_TEXTURE_2D, textureID2);
-        glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
-        glGenerateMipmap(GL_TEXTURE_2D);
-
-        // set the texture wrapping parameters
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-        // set texture filtering parameters
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-        // unbind texture
-        glBindTexture(GL_TEXTURE_2D, 0);
-        stbi_image_free(data);
-    }
-    else
-    {
-        std::cout << "Failed to load texture" << std::endl;
-        stbi_image_free(data);
-    }
-
-    return textureID2;
-}
+//unsigned int ParticleGenerator::LoadTexture(std::string* path) {
+//
+//    //std::cout << testString << std::endl;
+//    unsigned int textureID2 = 0;
+//    glGenTextures(1, &textureID2);
+//
+//    // load image, create texture and generate mipmaps
+//    int width = 0;
+//    int height = 0;
+//    int nrChannels = 0;
+//    //stbi_set_flip_vertically_on_load(true); // tell stb_image.h to flip loaded texture's on the y-axis.
+//    unsigned char* data = stbi_load(path->c_str(), &width, &height, &nrChannels, 0);
+//    //unsigned char* data = stbi_load(skyBoxFaces[i].c_str(), &width, &height, &nrChannels, 0);
+//    if (data)
+//    {
+//        GLenum format;
+//        if (nrChannels == 1) {
+//            format = GL_RED;
+//        }
+//        else if (nrChannels == 3) {
+//            format = GL_RGB;
+//        }
+//        else if (nrChannels == 4) {
+//            format = GL_RGBA;
+//        }
+//
+//        glBindTexture(GL_TEXTURE_2D, textureID2);
+//        glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+//        glGenerateMipmap(GL_TEXTURE_2D);
+//
+//        // set the texture wrapping parameters
+//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+//
+//        // set texture filtering parameters
+//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+//
+//        // unbind texture
+//        glBindTexture(GL_TEXTURE_2D, 0);
+//        stbi_image_free(data);
+//    }
+//    else
+//    {
+//        std::cout << "Failed to load texture" << std::endl;
+//        stbi_image_free(data);
+//    }
+//
+//    return textureID2;
+//}
