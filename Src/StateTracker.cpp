@@ -9,12 +9,12 @@ StateTracker::StateTracker(int screenWidth, int screenHeight)
     windowWidth = screenWidth;
     windowHeight = screenHeight;
 
-    particleAmountPerBall = 500;
+    particleAmount = 1000;
 
     this->camera = new Camera(0.0, 2.0, 30.0, 0.0, 1.0, 0.0, -90.0f, 0.0f, screenWidth, screenHeight);
 
     lightModel = new LightingModel();
-    particleGenerator = new ParticleGenerator(particleAmountPerBall);
+    particleGenerator = new ParticleGenerator(particleAmount);
 
     cube = new Cube();
     skyBox = new SkyBox();
@@ -189,7 +189,7 @@ void StateTracker::BuildGameObjects()
 
     skyBox->Init();
 
-    Block* floorBlock = new Block(glm::vec3(0.0, 0.0, -1.1), glm::vec3(0.0, 0.0, 0.0), glm::vec3(23.0f, 23.0f, 0.0f), true);
+    Block* floorBlock = new Block(glm::vec3(2.0, 0.0, -1.1), glm::vec3(0.0, 0.0, 0.0), glm::vec3(30.0f, 27.0f, 0.0f), true);
 
     Block* TopBlock = new Block();
     TopBlock->position = glm::vec3(2.1, 11.0, 0.0);
@@ -282,6 +282,7 @@ void StateTracker::BuildGameObjects()
 
     debugObject->Init();
     quad->Init();
+    testSphere->Init();
 }
 
 void StateTracker::LaunchBall()
@@ -289,8 +290,7 @@ void StateTracker::LaunchBall()
     int newSphereId = spheres.size();
     Sphere* newball = new Sphere(newSphereId);
     newball->Init();
-    newball->velocity = glm::vec2(0.0, 45.0);
-    //newball->scale = glm::vec3(2.0f, 2.0f, 2.0f);
+    newball->velocity = glm::vec2(0.0, 50.0);
     newball->position = glm::vec3(10.5f, -8.0f, 0.0f);
     spheres.push_back(newball);
     spherePositions.push_back(newball->position);

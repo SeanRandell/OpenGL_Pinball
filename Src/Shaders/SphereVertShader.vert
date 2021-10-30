@@ -17,6 +17,9 @@ uniform mat4 modelMatrixUniform;
 uniform mat4 viewMatrixUniform;
 uniform mat4 projectionMatrixUniform;
 
+
+uniform vec3 offsets[200];
+
 // vertex attribs (input)
 //attribute vec3 vertexPosition;
 //attribute vec3 vertexNormal;
@@ -33,10 +36,14 @@ void main()
 //    texCoord0 = vertexTexCoord;
 //    gl_Position = matrixModelViewProjection * vec4(vertexPosition, 1.0);
 
-    vertexShaderOut.FragmentPosition = vec3(modelMatrixUniform * vec4(aPosition, 1.0));
-    vertexShaderOut.Normal = mat3(transpose(inverse(modelMatrixUniform))) * aNormal;
+//    vertexShaderOut.FragmentPosition = vec3(modelMatrixUniform * vec4(aPosition, 1.0));
+    vec3 offset = offsets[gl_InstanceID];
+    vertexShaderOut.FragmentPosition = aPosition + offset;
+//    vertexShaderOut.Normal = mat3(transpose(inverse(modelMatrixUniform))) * aNormal;
+    vertexShaderOut.Normal = offset * aNormal;
 //    vertexShaderOut.FragmentPosition = vec3(aInstanceModeMatrix * vec4(aPosition, 1.0));
 //    vertexShaderOut.Normal = mat3(transpose(inverse(aInstanceModeMatrix))) * aNormal;  
+
     gl_Position = projectionMatrixUniform * viewMatrixUniform * vec4(vertexShaderOut.FragmentPosition, 1.0);
 //     gl_Position = projectionMatrixUniform * viewMatrixUniform * modelMatrixUniform * vec4(vertexShaderOut.FragmentPosition, 1.0);
 }

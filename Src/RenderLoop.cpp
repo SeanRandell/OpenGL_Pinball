@@ -200,10 +200,6 @@ void RenderLoop::Init(StateTracker* stateTracker, int screenWidth, int screenHei
     {
         stateTracker->pegs[i]->pegLight = stateTracker->lightModel->GetLight(i);
     }
-
-    stateTracker->particleGenerator->particles.push_back(new Particle(glm::vec2(0, 0), 10.0f));
-    stateTracker->particleGenerator->particles.push_back(new Particle(glm::vec2(5, 0), 10.0f));
-    stateTracker->particleGenerator->particles.push_back(new Particle(glm::vec2(10, 0), 10.0f));
 }
 
 void RenderLoop::CheckInput(StateTracker* stateTracker, bool* quitApp, float deltaTime) {
@@ -437,9 +433,15 @@ void RenderLoop::UpdateState(StateTracker* stateTracker, float deltaTime, Quadtr
             }
 
             // update particles
-            for (int i = 0; i < stateTracker->spheres.size(); i++)
+            for (auto ball : stateTracker->spheres)
             {
-                
+                stateTracker->particleGenerator->Update(deltaTime, ball, 2, glm::vec2(ball->radius/4.0f));
+            }
+
+            //if no spheres make sure all particles die
+            if (stateTracker->spheres.size() == 0)
+            {
+                stateTracker->particleGenerator->UpdateAllParticles(deltaTime);
             }
         }
     }
@@ -468,29 +470,29 @@ void RenderLoop::RenderFrame(StateTracker* stateTracker, Quadtree* quadtree)
     stateTracker->blockShader->SetCamera("cameraUniform", *stateTracker->camera);
     stateTracker->blockShader->SetLightingModel(*stateTracker->lightModel);
 
-    for (unsigned int i = 0; i < stateTracker->blocks.size(); i++)
+    for(auto block : stateTracker->blocks)
     {
         stateTracker->blockShader->SetBool("debugUniform", false);
         stateTracker->modelMatrix = glm::mat4(1.0f);
-        stateTracker->modelMatrix = glm::translate(stateTracker->modelMatrix, stateTracker->blocks[i]->position);
-        stateTracker->modelMatrix = glm::scale(stateTracker->modelMatrix, stateTracker->blocks[i]->scale);
+        stateTracker->modelMatrix = glm::translate(stateTracker->modelMatrix, block->position);
+        stateTracker->modelMatrix = glm::scale(stateTracker->modelMatrix, block->scale);
         stateTracker->blockShader->SetMat4("modelMatrixUniform", stateTracker->modelMatrix);
-        if (stateTracker->blocks[i]->isBumper || stateTracker->blocks[i]->isScenery)
+        if (block->isBumper || block->isScenery)
         {
             glUniformSubroutinesuiv(GL_FRAGMENT_SHADER, 1, &stateTracker->OneTextureIndex);
-            if (stateTracker->blocks[i]->isScenery)
+            if (block->isScenery)
             {
-                stateTracker->blocks[i]->RenderNormalBlock(stateTracker->blockShader, stateTracker->skyBox, stateTracker->wallBlockTexture);
+                block->RenderNormalBlock(stateTracker->blockShader, stateTracker->skyBox, stateTracker->wallBlockTexture);
             }
             else
             {
-                stateTracker->blocks[i]->RenderNormalBlock(stateTracker->blockShader, stateTracker->skyBox, stateTracker->bumperBlockTexture);
+                block->RenderNormalBlock(stateTracker->blockShader, stateTracker->skyBox, stateTracker->bumperBlockTexture);
             }
         }
         else
         {
             glUniformSubroutinesuiv(GL_FRAGMENT_SHADER, 1, &stateTracker->ThreeTextureIndex);
-            stateTracker->blocks[i]->Render(stateTracker->blockShader, stateTracker->skyBox, stateTracker->diffuseMapTexture, stateTracker->specularMapTexture, stateTracker->reflectionMaptexture);
+            block->Render(stateTracker->blockShader, stateTracker->skyBox, stateTracker->diffuseMapTexture, stateTracker->specularMapTexture, stateTracker->reflectionMaptexture);
         }
 
         // render bounding box
@@ -502,7 +504,7 @@ void RenderLoop::RenderFrame(StateTracker* stateTracker, Quadtree* quadtree)
         {
             continue;
         }
-        if (stateTracker->blocks[i]->isScenery)
+        if (block->isScenery)
         {
             continue;
         }
@@ -510,7 +512,7 @@ void RenderLoop::RenderFrame(StateTracker* stateTracker, Quadtree* quadtree)
         glPolygonOffset(0, -1);
         glEnable(GL_POLYGON_OFFSET_FILL);
         stateTracker->blockShader->SetBool("debugUniform", true);
-        stateTracker->blocks[i]->Render(stateTracker->blockShader, stateTracker->skyBox, stateTracker->diffuseMapTexture, stateTracker->specularMapTexture, stateTracker->reflectionMaptexture);
+        block->Render(stateTracker->blockShader, stateTracker->skyBox, stateTracker->diffuseMapTexture, stateTracker->specularMapTexture, stateTracker->reflectionMaptexture);
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         glPolygonOffset(1, 0);
         glEnable(GL_POLYGON_OFFSET_FILL);
@@ -521,82 +523,13 @@ void RenderLoop::RenderFrame(StateTracker* stateTracker, Quadtree* quadtree)
         stateTracker->normalShader->Use();
         stateTracker->normalShader->SetMat4("projectionMatrixUniform", stateTracker->projectionMatrix);
         stateTracker->normalShader->SetMat4("viewMatrixUniform", stateTracker->viewMatrix);
-        for (unsigned int i = 0; i < stateTracker->blocks.size(); i++)
+        for (auto block : stateTracker->blocks)
         {
             stateTracker->modelMatrix = glm::mat4(1.0f);
-            stateTracker->modelMatrix = glm::translate(stateTracker->modelMatrix, stateTracker->blocks[i]->position);
-            stateTracker->modelMatrix = glm::scale(stateTracker->modelMatrix, stateTracker->blocks[i]->scale);
+            stateTracker->modelMatrix = glm::translate(stateTracker->modelMatrix, block->position);
+            stateTracker->modelMatrix = glm::scale(stateTracker->modelMatrix, block->scale);
             stateTracker->normalShader->SetMat4("modelMatrixUniform", stateTracker->modelMatrix);
-            stateTracker->blocks[i]->Render(stateTracker->normalShader, stateTracker->skyBox, stateTracker->diffuseMapTexture, stateTracker->specularMapTexture, stateTracker->reflectionMaptexture);
-        }
-    }
-
-    //Particles
-    stateTracker->particleShader->Use();
-    stateTracker->particleShader->SetMat4("projectionMatrixUniform", stateTracker->projectionMatrix);
-    stateTracker->particleShader->SetMat4("viewMatrixUniform", stateTracker->viewMatrix);
-    stateTracker->particleShader->SetCamera("cameraUniform", *stateTracker->camera);
-    glActiveTexture(GL_TEXTURE0);
-    //stateTracker->particleTexture->Bind();
-    //for (auto ball : stateTracker->spheres)
-    //{
-    //    //if ball is going fast enough
-
-    //}
-
-
-
-    //for (auto particle : stateTracker->particleGenerator->particles)
-    //{
-        stateTracker->particleGenerator->Render(stateTracker->particleShader, stateTracker->particleTexture);
-    //}
-
-    // sphere
-    stateTracker->sphereShader->Use();
-    stateTracker->sphereShader->SetMat4("viewMatrixUniform", stateTracker->viewMatrix);
-    stateTracker->sphereShader->SetMat4("projectionMatrixUniform", stateTracker->projectionMatrix);
-    stateTracker->sphereShader->SetCamera("cameraUniform", *stateTracker->camera);
-    stateTracker->sphereShader->SetLightingModel(*stateTracker->lightModel);
-    for (unsigned int i = 0; i < stateTracker->spheres.size(); i++)
-    {
-        stateTracker->sphereShader->SetBool("debugUniform", false);
-        stateTracker->modelMatrix = glm::mat4(1.0f);
-        stateTracker->modelMatrix = glm::translate(stateTracker->modelMatrix, stateTracker->spheres[i]->position);
-        stateTracker->sphereShader->SetMat4("modelMatrixUniform", stateTracker->modelMatrix);
-        stateTracker->spheres[i]->Render(stateTracker->sphereShader, stateTracker->skyBox->cubemapTexture, stateTracker->sphereMatrices);
-
-        // render bounding box
-        if (!stateTracker->isDebugOn)
-        {
-            continue;
-        }
-        if (!stateTracker->isBoundingBoxesOn)
-        {
-            continue;
-        }
-        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-        glPolygonOffset(0, -1);
-        glEnable(GL_POLYGON_OFFSET_FILL);
-        stateTracker->sphereShader->SetBool("debugUniform", true);
-        stateTracker->spheres[i]->Render(stateTracker->sphereShader, stateTracker->skyBox->cubemapTexture, stateTracker->sphereMatrices);
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-        glPolygonOffset(1, 0);
-        glEnable(GL_POLYGON_OFFSET_FILL);
-
-    }
-
-    // sphere normal
-    if (stateTracker->isVertexNormalsDisplayOn)
-    {
-        stateTracker->normalShader->SetMat4("viewMatrixUniform", stateTracker->viewMatrix);
-        stateTracker->normalShader->SetMat4("projectionMatrixUniform", stateTracker->projectionMatrix);
-        for (unsigned int i = 0; i < stateTracker->spheres.size(); i++)
-        {
-            stateTracker->normalShader->Use();
-            stateTracker->modelMatrix = glm::mat4(1.0f);
-            stateTracker->modelMatrix = glm::translate(stateTracker->modelMatrix, stateTracker->spheres[i]->position);
-            stateTracker->normalShader->SetMat4("modelMatrixUniform", stateTracker->modelMatrix);
-            stateTracker->spheres[i]->Render(stateTracker->normalShader, stateTracker->skyBox->cubemapTexture, stateTracker->sphereMatrices);
+            block->Render(stateTracker->normalShader, stateTracker->skyBox, stateTracker->diffuseMapTexture, stateTracker->specularMapTexture, stateTracker->reflectionMaptexture);
         }
     }
 
@@ -606,13 +539,13 @@ void RenderLoop::RenderFrame(StateTracker* stateTracker, Quadtree* quadtree)
     stateTracker->cubeShader->SetMat4("projectionMatrixUniform", stateTracker->projectionMatrix);
     stateTracker->cubeShader->SetCamera("cameraUniform", *stateTracker->camera);
     stateTracker->cubeShader->SetLightingModel(*stateTracker->lightModel);
-    for (int i = 0; i < stateTracker->pegs.size(); i++)
+    for(auto peg : stateTracker->pegs)
     {
         stateTracker->cubeShader->SetBool("debugUniform", false);
         stateTracker->modelMatrix = glm::mat4(1.0f);
-        stateTracker->modelMatrix = glm::translate(stateTracker->modelMatrix, stateTracker->pegs[i]->position);
+        stateTracker->modelMatrix = glm::translate(stateTracker->modelMatrix, peg->position);
         stateTracker->cubeShader->SetMat4("modelMatrixUniform", stateTracker->modelMatrix);
-        stateTracker->pegs[i]->Render(stateTracker->cubeShader);
+        peg->Render(stateTracker->cubeShader);
 
         // render bounding box
         if (!stateTracker->isDebugOn)
@@ -628,7 +561,7 @@ void RenderLoop::RenderFrame(StateTracker* stateTracker, Quadtree* quadtree)
         glPolygonOffset(0, -1);
         glEnable(GL_POLYGON_OFFSET_FILL);
         stateTracker->cubeShader->SetBool("debugUniform", true);
-        stateTracker->pegs[i]->Render(stateTracker->cubeShader);
+        peg->Render(stateTracker->cubeShader);
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         glPolygonOffset(1, 0);
         glEnable(GL_POLYGON_OFFSET_FILL);
@@ -641,14 +574,79 @@ void RenderLoop::RenderFrame(StateTracker* stateTracker, Quadtree* quadtree)
         stateTracker->normalShader->SetMat4("projectionMatrixUniform", stateTracker->projectionMatrix);
         stateTracker->normalShader->SetMat4("viewMatrixUniform", stateTracker->viewMatrix);
 
-        for (int i = 0; i < stateTracker->pegs.size(); i++)
+        for (auto peg : stateTracker->pegs)
         {
             stateTracker->modelMatrix = glm::mat4(1.0f);
-            stateTracker->modelMatrix = glm::translate(stateTracker->modelMatrix, stateTracker->pegs[i]->position);
+            stateTracker->modelMatrix = glm::translate(stateTracker->modelMatrix, peg->position);
             stateTracker->normalShader->SetMat4("modelMatrixUniform", stateTracker->modelMatrix);
-            stateTracker->pegs[i]->Render(stateTracker->normalShader);
+            peg->Render(stateTracker->normalShader);
         }
     }
+
+    //Particles
+    stateTracker->particleShader->Use();
+    stateTracker->particleShader->SetMat4("projectionMatrixUniform", stateTracker->projectionMatrix);
+    stateTracker->particleShader->SetMat4("viewMatrixUniform", stateTracker->viewMatrix);
+    stateTracker->particleShader->SetCamera("cameraUniform", *stateTracker->camera);
+    glActiveTexture(GL_TEXTURE0);
+    stateTracker->particleGenerator->Render(stateTracker->particleShader, stateTracker->particleTexture);
+
+    // sphere
+    stateTracker->sphereShader->Use();
+    stateTracker->sphereShader->SetMat4("viewMatrixUniform", stateTracker->viewMatrix);
+    stateTracker->sphereShader->SetMat4("projectionMatrixUniform", stateTracker->projectionMatrix);
+    stateTracker->sphereShader->SetCamera("cameraUniform", *stateTracker->camera);
+    stateTracker->sphereShader->SetLightingModel(*stateTracker->lightModel);
+    for (unsigned int i = 0; i < stateTracker->spheres.size(); i++)
+    {
+
+
+        stateTracker->modelMatrix = glm::mat4(1.0f);
+        stateTracker->modelMatrix = glm::translate(stateTracker->modelMatrix, stateTracker->spheres[i]->position);
+        stateTracker->sphereShader->SetMat4("modelMatrixUniform", stateTracker->modelMatrix);
+        
+    }
+    for (unsigned int i = 0; i < stateTracker->spheres.size(); i++)
+    {
+        stateTracker->sphereShader->SetArrayVec3("offsets", i, stateTracker->spheres[i]->position);
+    }
+        stateTracker->sphereShader->SetBool("debugUniform", false);
+        stateTracker->testSphere->Render(stateTracker->sphereShader, stateTracker->skyBox->cubemapTexture, stateTracker->spheres.size());
+
+        // render bounding box
+        //if (!stateTracker->isDebugOn)
+        //{
+        //    continue;
+        //}
+        //if (!stateTracker->isBoundingBoxesOn)
+        //{
+        //    continue;
+        //}
+        //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        //glPolygonOffset(0, -1);
+        //glEnable(GL_POLYGON_OFFSET_FILL);
+        //stateTracker->sphereShader->SetBool("debugUniform", true);
+        //stateTracker->spheres[i]->Render(stateTracker->sphereShader, stateTracker->skyBox->cubemapTexture, stateTracker->sphereMatrices);
+        //glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        //glPolygonOffset(1, 0);
+        //glEnable(GL_POLYGON_OFFSET_FILL);
+
+  /*  }*/
+
+    // sphere normal
+    //if (stateTracker->isVertexNormalsDisplayOn)
+    //{
+    //    stateTracker->normalShader->SetMat4("viewMatrixUniform", stateTracker->viewMatrix);
+    //    stateTracker->normalShader->SetMat4("projectionMatrixUniform", stateTracker->projectionMatrix);
+    //    for (unsigned int i = 0; i < stateTracker->spheres.size(); i++)
+    //    {
+    //        stateTracker->normalShader->Use();
+    //        stateTracker->modelMatrix = glm::mat4(1.0f);
+    //        stateTracker->modelMatrix = glm::translate(stateTracker->modelMatrix, stateTracker->spheres[i]->position);
+    //        stateTracker->normalShader->SetMat4("modelMatrixUniform", stateTracker->modelMatrix);
+    //        stateTracker->spheres[i]->Render(stateTracker->normalShader, stateTracker->skyBox->cubemapTexture, stateTracker->sphereMatrices);
+    //    }
+    //}
 
     //Lights
     if (stateTracker->isDebugOn && stateTracker->isLightingBoxesOn)

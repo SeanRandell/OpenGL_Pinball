@@ -221,19 +221,19 @@ void Physics::CollideSphereAndPeg(std::pair<Sphere*, Cylinder*>& collidedObjects
 
     // Dot Product Tangent
     float dpTan1 = ball->velocity.x * tx + ball->velocity.y * ty;
-    float dpTan2 = peg->velocity.x * tx + peg->velocity.y * ty;
+    //float dpTan2 = peg->velocity.x * tx + peg->velocity.y * ty;
 
     //TODO if a do not do this if it is a peg that the ball is colliding with.
-    float dpNormal1 = ball->velocity.x * nx + ball->velocity.y * ny;
-    float dpNormal2 = peg->velocity.x * nx + peg->velocity.y * ny;
+    //float dpNormal1 = ball->velocity.x * nx + ball->velocity.y * ny;
+    //float dpNormal2 = peg->velocity.x * nx + peg->velocity.y * ny;
 
-    //conservation of momentum in 1D
-    float momentum1 = (dpNormal1 * (ball->mass - peg->mass) + 2.0f * peg->mass * dpNormal2) / (ball->mass + peg->mass);
-    float momentum2 = (dpNormal2 * (peg->mass - ball->mass) + 2.0f * ball->mass * dpNormal1) / (ball->mass + peg->mass);
+    ////conservation of momentum in 1D
+    //float momentum1 = (dpNormal1 * (ball->mass - peg->mass) + 2.0f * peg->mass * dpNormal2) / (ball->mass + peg->mass);
+    //float momentum2 = (dpNormal2 * (peg->mass - ball->mass) + 2.0f * ball->mass * dpNormal1) / (ball->mass + peg->mass);
 
     // update velocities
-    ball->velocity.x = tx * dpTan1 + nx * momentum1;
-    ball->velocity.y = ty * dpTan1 + ny * momentum1;
+    ball->velocity.x = tx * dpTan1; //+ nx * momentum1;
+    ball->velocity.y = ty * dpTan1;// +ny * momentum1;
 
     //reset peg light
     peg->ResetCooldownTimer();

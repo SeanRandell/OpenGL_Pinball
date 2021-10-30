@@ -8,9 +8,6 @@
 #include "object.h"
 #include "Quad.h"
 #include "Sphere.h"
-//#include "texture.h"
-//#include "game_object.h"
-
 
 // Represents a single particle and its state
 struct Particle {
@@ -39,7 +36,8 @@ public:
     ParticleGenerator(unsigned int amount);
     ~ParticleGenerator();
     // update all particles
-    void Update(float dt, Sphere& object, unsigned int newParticles, glm::vec2 offset = glm::vec2(0.0f, 0.0f));
+    void Update(float dt, Sphere* object, unsigned int newParticles, glm::vec2 offset = glm::vec2(0.0f, 0.0f));
+    void UpdateAllParticles(float deltaTime);
     // render all particles
     void Render(RTRShader* shader,TextureObject* particleTexture);
     void Init();
@@ -60,7 +58,7 @@ private:
     // returns the first Particle index that's currently unused e.g. Life <= 0.0f or 0 if no particle is currently inactive
     unsigned int FirstUnusedParticle();
     // respawns particle
-    void RespawnParticle(Particle& particle, Sphere& object, glm::vec2 offset = glm::vec2(0.0f, 0.0f));
+    void RespawnParticle(Particle* particle, Sphere* object, glm::vec2 offset = glm::vec2(0.0f, 0.0f));
     //unsigned int LoadTexture(std::string* path);
 
 };

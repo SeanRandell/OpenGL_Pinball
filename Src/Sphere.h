@@ -25,7 +25,7 @@ public:
     virtual void Init();
     void InitConstructorValues();
     //virtual void Render(RTRShader* shader, unsigned int cubeMapTexture);
-    virtual void Render(RTRShader* shader, unsigned int cubeMapTexture, std::vector<glm::mat4> sphereModelMatrices);
+    virtual void Render(RTRShader* shader, unsigned int cubeMapTexture, unsigned int sphereCount);
     virtual void End();
 
     bool IsContainedWithin(Rectangle* boundary);

@@ -65,7 +65,7 @@ void Sphere::Init()
 
 }
 
-void Sphere::Render(RTRShader* shader, unsigned int cubeMapTexture, std::vector<glm::mat4> sphereModelMatrices)
+void Sphere::Render(RTRShader* shader, unsigned int cubeMapTexture, unsigned int sphereCount)
 {
     glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
 
@@ -76,10 +76,12 @@ void Sphere::Render(RTRShader* shader, unsigned int cubeMapTexture, std::vector<
 
 
     // draw center sphere
-    glDrawElements(GL_TRIANGLES,            // primitive type
-        GetIndexCount(), // # of indices
-        GL_UNSIGNED_INT,         // data type
-        (void*)0);               // ptr to indices
+    //glDrawElements(GL_TRIANGLES,            // primitive type
+    //    GetIndexCount(), // # of indices
+    //    GL_UNSIGNED_INT,         // data type
+    //    (void*)0);               // ptr to indices
+
+    glDrawElementsInstanced(GL_TRIANGLES, GetIndexCount(), GL_UNSIGNED_INT, (void*)0, sphereCount);
 
     glBindVertexArray(0);
 }

@@ -18,3 +18,8 @@ int LightingModel::AddLight(Light light) {
     numberOfLights++;
     return 0;
 }
+
+Light* LightingModel::GetLights()
+{
+    return lights;
+}

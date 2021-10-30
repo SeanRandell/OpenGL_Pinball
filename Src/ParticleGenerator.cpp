@@ -7,40 +7,57 @@ ParticleGenerator::ParticleGenerator(unsigned int amount)
     particlePath = "../Assignment2/Src/particle.png";
     particleTexture = 0;
     this->particleQuad = new Quad();
-    //this->init();
 }
 
 ParticleGenerator::~ParticleGenerator()
 {
     particleQuad->End();
     delete particleQuad;
+
+    for (auto particle : particles)
+    {
+        delete particle;
+    }
 }
 
-void ParticleGenerator::Update(float deltaTime, Sphere& object, unsigned int newParticles, glm::vec2 offset)
+void ParticleGenerator::Update(float deltaTime, Sphere* object, unsigned int newParticles, glm::vec2 offset)
 {
-    // add new particles 
-    //for (unsigned int i = 0; i < newParticles; ++i)
-    //{
-    //    int unusedParticle = this->FirstUnusedParticle();
-    //    this->RespawnParticle(this->particles[unusedParticle], object, offset);
-    //}
-    //// update all particles
-    //for (unsigned int i = 0; i < this->amount; ++i)
-    //{
-    //    Particle& currentParticle = this->particles[i];
-    //    currentParticle.life -= deltaTime; // reduce life
-    //    if (currentParticle.life > 0.0f)
-    //    {	// particle is alive, thus update
-    //        currentParticle.position -= currentParticle.velocity * deltaTime;
-    //        currentParticle.color.a -= deltaTime * 2.5f;
-    //    }
-    //}
+    // add new particles if sphere has enough velocity
+    if (sqrt((object->velocity.x * object->velocity.x) + (object->velocity.y * object->velocity.y)) >= 15.0f)
+    {
+        for (unsigned int i = 0; i < newParticles; ++i)
+        {
+            int unusedParticle = this->FirstUnusedParticle();
+            this->RespawnParticle(this->particles[unusedParticle], object, offset);
+        }
+    }
+    UpdateAllParticles(deltaTime);
+}
+
+void ParticleGenerator::UpdateAllParticles(float deltaTime)
+{
+    // update all particles
+    for (unsigned int i = 0; i < this->amount; ++i)
+    {
+        Particle* currentParticle = this->particles[i];
+        currentParticle->life -= deltaTime; // reduce life
+        if (currentParticle->life > 0.0f)
+        {	// particle is alive, thus update
+            currentParticle->position -= currentParticle->velocity * deltaTime;
+            if (currentParticle->color.a > 0)
+            {
+                currentParticle->color.a -= deltaTime * 2.5f;
+                if (currentParticle->color.a < 0)
+                {
+                    currentParticle->color.a = 0;
+                }
+            }
+        }
+    }
 }
 
 void ParticleGenerator::Init()
 {
-    //particleTexture = LoadTexture(&particlePath);
-
     // set up mesh and attribute properties
 
     particleQuad->Init();
@@ -67,8 +84,10 @@ void ParticleGenerator::Init()
     //glBindVertexArray(0);
 
     // create this->amount default particle instances
-    //for (unsigned int i = 0; i < this->amount; ++i)
-    //    this->particles.push_back(Particle());
+    for (unsigned int i = 0; i < this->amount; ++i)
+    {
+        particles.push_back(new Particle());
+    }
 }
 
 // render all particles
@@ -84,11 +103,6 @@ void ParticleGenerator::Render(RTRShader* shader, TextureObject* particleTexture
             shader->SetVec2("offset", particle->position);
             shader->SetVec4("color", particle->color);
             particleTexture->Bind();
-            //glBindTexture(GL_TEXTURE_2D, particleTexture);
-            
-            //glBindVertexArray(this->VAO);
-            //glDrawArrays(GL_TRIANGLES, 0, 6);
-            //glBindVertexArray(0);
             particleQuad->Render(shader);
         }
     }
@@ -120,12 +134,14 @@ unsigned int ParticleGenerator::FirstUnusedParticle()
     return 0;
 }
 
-void ParticleGenerator::RespawnParticle(Particle& particle, Sphere& object, glm::vec2 offset)
+void ParticleGenerator::RespawnParticle(Particle* particle, Sphere* object, glm::vec2 offset)
 {
-    float random = ((rand() % 100) - 50) / 10.0f;
+    float random = ((rand() % 100) - 50) / 200.0f;
     float rColor = 0.5f + ((rand() % 100) / 100.0f);
-    particle.position = glm::vec2(object.position.x, object.position.y) + random + offset;
-    particle.color = glm::vec4(rColor, rColor, rColor, 1.0f);
-    particle.life = 1.0f;
-    particle.velocity = object.velocity * 0.1f;
+    particle->position = glm::vec2(object->position.x, object->position.y) + random;
+    //if(position)
+    particle->color = glm::vec4(rColor, rColor, rColor, 1.0f);
+
+    particle->life = 1.0f;
+    particle->velocity = object->velocity * 0.1f;
 }

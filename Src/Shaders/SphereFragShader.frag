@@ -56,6 +56,7 @@ uniform bool debugUniform;
 
 void main()
 {
+    // TODO add light colours to final color
     vec3 viewDirectionVector = normalize(fragmentShaderIn.FragmentPosition - cameraUniform.Position);
     vec3 reflectionVector = reflect(viewDirectionVector, normalize(fragmentShaderIn.Normal));
     vec3 finalColor = texture(skyBoxUniform, reflectionVector).rgb;

@@ -52,7 +52,7 @@ public:
     bool rightFlipperMoving;
 
 
-    int particleAmountPerBall;
+    int particleAmount;
 
     bool isQuadTreeOn;
     bool isDebugHUDOn;

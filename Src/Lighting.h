@@ -55,6 +55,7 @@ public:
     int GetNumberOfLights();
     Light* GetLight(int index);
     int AddLight(Light light);
+    Light* GetLights();
 
 protected:
     int numberOfLights;

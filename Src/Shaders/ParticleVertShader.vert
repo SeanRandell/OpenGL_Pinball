@@ -21,7 +21,7 @@ uniform Camera cameraUniform;
 
 void main()
 {
-    float scale = 0.4f;
+    float scale = 0.2f;
 //    float scale = 10.0f;
     TexCoords = aTextureCoordinate;
     ParticleColor = color;
