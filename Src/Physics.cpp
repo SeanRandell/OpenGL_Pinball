@@ -44,7 +44,6 @@ void Physics::BuildQuadtree(StateTracker* stateTracker, float deltaTime, Quadtre
     }
 }
 
-//void Physics::PhyiscsPerSphere(Sphere* ball, std::vector<Object*> objectList, float deltaTime)
 void Physics::PhyiscsPerSphere(Sphere* ball, std::vector<Sphere*> sphereList, std::vector<Block*> blockList, std::vector<Cylinder*> pegList, float deltaTime)
 {
     // vector for the balls and Pegs that have collided
@@ -212,28 +211,19 @@ void Physics::CollideSphereAndPeg(std::pair<Sphere*, Cylinder*>& collidedObjects
     float distance = sqrtf((ball->position.x - peg->position.x) * (ball->position.x - peg->position.x) + (ball->position.y - peg->position.y) * (ball->position.y - peg->position.y));
 
     //Normal 
-    float nx = (peg->position.x - ball->position.x) / distance;
-    float ny = (peg->position.y - ball->position.y) / distance;
+    float normalX = (peg->position.x - ball->position.x) / distance;
+    float normalY = (peg->position.y - ball->position.y) / distance;
 
     //Tangent
-    float tx = -ny;
-    float ty = nx;
+    float tangentX = -normalY;
+    float tangentY = normalX;
 
     // Dot Product Tangent
-    float dpTan1 = ball->velocity.x * tx + ball->velocity.y * ty;
-    //float dpTan2 = peg->velocity.x * tx + peg->velocity.y * ty;
-
-    //TODO if a do not do this if it is a peg that the ball is colliding with.
-    //float dpNormal1 = ball->velocity.x * nx + ball->velocity.y * ny;
-    //float dpNormal2 = peg->velocity.x * nx + peg->velocity.y * ny;
-
-    ////conservation of momentum in 1D
-    //float momentum1 = (dpNormal1 * (ball->mass - peg->mass) + 2.0f * peg->mass * dpNormal2) / (ball->mass + peg->mass);
-    //float momentum2 = (dpNormal2 * (peg->mass - ball->mass) + 2.0f * ball->mass * dpNormal1) / (ball->mass + peg->mass);
+    float dotProductNormalOne = ball->velocity.x * tangentX + ball->velocity.y * tangentY;
 
     // update velocities
-    ball->velocity.x = tx * dpTan1; //+ nx * momentum1;
-    ball->velocity.y = ty * dpTan1;// +ny * momentum1;
+    ball->velocity.x = tangentX * dotProductNormalOne;
+    ball->velocity.y = tangentY * dotProductNormalOne;
 
     //reset peg light
     peg->ResetCooldownTimer();
@@ -249,31 +239,31 @@ void Physics::CollideTwoSpheres(std::pair<Sphere*, Sphere*>& collidedSpheres)
     float distance = sqrtf((ball1->position.x - ball2->position.x) * (ball1->position.x - ball2->position.x) + (ball1->position.y - ball2->position.y) * (ball1->position.y - ball2->position.y));
 
     //Normal 
-    float nx = (ball2->position.x - ball1->position.x) / distance;
-    float ny = (ball2->position.y - ball1->position.y) / distance;
+    float normalX = (ball2->position.x - ball1->position.x) / distance;
+    float normalY = (ball2->position.y - ball1->position.y) / distance;
 
     //Tangent
-    float tx = -ny;
-    float ty = nx;
+    float tangentX = -normalY;
+    float tangentY = normalX;
 
     // Dot Product Tangent
-    float dpTan1 = ball1->velocity.x * tx + ball1->velocity.y * ty;
-    float dpTan2 = ball2->velocity.x * tx + ball2->velocity.y * ty;
+    float dotProductTangentOne = ball1->velocity.x * tangentX + ball1->velocity.y * tangentY;
+    float dotProductTangent2 = ball2->velocity.x * tangentX + ball2->velocity.y * tangentY;
 
-    //TODO if a do not do this if it is a peg that the ball is colliding with.
-    float dpNormal1 = ball1->velocity.x * nx + ball1->velocity.y * ny;
-    float dpNormal2 = ball2->velocity.x * nx + ball2->velocity.y * ny;
+    //do not do this if it is a peg that the ball is colliding with.
+    float dotProductNormalOne = ball1->velocity.x * normalX + ball1->velocity.y * normalY;
+    float dotProductNormalTwo = ball2->velocity.x * normalX + ball2->velocity.y * normalY;
 
     //conservation of momentum in 1D
-    float momentum1 = (dpNormal1 * (ball1->mass - ball2->mass) + 2.0f * ball2->mass * dpNormal2) / (ball1->mass + ball2->mass);
-    float momentum2 = (dpNormal2 * (ball2->mass - ball1->mass) + 2.0f * ball1->mass * dpNormal1) / (ball1->mass + ball2->mass);
+    float momentum1 = (dotProductNormalOne * (ball1->mass - ball2->mass) + 2.0f * ball2->mass * dotProductNormalTwo) / (ball1->mass + ball2->mass);
+    float momentum2 = (dotProductNormalTwo * (ball2->mass - ball1->mass) + 2.0f * ball1->mass * dotProductNormalOne) / (ball1->mass + ball2->mass);
 
     // update velocities
-    ball1->velocity.x = tx * dpTan1 + nx * momentum1;
-    ball1->velocity.y = ty * dpTan1 + ny * momentum1;
+    ball1->velocity.x = tangentX * dotProductTangentOne + normalX * momentum1;
+    ball1->velocity.y = tangentY * dotProductTangentOne + normalY * momentum1;
 
-    ball2->velocity.x = tx * dpTan2 + nx * momentum2;
-    ball2->velocity.y = ty * dpTan2 + ny * momentum2;
+    ball2->velocity.x = tangentX * dotProductTangent2 + normalX * momentum2;
+    ball2->velocity.y = tangentY * dotProductTangent2 + normalY * momentum2;
 }
 
 bool Physics::DoCirclesOverLap(float x1, float y1, float radius1, float x2, float y2, float radius2)
@@ -284,13 +274,8 @@ bool Physics::DoCirclesOverLap(float x1, float y1, float radius1, float x2, floa
 Collision Physics::CheckCollision(Sphere& one, Block& two) // AABB - Circle collision
 {
     // get center point circle first 
-    //glm::vec2 center(one.position + one.radius);
     // calculate AABB info (center, half-extents)
     glm::vec2 aabb_half_extents((two.scale.x / 2.0f), (two.scale.y / 2.0f));
-    //glm::vec2 aabb_center(
-    //    two.position.x + aabb_half_extents.x,
-    //    two.position.y + aabb_half_extents.y
-    //);
 
     glm::vec2 blockPosition = glm::vec2(two.position.x, two.position.y);
     glm::vec2 ballPosition = glm::vec2(one.position.x, one.position.y);
@@ -301,15 +286,9 @@ Collision Physics::CheckCollision(Sphere& one, Block& two) // AABB - Circle coll
     glm::vec2 closest = blockPosition + clamped;
     // retrieve vector between center circle and closest point AABB and check if length <= radius
     difference = closest - ballPosition;
-    //std::cout << "Block: " << "(" << blockPosition.x << ", " << blockPosition.y << ") "
-    //    << "Ball: " << "(" << ballPosition.x << ", " << ballPosition.y << ") "
-    //    << "Diff: " << "(" << difference.x << ", " << difference.y << ") "
-    //    << "length: " << "(" << glm::length(difference) << ") " << std::endl;
-    /*  if (DoCirclesOverLap(one.position.x, one.position.y, one.radius, two.position.x, two.position.y, 0.5)) */
 
     if (glm::length(difference) < one.radius)
     {
-        //std::cout << "COLLISION" << std::endl;
         // not <= since in that case a collision also occurs when object one exactly touches object two, which they are at the end of each collision resolution stage.
         return std::make_tuple(true, VectorDirection(difference), difference);
     }

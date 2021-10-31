@@ -18,7 +18,6 @@ public:
     void CalculateBallPhysics(StateTracker* stateTracker, float deltaTime, Quadtree* quadtree);
 	void BuildQuadtree(StateTracker* stateTracker, float deltaTime, Quadtree* quadtree);
 	void PopulateQuadtree(StateTracker* stateTracker, Quadtree* quadtree);
-	//void PhyiscsPerSphere(Sphere* ball, std::vector<Object*> objectList, float deltaTime);
 	void PhyiscsPerSphere(Sphere* ball, std::vector<Sphere*> sphereList, std::vector<Block*> blockList, std::vector<Cylinder*> pegList, float deltaTime);
 	void SphereAndBlockCollision(Block*& currentBlock, Sphere* ball);
 	void CollideSphereAndPeg(std::pair<Sphere*, Cylinder*>& collidedObjects);

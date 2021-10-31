@@ -23,7 +23,6 @@ struct Particle {
     }
 };
 
-
 // ParticleGenerator acts as a container for rendering a large number of 
 // particles by repeatedly spawning and updating particles and killing 
 // them after a given amount of time.
@@ -43,22 +42,13 @@ public:
     void Init();
 private:
 
-    // state
-    //std::vector<std::pair<Sphere*,std::vector<Particle>>> particles;
-
     unsigned int amount;
-
     std::string particlePath;
-
-    // render state
     Quad* particleQuad;
-    //unsigned int VAO;
-    // initializes buffer and vertex attributes
 
     // returns the first Particle index that's currently unused e.g. Life <= 0.0f or 0 if no particle is currently inactive
     unsigned int FirstUnusedParticle();
     // respawns particle
     void RespawnParticle(Particle* particle, Sphere* object, glm::vec2 offset = glm::vec2(0.0f, 0.0f));
     //unsigned int LoadTexture(std::string* path);
-
 };

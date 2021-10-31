@@ -1,6 +1,3 @@
-//#define CRTSECURENOWARNINGS
-//#include <stdio.h>
-//#include <iostream>
 #include "RTRShader.h"
 
 RTRShader::RTRShader(const char* vertexPath, const char* fragmentPath, const char* geometryPath)

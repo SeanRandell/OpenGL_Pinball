@@ -3,13 +3,7 @@
 void Quad::Init()
 {
     numberOfVertices = 4;
-    //vertices = {
-    //    // positions        // texture Coords
-    //    -1.0f,  1.0f, 0.0f, 0.0f, 1.0f
-    //    -1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
-    //     1.0f,  1.0f, 0.0f, 1.0f, 1.0f,
-    //     1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
-    //};
+
     vertices = {
         // positions        // texture Coords
         -1.0f,  -1.0f,  0.0f,  0.0f, 0.0f,
@@ -17,15 +11,6 @@ void Quad::Init()
         -1.0f,   1.0f,  0.0f,  0.0f, 1.0f,
          1.0f,   1.0f,  0.0f,  1.0f, 1.0f,
     };
-    //vertices = {
-    //    // positions        // texture Coords
-    //    -1.0f,  -1.0f,  0.0f,  0.0f, 0.0f,
-    //     1.0f,   1.0f,  0.0f,  1.0f, 1.0f,
-    //    -1.0f,   1.0f,  0.0f,  0.0f, 1.0f,
-    //    -1.0f,  -1.0f,  0.0f,  0.0f, 0.0f,
-    //     1.0f,   -1.0f, 0.0f,  0.0f, 1.0f,
-    //     1.0f,   1.0f,  0.0f,  1.0f, 1.0f,
-    //};
 
     glGenBuffers(1, &vertexBuffer);
 
@@ -44,21 +29,17 @@ void Quad::Init()
 
 void Quad::Render(RTRShader* shader)
 {
-    //shader->SetMaterial("objectMaterialUniform", material);
-
     glBindVertexArray(vertexArray);
-    //glDrawElements(GL_TRIANGLES, numberOfFaces * 3, GL_UNSIGNED_INT, 0);
+
     glDrawArrays(GL_TRIANGLE_STRIP, 0, numberOfVertices);
-    //glDrawArrays(GL_TRIANGLES, 0, numberOfVertices);
+
     glBindVertexArray(0);
 }
 
 void Quad::RenderParticle(RTRShader* shader)
 {
     //shader->SetMaterial("objectMaterialUniform", material);
-
     glBindVertexArray(vertexArray);
-    //glDrawElements(GL_TRIANGLES, numberOfFaces * 3, GL_UNSIGNED_INT, 0);
     glDrawArrays(GL_TRIANGLE_STRIP, 0, numberOfVertices);
     glBindVertexArray(0);
 }

@@ -8,7 +8,6 @@ in VertexData {
     vec3 Normal;
 } fragmentShaderIn;
 
-// uniforms
 struct Camera {
     vec3 Position;
     vec3 Front;
@@ -33,6 +32,7 @@ struct Light {
     float constant;
     float linear;
     float quadratic;
+    bool isLightOn;
 //    float cutoff;
 //    float OuterCutoff;
 };
@@ -56,13 +56,58 @@ uniform bool debugUniform;
 
 void main()
 {
-    // TODO add light colours to final color
+    vec3 finalColor = vec3(0.0, 0.0, 0.0);
     vec3 viewDirectionVector = normalize(fragmentShaderIn.FragmentPosition - cameraUniform.Position);
     vec3 reflectionVector = reflect(viewDirectionVector, normalize(fragmentShaderIn.Normal));
-    vec3 finalColor = texture(skyBoxUniform, reflectionVector).rgb;
+    finalColor = texture(skyBoxUniform, reflectionVector).rgb;
+
+    vec3 normalVector = normalize(transpose(inverse(mat3(modelMatrixUniform))) * fragmentShaderIn.Normal);
+    
+    for (int currentLight = 0; currentLight < numberOfLightsUniform; currentLight++) 
+    {
+        if(lightsUniform[currentLight].isLightOn == false)
+        {
+            continue;
+        }
+        float attenuation = 1.0;
+
+        // calc ambient
+        vec3 ambient = lightsUniform[currentLight].ambient * objectMaterialUniform.ambient;
+    
+        // calc diffuse
+        vec3 lightDirectionVector;
+        if (lightsUniform[currentLight].type == DirectionalLight) {
+            lightDirectionVector = -lightsUniform[currentLight].direction;
+        }
+        else {
+            lightDirectionVector = lightsUniform[currentLight].position - fragmentShaderIn.FragmentPosition;
+            float lightDirectionVectorLength = length(lightDirectionVector);
+            attenuation = min(
+                1.0 / (
+                  (lightsUniform[currentLight].constant) +
+                  (lightsUniform[currentLight].linear * lightDirectionVectorLength) +
+                  (lightsUniform[currentLight].quadratic * lightDirectionVectorLength * lightDirectionVectorLength)
+                ), 1);
+        }
+        lightDirectionVector = normalize(lightDirectionVector);
+        float diffuseFloat = max(dot(normalVector, lightDirectionVector), 0.0);
+        vec3 diffuseVector = lightsUniform[currentLight].diffuse * diffuseFloat * objectMaterialUniform.diffuse;
+    
+        // calc specular
+        vec3 fragmentToCameraVector = normalize(cameraUniform.Position - fragmentShaderIn.FragmentPosition);
+        // Phong
+        //vec3 R = reflect(-L, N);  
+        //float s = pow(max(dot(R, V), 0.0), u_ObjectMaterial.Shininess);
+        // Blinn-Phong
+        vec3 BlinnPhongVector = normalize(lightDirectionVector + fragmentToCameraVector);
+        float specularFloat = pow(max(dot(normalVector, BlinnPhongVector), 0.0), objectMaterialUniform.shininess);
+        vec3 specularVector = lightsUniform[currentLight].specular * specularFloat * objectMaterialUniform.specular;
+
+        finalColor += (attenuation*(ambient + diffuseVector + specularVector));
+     }
 
     float brightness = dot(finalColor, vec3(0.4126, 0.9152, 0.0922));
-    if(brightness > 3.0)
+    if(brightness > 2.0)
     {
         BrightColor = vec4(finalColor, 1.0);
     }
@@ -75,6 +120,5 @@ void main()
         finalColor = vec3(0.0,1.0,0.0);
     }
 
-    // set frag color
     FragmentColor = vec4(finalColor, 1.0);
 }

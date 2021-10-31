@@ -5,14 +5,12 @@ StateTracker::StateTracker(int screenWidth, int screenHeight)
     this->screenWidth = screenWidth;
     this->screenHeight = screenHeight;
 
-    //TODO fix this so that it does not break non fullscreen
     windowWidth = screenWidth;
     windowHeight = screenHeight;
 
     particleAmount = 1000;
 
-    this->camera = new Camera(0.0, 2.0, 30.0, 0.0, 1.0, 0.0, -90.0f, 0.0f, screenWidth, screenHeight);
-
+    camera = new Camera(0.0, 2.0, 30.0, 0.0, 1.0, 0.0, -90.0f, 0.0f, screenWidth, screenHeight);
     lightModel = new LightingModel();
     particleGenerator = new ParticleGenerator(particleAmount);
 
@@ -20,7 +18,7 @@ StateTracker::StateTracker(int screenWidth, int screenHeight)
     skyBox = new SkyBox();
     debugObject = new Debug();
     quad = new Quad();
-    testSphere = new Sphere(-10);
+    InstancedSphere = new Sphere(-10);
 
     leftFlipper = new Block(true);
     rightFlipper = new Block(true);
@@ -42,8 +40,8 @@ StateTracker::StateTracker(int screenWidth, int screenHeight)
     isBoundingBoxesOn = true;
     isLaunchLightMovingUp = true;
 
-    launchCooldown = 0.3f;
-    launchCountdown = 0.3f;
+    launchCooldown = 0.1f;
+    launchCountdown = 0.1f;
 }
 
 void StateTracker::InitShadersAndTextures()
@@ -169,8 +167,8 @@ StateTracker::~StateTracker()
         delete pegs[i];
     }
 
-    testSphere->End();
-    delete testSphere;
+    InstancedSphere->End();
+    delete InstancedSphere;
 
     skyBox->End();
     delete skyBox;
@@ -208,11 +206,18 @@ void StateTracker::BuildGameObjects()
     leftLaunchWallBlock->position = glm::vec3(8.1, -4.1, 0.0);
     leftLaunchWallBlock->scale = glm::vec3(2.0, 12.0f, 2.0);
 
+    //Test Block to keep balls from despawning
+    //Block* TestBlock = new Block();
+    //TestBlock->position = glm::vec3(0.0, -8.0, 0.0);
+    //TestBlock->scale = glm::vec3(6.0, 3.0f, 2.0);
+
     blocks.push_back(floorBlock);
     blocks.push_back(TopBlock);
     blocks.push_back(leftWallBlock);
     blocks.push_back(rightLaunchWall);
     blocks.push_back(leftLaunchWallBlock);
+
+    //blocks.push_back(TestBlock);
 
     leftFlipper->scale = glm::vec3(4.0, 3.0, 1.0);
     rightFlipper->scale = glm::vec3(4.0, 3.0, 1.0);
@@ -283,7 +288,7 @@ void StateTracker::BuildGameObjects()
 
     debugObject->Init();
     quad->Init();
-    testSphere->Init();
+    InstancedSphere->Init();
 }
 
 void StateTracker::LaunchBall()
@@ -294,7 +299,6 @@ void StateTracker::LaunchBall()
     newball->velocity = glm::vec2(0.0, 50.0);
     newball->position = glm::vec3(10.5f, -8.0f, 0.0f);
     spheres.push_back(newball);
-    spherePositions.push_back(newball->position);
 }
 
 void StateTracker::InitBuffers(int screenWidth, int screenHeight)
@@ -347,26 +351,6 @@ void StateTracker::InitBuffers(int screenWidth, int screenHeight)
     }
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-
-    // configure depth map FBO
-// -----------------------
-    //glGenFramebuffers(1, &depthMapFBO);
-    //// create depth texture
-    //glGenTextures(1, &depthMap);
-    //glBindTexture(GL_TEXTURE_2D, depthMap);
-    //glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
-    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-    //float borderColor[] = { 1.0, 1.0, 1.0, 1.0 };
-    //glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
-    //// attach depth texture as FBO's depth buffer
-    //glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
-    //glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMap, 0);
-    //glDrawBuffer(GL_NONE);
-    //glReadBuffer(GL_NONE);
-    //glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 std::string StateTracker::GetSettingString(bool boolToCheck)
@@ -380,53 +364,3 @@ std::string StateTracker::GetSettingString(bool boolToCheck)
     }
     return returnString;
 }
-
-
-
-//sphere building
-
-//testSphere->Init();
-//
-//glGenBuffers(1, &sphereVertexBuffer);
-//glBindBuffer(GL_ARRAY_BUFFER, sphereVertexBuffer);
-//glBufferData(GL_ARRAY_BUFFER, testSphere->GetInterleavedVertexSize() + (sizeof(glm::mat4) * 1), testSphere->GetInterleavedVertices(), GL_DYNAMIC_DRAW);
-////glBufferSubData(GL_ARRAY_BUFFER, GetInterleavedVertexSize() + sizeof(normals), sizeof(tex),GL_DYNAMIC_DRAW);
-//glGenVertexArrays(1, &sphereVertexArray);
-//glBindVertexArray(sphereVertexArray);
-
-//// bind vbo for smooth sphere (center and right)
-////glBindBuffer(GL_ARRAY_BUFFER, sphereVertexBuffer);
-
-//// set attrib arrays using glVertexAttribPointer()
-//glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
-//glEnableVertexAttribArray(0);
-
-//// normals
-//glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-//glEnableVertexAttribArray(1);
-////glVertexAttribPointer(attribVertexTexCoord, 2, GL_FLOAT, false, stride, (void*)(6 * sizeof(float)));
-
-////modelmatrix
-//// set attribute pointers for matrix (4 times vec4)
-
-//glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(glm::vec4), (void*)0);
-//glEnableVertexAttribArray(2);
-
-//glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(glm::vec4), (void*)(sizeof(glm::vec4)));
-//glEnableVertexAttribArray(3);
-
-//glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(glm::vec4), (void*)(2 * sizeof(glm::vec4)));
-//glEnableVertexAttribArray(4);
-
-//glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(glm::vec4), (void*)(3 * sizeof(glm::vec4)));
-//glEnableVertexAttribArray(5);
-
-//glVertexAttribDivisor(2, 1);
-//glVertexAttribDivisor(3, 1);
-//glVertexAttribDivisor(4, 1);
-//glVertexAttribDivisor(5, 1);
-
-//glGenBuffers(1, &sphereFaceElementBuffer);
-//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, sphereFaceElementBuffer);
-//glBufferData(GL_ELEMENT_ARRAY_BUFFER, testSphere->GetIndexSize(), testSphere->GetIndices(), GL_STATIC_DRAW);
-//glBindVertexArray(0);

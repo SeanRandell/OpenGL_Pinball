@@ -1,11 +1,9 @@
 #pragma once
 #include "Object.h"
 #include <vector>
-//-----------------------------------------------------------------------------
 
 // Ideas for sphere class sourced from AUTHOR: Song Ho Ahn - http://www.songho.ca/opengl/gl_sphere.html
 
-// constants //////////////////////////////////////////////////////////////////
 const int MIN_SECTOR_COUNT = 3;
 const int MIN_STACK_COUNT = 2;
 
@@ -24,13 +22,12 @@ public:
     ~Sphere() {}
     virtual void Init();
     void InitConstructorValues();
-    //virtual void Render(RTRShader* shader, unsigned int cubeMapTexture);
     virtual void Render(RTRShader* shader, unsigned int cubeMapTexture, unsigned int sphereCount);
     void RenderNormals(RTRShader* shader, unsigned int cubeMapTexture);
     virtual void End();
 
     bool IsContainedWithin(Rectangle* boundary);
-//private:
+private:
     // memeber vars
     int sectorCount;                        // longitude, # of slices
     int stackCount;                         // latitude, # of stacks

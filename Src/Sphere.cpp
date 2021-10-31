@@ -56,9 +56,6 @@ void Sphere::Init()
     glEnableVertexAttribArray(1);
     //glVertexAttribPointer(attribVertexTexCoord, 2, GL_FLOAT, false, stride, (void*)(6 * sizeof(float)));
 
-    //modelmatrix
-
-
     glGenBuffers(1, &faceElementBuffer);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, faceElementBuffer);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, GetIndexSize(), GetIndices(), GL_STATIC_DRAW);
@@ -67,6 +64,7 @@ void Sphere::Init()
 
 void Sphere::Render(RTRShader* shader, unsigned int cubeMapTexture, unsigned int sphereCount)
 {
+    shader->SetMaterial("objectMaterialUniform", material);
     glBindVertexArray(vertexArray);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_CUBE_MAP, cubeMapTexture);
@@ -77,6 +75,7 @@ void Sphere::Render(RTRShader* shader, unsigned int cubeMapTexture, unsigned int
 
 void Sphere::RenderNormals(RTRShader* shader, unsigned int cubeMapTexture)
 {
+    shader->SetMaterial("objectMaterialUniform", material);
     glBindVertexArray(vertexArray);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_CUBE_MAP, cubeMapTexture);
@@ -173,23 +172,6 @@ void Sphere::BuildVerticesSmooth()
 
     // generate interleaved vertex array as well
     BuildInterleavedVertices();
-
-    //int k = 0;
-    //int j = 1;
-    //fprintf(stderr, "Start\n");
-    //for (size_t i = 0; i < interleavedVertices.size(); i++)
-    //{
-    //    //fprintf(stderr, "mouse x: %d, y: %d\n", keyEvent.button.x, keyEvent.button.y);
-    //    fprintf(stderr, "%f, ", interleavedVertices[i]);
-    //    k++;
-    //    //fprintf(stderr, " - index: %lu\n, ", i);
-    //    if (k == 6) {
-    //        fprintf(stderr, " - index: %d,\n", j);
-    //        j++;
-    //        k = 0;
-    //    }
-    //}
-    //fprintf(stderr, "End\n");
 }
 
 ///////////////////////////////////////////////////////////////////////////////

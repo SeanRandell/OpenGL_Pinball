@@ -1,18 +1,5 @@
-//-----------------------------------------------------------------------------
-// RTRObject.cpp
-//-----------------------------------------------------------------------------
-// RMIT University, COSC1226: Real-Time Rendering and 3D Game Programming
-//-----------------------------------------------------------------------------
-#include "Object.h"
 
-// README / TODO - This is just a simple start.
-// * For your assignment, think carefully about how Shaders, Materials and Objects will hang together.
-// * Have a hierarchy of differnet object types (static object, moving object, hierarchical object, object with force, etc...
-// * Don't worry too much about optimising the buffer handling by, for example, merging all objects into a single 
-// vertex buffer. Or sorting object based on shader or material to minimize switches. Spend your time on more imprtant 
-// optimisation techniques that will add marks - for example your uniform grid implementation. 
-// * For this assignment you can hardcode the vertex buffers for the differnet shapes (see cube) and then 
-// scale, place and animate them with transformation matrices.
+#include "Object.h"
 
 Object::Object() {
     numberOfVertices = 0;
@@ -24,7 +11,6 @@ Object::Object() {
     vertexBuffer = 0;
     vertexArray = 0;
     faceElementBuffer = 0;
-    //std::cout << "Base called" << std::endl;
 
     position = OBJECT_DEFAULT_POSITION;
     rotation = OBJECT_DEFAULT_ROTATION;

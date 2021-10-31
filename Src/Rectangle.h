@@ -2,7 +2,6 @@
 
 class Rectangle {
 public:
-    //float left, bottom, width, height;
     float x, y, width, height;
     float left, right, top, bottom;
     Rectangle(float x, float y, float width, float height) {

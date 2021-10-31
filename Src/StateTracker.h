@@ -15,32 +15,35 @@
 #include <sdl/SDL_timer.h>
 #include <string>
 
-const unsigned int SHADOW_WIDTH = 1024, SHADOW_HEIGHT = 1024;
+//const unsigned int SHADOW_WIDTH = 1024, SHADOW_HEIGHT = 1024;
 
 class StateTracker {
 public:
-
+    //objects
     Camera* camera;
-    
-    glm::mat4 modelMatrix{ 1.0 };
-    glm::mat4 projectionMatrix{ 1.0 };
-    glm::mat4 viewMatrix{ 1.0 };
-
     Cube* cube;
     SkyBox* skyBox;
     Block* leftFlipper;
     Block* rightFlipper;
+    Debug* debugObject;
+    Quad* quad;
+    Sphere* InstancedSphere;
 
+    //object collections
     std::vector<Block*> blocks;
     std::vector<Sphere*> spheres;
     std::vector<Cylinder*> pegs;
 
-    Debug* debugObject;
-    Quad* quad;
+    // matrices
+    glm::mat4 modelMatrix{ 1.0 };
+    glm::mat4 projectionMatrix{ 1.0 };
+    glm::mat4 viewMatrix{ 1.0 };
 
+
+    // settings
     float bloomExposure;
-    bool isBloomOn;
-    bool isDebugOn;
+    int particleAmount;
+    unsigned int physicsObjectCount{ 0 };
 
     bool canLaunchBall;
     float launchCooldown;
@@ -51,9 +54,8 @@ public:
     bool leftFlipperMoving;
     bool rightFlipperMoving;
 
-
-    int particleAmount;
-
+    bool isBloomOn;
+    bool isDebugOn;
     bool isQuadTreeOn;
     bool isDebugHUDOn;
     bool localIsDebugHUDOnToggle;
@@ -63,8 +65,7 @@ public:
     bool isBoundingBoxesOn;
     bool isLaunchLightMovingUp;
 
-    unsigned int physicsObjectCount{ 0 };
-
+    //shaders
     RTRShader* cubeShader{ nullptr };
     RTRShader* normalShader{ nullptr };
     RTRShader* skyBoxShader{ nullptr };
@@ -93,44 +94,34 @@ public:
     //particle
     TextureObject* particleTexture{ nullptr };
 
+    // rendering objects
     LightingModel* lightModel;
     ParticleGenerator* particleGenerator;
 
     //bloom buffers
-    unsigned int hdrFBO{0};
-    unsigned int rboDepth{0};
-    unsigned int pingpongFBO[2]{0,0};
-    unsigned int pingpongColorbuffers[2]{0,0};
-    unsigned int colorBuffers[2]{0,0};
+    unsigned int hdrFBO{ 0 };
+    unsigned int rboDepth{ 0 };
+    unsigned int pingpongFBO[2]{ 0,0 };
+    unsigned int pingpongColorbuffers[2]{ 0,0 };
+    unsigned int colorBuffers[2]{ 0,0 };
 
     // directional shadows buffers
     unsigned int depthMapFBO{ 0 };
-    unsigned int depthMap{0};
+    unsigned int depthMap{ 0 };
 
     //screen size
     int windowWidth, windowHeight;
     int screenWidth, screenHeight;
 
-
-    //sphere 
-    unsigned int sphereVertexBuffer{0};
-    unsigned int sphereVertexArray{0};
-    unsigned int sphereFaceElementBuffer{0};
-    std::vector<glm::vec3> spherePositions;
-    std::vector<glm::mat4> sphereMatrices;
-    Sphere* testSphere;
-
-
     StateTracker(int screenWidth, int screenHeight);
     ~StateTracker();
 
     void InitShadersAndTextures();
-
     std::string GetSettingString(bool boolToCheck);
     void InitBuffers(int screenWidth, int screenHeight);
     void BuildGameObjects();
     void LaunchBall();
-    
+
 private:
 
 };

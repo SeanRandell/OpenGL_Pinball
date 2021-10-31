@@ -15,7 +15,7 @@ enum class LightType : int
     SpotLight
 };
 
-// TODO: Support for spot lights
+// : Support for spot lights
 struct Light
 {
     LightType type;      // Used by light type ...

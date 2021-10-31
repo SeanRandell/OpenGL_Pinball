@@ -227,7 +227,6 @@ void RenderLoop::CheckInput(StateTracker* stateTracker, bool* quitApp, float del
         case SDL_MOUSEMOTION:
         {
             //fprintf(stderr, "mouse x: %d, y: %d\n", keyEvent.button.x, keyEvent.button.y);
-            //SDL_GetMouseState(&xpos, &ypos);
 
             static int xPosition = stateTracker->camera->lastX;
             static int yPosition = stateTracker->camera->lastY;
@@ -301,9 +300,6 @@ void RenderLoop::CheckInput(StateTracker* stateTracker, bool* quitApp, float del
                     stateTracker->isLightingBoxesOn = false;
                     stateTracker->isVertexNormalsDisplayOn = false;
                 }
-                break;
-            case SDLK_m:
-                stateTracker->camera->mouseControls = !stateTracker->camera->mouseControls;
                 break;
             case SDLK_SPACE:
                 // launch ball
@@ -434,8 +430,6 @@ void RenderLoop::UpdateState(StateTracker* stateTracker, float deltaTime, Quadtr
             // Count physics objects
             stateTracker->physicsObjectCount = stateTracker->spheres.size() + stateTracker->blocks.size() + stateTracker->pegs.size();
 
-            //int j = 1;
-            //Update peg lights
             for (int i = 1; i < stateTracker->pegs.size(); i++)
             {
                 stateTracker->pegs[i]->UpdatePegLights(deltaTime);
@@ -631,7 +625,7 @@ void RenderLoop::RenderFrame(StateTracker* stateTracker, Quadtree* quadtree)
         stateTracker->sphereShader->SetArrayVec3("offsets", i, stateTracker->spheres[i]->position);
     }
     stateTracker->sphereShader->SetBool("debugUniform", false);
-    stateTracker->testSphere->Render(stateTracker->sphereShader, stateTracker->skyBox->cubemapTexture, stateTracker->spheres.size());
+    stateTracker->InstancedSphere->Render(stateTracker->sphereShader, stateTracker->skyBox->cubemapTexture, stateTracker->spheres.size());
 
     // sphere bounding box
     if (stateTracker->isDebugOn)
@@ -642,7 +636,7 @@ void RenderLoop::RenderFrame(StateTracker* stateTracker, Quadtree* quadtree)
             glPolygonOffset(0, -1);
             glEnable(GL_POLYGON_OFFSET_FILL);
             stateTracker->sphereShader->SetBool("debugUniform", true);
-            stateTracker->testSphere->Render(stateTracker->sphereShader, stateTracker->skyBox->cubemapTexture, stateTracker->spheres.size());
+            stateTracker->InstancedSphere->Render(stateTracker->sphereShader, stateTracker->skyBox->cubemapTexture, stateTracker->spheres.size());
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
             glPolygonOffset(1, 0);
             glEnable(GL_POLYGON_OFFSET_FILL);

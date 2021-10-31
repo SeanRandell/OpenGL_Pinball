@@ -6,11 +6,6 @@
 #include <string>
 #include <iostream>
 
-#include <glm/glm.hpp>
-#include <glm/ext/matrix_clip_space.hpp> // glm::perspective
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-
 class Application
 {
 public:
@@ -26,32 +21,23 @@ public:
 private:
 
     bool quitApp;
-
-    Console* console{ nullptr };
-
-    void CheckInput();
-    void UpdateState(Quadtree* quadtree);
-    void RenderFrame(Quadtree* quadtree);
-    //void UpdateShaders();
-    //void LoadTexture();
-    //void InitBuffers();
-
-    std::string mainWindowTitle;
     bool isFullScreen;
     int windowWidth;
     int windowHeight;
     int screenWidth;
     int screenHeight;
-    SDL_Window* SDLWindow;
-    SDL_Renderer* SDLRenderer;
-    SDL_GLContext GLContext;
-
-    //unsigned int hdrFBO;
-    //unsigned int rboDepth;
-    //unsigned int pingpongFBO[2];
-    //unsigned int pingpongColorbuffers[2];
+    std::string mainWindowTitle; 
 
     unsigned int currentTime{ 0 };
     float timeDelta{ 0 };
     int fps{ 0 };
+
+    Console* console{ nullptr };
+    SDL_Window* SDLWindow;
+    SDL_Renderer* SDLRenderer;
+    SDL_GLContext GLContext;
+
+    void CheckInput();
+    void UpdateState(Quadtree* quadtree);
+    void RenderFrame(Quadtree* quadtree);
 };

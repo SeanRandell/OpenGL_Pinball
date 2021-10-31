@@ -25,7 +25,6 @@ void Debug::Render(RTRShader* shader)
     //shader->SetMaterial("objectMaterialUniform", material);
 
     glBindVertexArray(vertexArray);
-    //glDrawElements(GL_TRIANGLES, numberOfFaces * 3, GL_UNSIGNED_INT, 0);
     glDrawArrays(GL_POINTS, 0, numberOfVertices);
     glBindVertexArray(0);
 }

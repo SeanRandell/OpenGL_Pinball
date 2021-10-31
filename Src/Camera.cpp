@@ -83,23 +83,17 @@ void Camera::ProcessMouseMovement(float xoffset, float yoffset, float deltaTime,
 // processes input received from any keyboard-like input system. Accepts input parameter in the form of camera defined ENUM (to abstract it from windowing systems)
 void Camera::ProcessCameraMoving(float deltaTime)
 {
-    //float velocity = MovementSpeed * deltaTime;
     if (moveFoward) {
         position += front * movementSpeed * deltaTime;
-
-        //fprintf(stderr, "position: x = %.2f, y = %.2f, z = %.2f, deltaTime = %f\n", position.x, position.y, position.z, deltaTime);
     }
     if (moveBackward) {
         position -= front * movementSpeed * deltaTime;
-        //fprintf(stderr, "left triggered\n");
     }
     if (moveLeft) {
         position -= right * strafeSpeed * deltaTime;
-
     }
     if (moveRight) {
         position += right * strafeSpeed * deltaTime;
-        //fprintf(stderr, "left triggered\n");
     }
 }
 

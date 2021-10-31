@@ -22,9 +22,6 @@
     <Filter Include="Shader Files\Cube Shader">
       <UniqueIdentifier>{06f35864-0456-4041-8f21-bc6b0b87b85d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Shader Files\Tony%27s Shaders">
-      <UniqueIdentifier>{ad3f5658-038b-4dc8-ac45-188e522834a6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Shader Files\SkyBox Shader">
       <UniqueIdentifier>{93463dac-e62f-410f-b6b0-18241342e5c8}</UniqueIdentifier>
     </Filter>
@@ -228,9 +225,6 @@
     </None>
     <None Include="Src\Shaders\SkyBoxVertShader.vert">
       <Filter>Shader Files\SkyBox Shader</Filter>
-    </None>
-    <None Include="Src\Shaders\RTRDefault.frag">
-      <Filter>Shader Files\Tony%27s Shaders</Filter>
     </None>
     <None Include="Src\Shaders\SphereFragShader.frag">
       <Filter>Shader Files\Sphere Shader</Filter>

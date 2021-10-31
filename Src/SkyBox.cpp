@@ -78,18 +78,14 @@ void SkyBox::Init()
 
 void SkyBox::Render(RTRShader* shader)
 {
-    //glDepthMask(GL_FALSE);
     // change depth function so depth test passes when values are equal to depth buffer's content
     glDepthFunc(GL_LEQUAL);
     shader->SetMaterial("objectMaterialUniform", material);
     glBindVertexArray(vertexArray);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
-    //glDrawElements(GL_TRIANGLES, numberOfFaces * 3, GL_UNSIGNED_INT, 0);
     glDrawArrays(GL_TRIANGLES, 0, numberOfVertices);
     glBindVertexArray(0);
-    //glDepthMask(GL_TRUE);
-
 }
 
 void SkyBox::End()

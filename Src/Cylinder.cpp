@@ -84,45 +84,6 @@ void Cylinder::End()
     Object::End();
 }
 
-///////////////////////////////////////////////////////////////////////////////
-// draw lines only
-// the caller must set the line width before call this
-///////////////////////////////////////////////////////////////////////////////
-//void Cylinder::drawLines(const float lineColor[4]) const
-//{
-//    // set line colour
-//    glColor4fv(lineColor);
-//    glMaterialfv(GL_FRONT, GL_DIFFUSE, lineColor);
-//
-//    // draw lines with VA
-//    glDisable(GL_LIGHTING);
-//    glDisable(GL_TEXTURE_2D);
-//    glEnableClientState(GL_VERTEX_ARRAY);
-//    glVertexPointer(3, GL_FLOAT, 0, vertices.data());
-//
-//    glDrawElements(GL_LINES, (unsigned int)lineIndices.size(), GL_UNSIGNED_INT, lineIndices.data());
-//
-//    glDisableClientState(GL_VERTEX_ARRAY);
-//    glEnable(GL_LIGHTING);
-//    glEnable(GL_TEXTURE_2D);
-//}
-
-
-///////////////////////////////////////////////////////////////////////////////
-// draw a cylinder surfaces and lines on top of it
-// the caller must set the line width before call this
-///////////////////////////////////////////////////////////////////////////////
-//void Cylinder::drawWithLines(const float lineColor[4]) const
-//{
-//    glEnable(GL_POLYGON_OFFSET_FILL);
-//    glPolygonOffset(1.0, 1.0f); // move polygon backward
-//    this->draw();
-//    glDisable(GL_POLYGON_OFFSET_FILL);
-//
-//    // draw lines with VA
-//    drawLines(lineColor);
-//}
-
 void Cylinder::ClearArrays()
 {
     std::vector<float>().swap(vertices);

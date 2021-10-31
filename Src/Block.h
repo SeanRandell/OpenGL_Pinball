@@ -9,7 +9,6 @@ struct VertexAndTexturePoint {
 class Block : public Object
 {
 public:
-    VertexAndTexturePoint* vertexAndTexturePoints;
     bool isBumper;
     bool isScenery;
     bool isActiveFlipper;
@@ -18,6 +17,7 @@ public:
     Block(bool isBumper);
     Block(glm::vec3 postion, glm::vec3 rotation, glm::vec3 scale, bool isBumper);
     ~Block() {}
+
     void InitConstructorValues();
     virtual void Init();
     virtual void Render(RTRShader* shader, SkyBox* skybox, TextureObject* diffuseMap, TextureObject* specularMap, TextureObject* reflectionMap);
@@ -25,4 +25,7 @@ public:
     virtual void End();
     virtual const char* GetName();
     bool IsContainedWithin(Rectangle* boundary);
+
+private:
+    VertexAndTexturePoint* vertexAndTexturePoints;
 };

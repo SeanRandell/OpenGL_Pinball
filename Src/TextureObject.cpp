@@ -21,7 +21,6 @@ void TextureObject::SetTextureID()
     this->textureID = LoadTexture();
 }
 
-//unsigned int TextureObject::LoadTexture(/ unsigned int Image_Format, unsigned int Internal_Format , unsigned int Filter_Min , unsigned int Filter_Max)
 unsigned int TextureObject::LoadTexture()
 {
 

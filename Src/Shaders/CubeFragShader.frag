@@ -57,7 +57,6 @@ uniform bool debugUniform;
 
 void main() 
 {
-    //vec3 N = normalize(cross(dFdx(fragmentShaderIn.FragPos), dFdy(fragmentShaderIn.FragPos)));
     vec3 normalVector = normalize(transpose(inverse(mat3(modelMatrixUniform))) * fragmentShaderIn.Normal);
     
     vec3 finalColor = vec3(0.0, 0.0, 0.0);
@@ -120,106 +119,4 @@ void main()
         finalColor = vec3(0.0,1.0,0.0);
     }
     FragmentColor = vec4(finalColor, 1.0);
-//    FragmentColor = vec4(0.0, 1.0, 0.0, 1.0); 
 }
-
-//uniform bool isLightingOnUniform;
-
-// function prototypes
-//vec3 CalculateDirectionalLight(DirectionalLight light, vec3 normal, vec3 viewDirection);
-//vec3 CalculatePointLight(PointLight light, vec3 normal, vec3 fragmentPosition, vec3 viewDirection);
-
-//void main()
-//{
-//// if (!isLightingOn){
-//    //    // ambient
-//    //    vec3 ambient = light.ambient * material.ambient;
-//    //  	
-//    //    // diffuse 
-//    //    vec3 norm = normalize(Normal);
-//    //    vec3 lightDir = normalize(light.position - FragPos);
-//    //    float diff = max(dot(norm, lightDir), 0.0);
-//    //    vec3 diffuse = light.diffuse * (diff * material.diffuse);
-//
-//        // ambient
-//        vec3 ambient = material.ambient;
-//  	
-//        // diffuse 
-//        vec3 normal = normalize(Normal);
-//        vec3 lightDirection = normalize(viewPosition - FragmentPosition);
-//        float diffuseFloat = max(dot(normal, lightDirection), 0.0f);
-//        vec3 diffuseVector = material.diffuse * (diffuseFloat * material.diffuse);
-//
-//        vec3 result = ambient + diffuseVector;
-//        FragColor = vec4(result, 1.0);
-//} else {
-//
-//        // properties
-//        vec3 normal = normalize(Normal);
-//        vec3 viewDirection = normalize(viewPosition - FragmentPosition);
-//
-//        // phase 1: directional lighting
-//        vec3 result = vec3(0.0,0.0,0.0);
-//        result += CalculateDirectionalLight(directionalLight, normal, viewDirection);
-//        // phase 2: point lights
-//        for(int i = 0; i < numberOfLights; i++)
-//        {
-//            result += CalculatePointLight(pointLights[i], normal, FragmentPosition, viewDirection); 
-//        }
-//
-//    //    vec3 result = ambient + diffuse + specular;
-//        FragColor = vec4(result, 1.0);
-//    }
-//} 
-//
-// calculates the color when using a directional light.
-//vec3 CalculateDirectionalLight(DirectionalLight light, vec3 normal, vec3 viewDirection)
-//{
-//    vec3 lightDirection = normalize(-light.direction);
-//    // diffuse shading
-//    float diffuseFloat = max(dot(normal, lightDirection), 0.0);
-//    // specular shading
-//    vec3 reflectDirection = reflect(-lightDirection, normal);
-////    float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
-//
-//    // blinn specular
-//    float specularFloat = 0.0;
-//    vec3 halfwayDirection = normalize(lightDirection + viewDirection);  
-////    spec = pow(max(dot(normal, halfwayDir), 0.0), 32.0);
-//    specularFloat = pow(max(dot(halfwayDirection, normal), 0.0),  material.shininess);
-//
-//    // combine results
-//    vec3 ambient = light.ambient * material.diffuse;
-//    vec3 diffuseVector = light.diffuse * diffuseFloat * material.diffuse;
-//    vec3 specularVector = light.specular * specularFloat * material.specular;
-//    return (ambient + diffuseVector + specularVector);
-//}
-
-// calculates the color when using a point light.
-//vec3 CalculatePointLight(PointLight light, vec3 normal, vec3 fragmentPosition, vec3 viewDirection)
-//{
-//    vec3 lightDirection = normalize(light.position - fragmentPosition);
-//    // diffuse shading
-//    float diffuseFloat = max(dot(normal, lightDirection), 0.0);
-//    // specular shading
-////    vec3 reflectDir = reflect(-lightDir, normal);
-////    float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
-//
-//    // blinn specular
-//    float specularFloat = 0.0;
-//    vec3 halfwayDirection = normalize(lightDirection + viewDirection);  
-//    specularFloat = pow(max(dot(halfwayDirection, normal), 0.0), 32.0);
-//
-//    // attenuation
-//    float distance = length(light.position - fragmentPosition);
-//    float attenuation = 1.0f / (light.constant + light.linear * distance + light.quadratic * (distance * distance)); 
-//    
-//    // combine results
-//    vec3 ambient = light.ambient * material.diffuse;
-//    vec3 diffuseVector = light.diffuse * diffuseFloat * material.diffuse;
-//    vec3 specularVector = light.specular * specularFloat * material.specular;
-////    ambient *= attenuation;
-////    diffuse *= attenuation;
-////    specular *= attenuation;
-//    return (ambient + diffuseVector + specularVector);
-//}

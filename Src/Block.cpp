@@ -44,11 +44,8 @@ void Block::InitConstructorValues()
     float rr = rep.r;
     float sr = rep.s;
     numberOfVertices = 36;
-    //diffuseMap = 0;
-    //specularMap = 0;
-    //reflectionMap = 0;
-    material = { {1, 1, 1 }, { 1, 1, 1 }, { 1, 1, 1 }, 64.0f };
-    //material = { {0.19225, 0.19225, 0.19225 }, { 0.50754, 0.50754, 0.50754 }, { 0.508273, 0.508273, 0.508273 }, 64.0f };
+    //material = { {1, 1, 1 }, { 1, 1, 1 }, { 1, 1, 1 }, 64.0f };
+    material = { {0.19225, 0.19225, 0.19225 }, { 0.50754, 0.50754, 0.50754 }, { 0.508273, 0.508273, 0.508273 }, 64.0f };
     vertexAndTexturePoints = new VertexAndTexturePoint[]{
         // points tex_coords
         { -xl, -yl, zl, 0, 0 }, // front
@@ -93,19 +90,10 @@ void Block::InitConstructorValues()
         { -xl, -yl, zl, 0, sr },
         { -xl, -yl, -zl, 0, 0 },
     };
-    //std::cout << "child called" << std::endl;
 }
 
 void Block::Init()
 {
-    //diffusePath = "../Assignment2/Src/container2.png";
-    //specularPath = "../Assignment2/Src/container2_specular.png";
-    //const char* testString = "../Assignment2/Src/container2.png";
-    //const char* testString1 = "../Assignment2/Src/container2_specular.png";
-    //diffuseMap = LoadTexture(&diffusePath);
-    //specularMap = LoadTexture(&specularPath);
-    //reflectionMap = LoadTexture(&specularPath);
-
 
     glGenBuffers(1, &vertexBuffer);
 
@@ -163,7 +151,6 @@ void Block::RenderNormalBlock(RTRShader* shader, SkyBox* skybox, TextureObject* 
     diffuseMap->Bind();
 
     glBindVertexArray(vertexArray);
-    //glDrawElements(GL_TRIANGLES, numberOfFaces * 3, GL_UNSIGNED_INT, 0);
     glDrawArrays(GL_TRIANGLES, 0, numberOfVertices);
     glBindVertexArray(0);
 }

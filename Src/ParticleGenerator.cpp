@@ -1,5 +1,4 @@
 #include "ParticleGenerator.h"
-//amount = 500
 
 ParticleGenerator::ParticleGenerator(unsigned int amount)
 {
@@ -58,30 +57,7 @@ void ParticleGenerator::UpdateAllParticles(float deltaTime)
 
 void ParticleGenerator::Init()
 {
-    // set up mesh and attribute properties
-
     particleQuad->Init();
-
-    //unsigned int VBO;
-    //float particle_quad[] = {
-    //    0.0f, 1.0f, 0.0f, 1.0f,
-    //    1.0f, 0.0f, 1.0f, 0.0f,
-    //    0.0f, 0.0f, 0.0f, 0.0f,
-
-    //    0.0f, 1.0f, 0.0f, 1.0f,
-    //    1.0f, 1.0f, 1.0f, 1.0f,
-    //    1.0f, 0.0f, 1.0f, 0.0f
-    //};
-    //glGenVertexArrays(1, &this->VAO);
-    //glGenBuffers(1, &VBO);
-    //glBindVertexArray(this->VAO);
-    //// fill mesh buffer
-    //glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    //glBufferData(GL_ARRAY_BUFFER, sizeof(particle_quad), particle_quad, GL_STATIC_DRAW);
-    //// set mesh attributes
-    //glEnableVertexAttribArray(0);
-    //glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
-    //glBindVertexArray(0);
 
     // create this->amount default particle instances
     for (unsigned int i = 0; i < this->amount; ++i)
@@ -139,9 +115,7 @@ void ParticleGenerator::RespawnParticle(Particle* particle, Sphere* object, glm:
     float random = ((rand() % 100) - 50) / 200.0f;
     float rColor = 0.5f + ((rand() % 100) / 100.0f);
     particle->position = glm::vec2(object->position.x, object->position.y) + random;
-    //if(position)
     particle->color = glm::vec4(rColor, rColor, rColor, 1.0f);
-
     particle->life = 1.0f;
     particle->velocity = object->velocity * 0.1f;
 }

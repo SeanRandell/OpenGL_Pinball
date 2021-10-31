@@ -42,7 +42,6 @@ public:
     float tiltSpeed;
 
     bool constrainPitch;
-    bool mouseControls;
 
     // movement booleans
     bool moveLeft;

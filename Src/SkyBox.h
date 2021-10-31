@@ -1,13 +1,12 @@
 #pragma once
 #include "Object.h"
-//#include <stb/stb_image.h>
 #include <vector>
-//-----------------------------------------------------------------------------
+
 class SkyBox : public Object
 {
 public:
     std::vector<std::string> skyBoxFaces;
-    unsigned int cubemapTexture;
+    unsigned int cubemapTexture{0};
 
     SkyBox() : Object() {};
     ~SkyBox() {}

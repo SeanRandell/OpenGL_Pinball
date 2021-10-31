@@ -16,28 +16,22 @@ struct Circle {
 
 class Quadtree {
 public:
-    //int MAX_OBJECTS = 10;
     int MAX_LEVELS = 100;
     int capacity;
     bool divided;
     int level;
-    //std::vector<Rectangle> objects;
     Rectangle* boundary;
     std::vector<Object*> objects;
     Quadtree* northeast;
     Quadtree* northwest;
     Quadtree* southeast;
     Quadtree* southwest;
-    //std::vector<Quadtree*> nodes;
 
     Quadtree(Rectangle* boundary, int capacity);
     ~Quadtree();
-    void Clear();
-    void Split();
-    void GetIndex();
+
     void SubDivide();
     bool Insert(Object* block);
-    std::vector<Rectangle> Retrieve();
     std::vector<Object*> Query(Sphere* circle);
     std::vector<Quadtree*> FindQuadrant(Sphere* circle);
     std::vector<Object*> GetObjectList(Quadtree* currentQuadtree);

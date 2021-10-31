@@ -1,4 +1,3 @@
-//#define STB_IMAGE_IMPLEMENTATION
 #include "Application.h"
 
 Application::Application(const char* title, bool isFullscreen, int width, int height)
