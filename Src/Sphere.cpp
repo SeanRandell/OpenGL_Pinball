@@ -67,21 +67,25 @@ void Sphere::Init()
 
 void Sphere::Render(RTRShader* shader, unsigned int cubeMapTexture, unsigned int sphereCount)
 {
-    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-
     glBindVertexArray(vertexArray);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_CUBE_MAP, cubeMapTexture);
-    //glDrawArrays(GL_TRIANGLES, 0, numberOfVertices);
-
-
-    // draw center sphere
-    //glDrawElements(GL_TRIANGLES,            // primitive type
-    //    GetIndexCount(), // # of indices
-    //    GL_UNSIGNED_INT,         // data type
-    //    (void*)0);               // ptr to indices
 
     glDrawElementsInstanced(GL_TRIANGLES, GetIndexCount(), GL_UNSIGNED_INT, (void*)0, sphereCount);
+    glBindVertexArray(0);
+}
+
+void Sphere::RenderNormals(RTRShader* shader, unsigned int cubeMapTexture)
+{
+    glBindVertexArray(vertexArray);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, cubeMapTexture);
+
+    // draw center sphere
+    glDrawElements(GL_TRIANGLES,            // primitive type
+        GetIndexCount(), // # of indices
+        GL_UNSIGNED_INT,         // data type
+        (void*)0);               // ptr to indices
 
     glBindVertexArray(0);
 }

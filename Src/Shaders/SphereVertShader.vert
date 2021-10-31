@@ -40,7 +40,7 @@ void main()
     vec3 offset = offsets[gl_InstanceID];
     vertexShaderOut.FragmentPosition = aPosition + offset;
 //    vertexShaderOut.Normal = mat3(transpose(inverse(modelMatrixUniform))) * aNormal;
-    vertexShaderOut.Normal = offset * aNormal;
+    vertexShaderOut.Normal = mat3(transpose(inverse(modelMatrixUniform))) * aNormal;
 //    vertexShaderOut.FragmentPosition = vec3(aInstanceModeMatrix * vec4(aPosition, 1.0));
 //    vertexShaderOut.Normal = mat3(transpose(inverse(aInstanceModeMatrix))) * aNormal;  
 

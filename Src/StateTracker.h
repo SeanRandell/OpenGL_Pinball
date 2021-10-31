@@ -61,6 +61,7 @@ public:
     bool isVertexNormalsDisplayOn;
     bool isLightingBoxesOn;
     bool isBoundingBoxesOn;
+    bool isLaunchLightMovingUp;
 
     unsigned int physicsObjectCount{ 0 };
 

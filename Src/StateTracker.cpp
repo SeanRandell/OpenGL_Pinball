@@ -40,6 +40,7 @@ StateTracker::StateTracker(int screenWidth, int screenHeight)
     isVertexNormalsDisplayOn = false;
     isLightingBoxesOn = false;
     isBoundingBoxesOn = true;
+    isLaunchLightMovingUp = true;
 
     launchCooldown = 0.3f;
     launchCountdown = 0.3f;

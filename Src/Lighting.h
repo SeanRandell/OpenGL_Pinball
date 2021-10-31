@@ -6,7 +6,7 @@
 #pragma once
 #include <glm/glm.hpp>
 
-constexpr auto MAX_LIGHTS = 12;
+constexpr auto MAX_LIGHTS = 13;
 
 enum class LightType : int
 {

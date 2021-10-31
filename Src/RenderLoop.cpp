@@ -74,7 +74,7 @@ void RenderLoop::Init(StateTracker* stateTracker, int screenWidth, int screenHei
         .type = LightType::PointLight,
         .ambient = glm::vec3(0.2, 0.0, 0.0),
         .diffuse = glm::vec3(0.5, 0.0, 0.0),
-        .specular = glm::vec3(1.0,1.0, 1.0),
+        .specular = glm::vec3(1.0, 1.0, 1.0),
         .position = glm::vec3(-4.5, 3.0, 1.5),
         .constant = 1.0f,
         .linear = 0.14f,
@@ -154,7 +154,7 @@ void RenderLoop::Init(StateTracker* stateTracker, int screenWidth, int screenHei
         .ambient = glm::vec3(0.0, 0.0, 0.2),
         .diffuse = glm::vec3(0.0, 0.0, 0.5),
         .specular = glm::vec3(1.0, 1.0, 1.0),
-        .position = glm::vec3(3.0, 0.0, 0.5),
+        .position = glm::vec3(3.0, 0.0, 1.5),
         .constant = 1.0f,
         .linear = 0.14f,
         .quadratic = 0.07f,
@@ -193,6 +193,18 @@ void RenderLoop::Init(StateTracker* stateTracker, int screenWidth, int screenHei
         .linear = 0.14f,
         .quadratic = 0.07f,
         .isLightOn = false
+        });
+    //teal moving light
+    stateTracker->lightModel->AddLight({
+        .type = LightType::PointLight,
+        .ambient = glm::vec3(0.0, 0.2, 0.2),
+        .diffuse = glm::vec3(0.0, 0.5, 0.5),
+        .specular = glm::vec3(1.0, 1.0, 1.0),
+        .position = glm::vec3(10.5f, -8.0f, 1.5f),
+        .constant = 1.0f,
+        .linear = 0.14f,
+        .quadratic = 0.07f,
+        .isLightOn = true
         });
 
     // assign lights to pegs
@@ -273,7 +285,6 @@ void RenderLoop::CheckInput(StateTracker* stateTracker, bool* quitApp, float del
                 break;
             case SDLK_b:
                 stateTracker->isDebugOn = !stateTracker->isDebugOn;
-                //TODO - reset camera turn debug stuff off
                 if (stateTracker->isDebugOn)
                 {
                     stateTracker->localIsDebugHUDOnToggle = true;
@@ -427,21 +438,37 @@ void RenderLoop::UpdateState(StateTracker* stateTracker, float deltaTime, Quadtr
             //Update peg lights
             for (int i = 1; i < stateTracker->pegs.size(); i++)
             {
-                //stateTracker->pegs[i]->UpdatePegLights(stateTracker->lightModel->GetLight(j), deltaTime);
                 stateTracker->pegs[i]->UpdatePegLights(deltaTime);
-                //j++;
             }
 
             // update particles
             for (auto ball : stateTracker->spheres)
             {
-                stateTracker->particleGenerator->Update(deltaTime, ball, 2, glm::vec2(ball->radius/4.0f));
+                stateTracker->particleGenerator->Update(deltaTime, ball, 2, glm::vec2(ball->radius / 4.0f));
             }
 
             //if no spheres make sure all particles die
             if (stateTracker->spheres.size() == 0)
             {
                 stateTracker->particleGenerator->UpdateAllParticles(deltaTime);
+            }
+
+            // move launch tube light up and down
+            if (stateTracker->isLaunchLightMovingUp) 
+            {
+                stateTracker->lightModel->GetLight(12)->position.y += 2 * deltaTime;
+                if (stateTracker->lightModel->GetLight(12)->position.y >= 4.0f)
+                {
+                    stateTracker->isLaunchLightMovingUp = false;
+                }
+            }
+            else
+            {
+                stateTracker->lightModel->GetLight(12)->position.y -= 2 * deltaTime;
+                if (stateTracker->lightModel->GetLight(12)->position.y <= -8.0f)
+                {
+                    stateTracker->isLaunchLightMovingUp = true;
+                }
             }
         }
     }
@@ -470,7 +497,7 @@ void RenderLoop::RenderFrame(StateTracker* stateTracker, Quadtree* quadtree)
     stateTracker->blockShader->SetCamera("cameraUniform", *stateTracker->camera);
     stateTracker->blockShader->SetLightingModel(*stateTracker->lightModel);
 
-    for(auto block : stateTracker->blocks)
+    for (auto block : stateTracker->blocks)
     {
         stateTracker->blockShader->SetBool("debugUniform", false);
         stateTracker->modelMatrix = glm::mat4(1.0f);
@@ -539,7 +566,7 @@ void RenderLoop::RenderFrame(StateTracker* stateTracker, Quadtree* quadtree)
     stateTracker->cubeShader->SetMat4("projectionMatrixUniform", stateTracker->projectionMatrix);
     stateTracker->cubeShader->SetCamera("cameraUniform", *stateTracker->camera);
     stateTracker->cubeShader->SetLightingModel(*stateTracker->lightModel);
-    for(auto peg : stateTracker->pegs)
+    for (auto peg : stateTracker->pegs)
     {
         stateTracker->cubeShader->SetBool("debugUniform", false);
         stateTracker->modelMatrix = glm::mat4(1.0f);
@@ -595,58 +622,47 @@ void RenderLoop::RenderFrame(StateTracker* stateTracker, Quadtree* quadtree)
     stateTracker->sphereShader->Use();
     stateTracker->sphereShader->SetMat4("viewMatrixUniform", stateTracker->viewMatrix);
     stateTracker->sphereShader->SetMat4("projectionMatrixUniform", stateTracker->projectionMatrix);
+    stateTracker->modelMatrix = glm::mat4(1.0f);
+    stateTracker->sphereShader->SetMat4("modelMatrixUniform", stateTracker->modelMatrix);
     stateTracker->sphereShader->SetCamera("cameraUniform", *stateTracker->camera);
     stateTracker->sphereShader->SetLightingModel(*stateTracker->lightModel);
     for (unsigned int i = 0; i < stateTracker->spheres.size(); i++)
     {
-
-
-        stateTracker->modelMatrix = glm::mat4(1.0f);
-        stateTracker->modelMatrix = glm::translate(stateTracker->modelMatrix, stateTracker->spheres[i]->position);
-        stateTracker->sphereShader->SetMat4("modelMatrixUniform", stateTracker->modelMatrix);
-        
-    }
-    for (unsigned int i = 0; i < stateTracker->spheres.size(); i++)
-    {
         stateTracker->sphereShader->SetArrayVec3("offsets", i, stateTracker->spheres[i]->position);
     }
-        stateTracker->sphereShader->SetBool("debugUniform", false);
-        stateTracker->testSphere->Render(stateTracker->sphereShader, stateTracker->skyBox->cubemapTexture, stateTracker->spheres.size());
+    stateTracker->sphereShader->SetBool("debugUniform", false);
+    stateTracker->testSphere->Render(stateTracker->sphereShader, stateTracker->skyBox->cubemapTexture, stateTracker->spheres.size());
 
-        // render bounding box
-        //if (!stateTracker->isDebugOn)
-        //{
-        //    continue;
-        //}
-        //if (!stateTracker->isBoundingBoxesOn)
-        //{
-        //    continue;
-        //}
-        //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-        //glPolygonOffset(0, -1);
-        //glEnable(GL_POLYGON_OFFSET_FILL);
-        //stateTracker->sphereShader->SetBool("debugUniform", true);
-        //stateTracker->spheres[i]->Render(stateTracker->sphereShader, stateTracker->skyBox->cubemapTexture, stateTracker->sphereMatrices);
-        //glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-        //glPolygonOffset(1, 0);
-        //glEnable(GL_POLYGON_OFFSET_FILL);
-
-  /*  }*/
+    // sphere bounding box
+    if (stateTracker->isDebugOn)
+    {
+        if (stateTracker->isBoundingBoxesOn)
+        {
+            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+            glPolygonOffset(0, -1);
+            glEnable(GL_POLYGON_OFFSET_FILL);
+            stateTracker->sphereShader->SetBool("debugUniform", true);
+            stateTracker->testSphere->Render(stateTracker->sphereShader, stateTracker->skyBox->cubemapTexture, stateTracker->spheres.size());
+            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+            glPolygonOffset(1, 0);
+            glEnable(GL_POLYGON_OFFSET_FILL);
+        }
+    }
 
     // sphere normal
-    //if (stateTracker->isVertexNormalsDisplayOn)
-    //{
-    //    stateTracker->normalShader->SetMat4("viewMatrixUniform", stateTracker->viewMatrix);
-    //    stateTracker->normalShader->SetMat4("projectionMatrixUniform", stateTracker->projectionMatrix);
-    //    for (unsigned int i = 0; i < stateTracker->spheres.size(); i++)
-    //    {
-    //        stateTracker->normalShader->Use();
-    //        stateTracker->modelMatrix = glm::mat4(1.0f);
-    //        stateTracker->modelMatrix = glm::translate(stateTracker->modelMatrix, stateTracker->spheres[i]->position);
-    //        stateTracker->normalShader->SetMat4("modelMatrixUniform", stateTracker->modelMatrix);
-    //        stateTracker->spheres[i]->Render(stateTracker->normalShader, stateTracker->skyBox->cubemapTexture, stateTracker->sphereMatrices);
-    //    }
-    //}
+    if (stateTracker->isVertexNormalsDisplayOn)
+    {
+        stateTracker->normalShader->SetMat4("viewMatrixUniform", stateTracker->viewMatrix);
+        stateTracker->normalShader->SetMat4("projectionMatrixUniform", stateTracker->projectionMatrix);
+        for (unsigned int i = 0; i < stateTracker->spheres.size(); i++)
+        {
+            stateTracker->normalShader->Use();
+            stateTracker->modelMatrix = glm::mat4(1.0f);
+            stateTracker->modelMatrix = glm::translate(stateTracker->modelMatrix, stateTracker->spheres[i]->position);
+            stateTracker->normalShader->SetMat4("modelMatrixUniform", stateTracker->modelMatrix);
+            stateTracker->spheres[i]->RenderNormals(stateTracker->normalShader, stateTracker->skyBox->cubemapTexture);
+        }
+    }
 
     //Lights
     if (stateTracker->isDebugOn && stateTracker->isLightingBoxesOn)

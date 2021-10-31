@@ -51,7 +51,7 @@ struct Light {
 //    float OuterCutoff;
 };
 
-#define MAX_NUMBER_OF_LIGHTS 12
+#define MAX_NUMBER_OF_LIGHTS 13
 
 #define DirectionalLight    0
 #define PointLight          1

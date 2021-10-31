@@ -26,6 +26,7 @@ public:
     void InitConstructorValues();
     //virtual void Render(RTRShader* shader, unsigned int cubeMapTexture);
     virtual void Render(RTRShader* shader, unsigned int cubeMapTexture, unsigned int sphereCount);
+    void RenderNormals(RTRShader* shader, unsigned int cubeMapTexture);
     virtual void End();
 
     bool IsContainedWithin(Rectangle* boundary);
