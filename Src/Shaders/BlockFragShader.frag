@@ -87,8 +87,15 @@ vec3 OneTexture()
         float attenuation = 1.0;
 
         // calc ambient
-        vec3 ambient = lightsUniform[currentLight].ambient * texture(objectDefaultMaterialUniform.diffuseMap, fragmentShaderIn.TextureCoordinates).rgb;
-
+        vec3 ambient = vec3(0.0, 0.0, 0.0);
+        if(lightsUniform[currentLight].type == PointLight)
+        {
+            ambient = (lightsUniform[currentLight].ambient * 4) * texture(objectDefaultMaterialUniform.diffuseMap, fragmentShaderIn.TextureCoordinates).rgb;
+        }
+        else
+        {
+             ambient = lightsUniform[currentLight].ambient * texture(objectDefaultMaterialUniform.diffuseMap, fragmentShaderIn.TextureCoordinates).rgb;
+        }
 
         // calc diffuse
         vec3 lightDirectionVector;
@@ -108,8 +115,15 @@ vec3 OneTexture()
         lightDirectionVector = normalize(lightDirectionVector);
         float diffuseFloat = max(dot(normalVector, lightDirectionVector), 0.0);
 
-        vec3 diffuseVector  = lightsUniform[currentLight].diffuse * diffuseFloat * texture(objectDefaultMaterialUniform.diffuseMap, fragmentShaderIn.TextureCoordinates).rgb;
-
+        vec3 diffuseVector = vec3(0.0, 0.0, 0.0);
+        if(lightsUniform[currentLight].type == PointLight)
+        {
+            diffuseVector  = (lightsUniform[currentLight].diffuse * 4) * diffuseFloat * texture(objectDefaultMaterialUniform.diffuseMap, fragmentShaderIn.TextureCoordinates).rgb;
+        }
+        else
+        {
+            diffuseVector  = lightsUniform[currentLight].diffuse * diffuseFloat * texture(objectDefaultMaterialUniform.diffuseMap, fragmentShaderIn.TextureCoordinates).rgb;
+        }
         // calc specular
         vec3 fragmentToCameraVector = normalize(cameraUniform.Position - fragmentShaderIn.FragmentPosition);
         // Phong
