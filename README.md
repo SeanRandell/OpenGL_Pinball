@@ -9,6 +9,8 @@
 
 ## About The Project
 
+This project was created for my Realtime Rendering and 3d Graphics course at RMIT. Contributions during this time are attributed under my RMIT student account - s3658051.
+
 ![OpenGL_Pinball_Image_0](readme_assets/0.jpg)
 
 Besides SDL2 and the use of GLText for the HUD, this was made completely from scratch with custom shaders using GLSL. These shaders were used to apply the following effects:
