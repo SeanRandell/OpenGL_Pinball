@@ -47,64 +47,64 @@ StateTracker::StateTracker(int screenWidth, int screenHeight)
 void StateTracker::InitShadersAndTextures()
 {
     this->cubeShader = new RTRShader(
-        "../Assignment2/Src/Shaders/CubeVertShader.vert",
-        "../Assignment2/Src/Shaders/CubeFragShader.frag",
-        "../Assignment2/Src/Shaders/CubeGeomShader.geom"
+        "../OpenGL_Pinball/Src/Shaders/CubeVertShader.vert",
+        "../OpenGL_Pinball/Src/Shaders/CubeFragShader.frag",
+        "../OpenGL_Pinball/Src/Shaders/CubeGeomShader.geom"
     );
     this->blockShader = new RTRShader(
-        "../Assignment2/Src/Shaders/BlockVertShader.vert",
-        "../Assignment2/Src/Shaders/BlockFragShader.frag",
-        "../Assignment2/Src/Shaders/BlockGeomShader.geom"
+        "../OpenGL_Pinball/Src/Shaders/BlockVertShader.vert",
+        "../OpenGL_Pinball/Src/Shaders/BlockFragShader.frag",
+        "../OpenGL_Pinball/Src/Shaders/BlockGeomShader.geom"
     );
     this->normalShader = new RTRShader(
-        "../Assignment2/Src/Shaders/NormalVertShader.vert",
-        "../Assignment2/Src/Shaders/NormalFragShader.frag",
-        "../Assignment2/Src/Shaders/NormalGeomShader.geom"
+        "../OpenGL_Pinball/Src/Shaders/NormalVertShader.vert",
+        "../OpenGL_Pinball/Src/Shaders/NormalFragShader.frag",
+        "../OpenGL_Pinball/Src/Shaders/NormalGeomShader.geom"
     );
     this->skyBoxShader = new RTRShader(
-        "../Assignment2/Src/Shaders/SkyBoxVertShader.vert",
-        "../Assignment2/Src/Shaders/SkyBoxFragShader.frag"
+        "../OpenGL_Pinball/Src/Shaders/SkyBoxVertShader.vert",
+        "../OpenGL_Pinball/Src/Shaders/SkyBoxFragShader.frag"
     );
     this->sphereShader = new RTRShader(
-        "../Assignment2/Src/Shaders/SphereVertShader.vert",
-        "../Assignment2/Src/Shaders/SphereFragShader.frag"
+        "../OpenGL_Pinball/Src/Shaders/SphereVertShader.vert",
+        "../OpenGL_Pinball/Src/Shaders/SphereFragShader.frag"
     );
     this->lightingShader = new RTRShader(
-        "../Assignment2/Src/Shaders/LightingVertexShader.vert",
-        "../Assignment2/Src/Shaders/LightingFragShader.frag"
+        "../OpenGL_Pinball/Src/Shaders/LightingVertexShader.vert",
+        "../OpenGL_Pinball/Src/Shaders/LightingFragShader.frag"
     );
     this->directionalLightShader = new RTRShader(
-        "../Assignment2/Src/Shaders/DirectionalVertShader.vert",
-        "../Assignment2/Src/Shaders/DirectionalFragShader.frag",
-        "../Assignment2/Src/Shaders/DirectionalGeomShader.geom"
+        "../OpenGL_Pinball/Src/Shaders/DirectionalVertShader.vert",
+        "../OpenGL_Pinball/Src/Shaders/DirectionalFragShader.frag",
+        "../OpenGL_Pinball/Src/Shaders/DirectionalGeomShader.geom"
     );
     this->blurShader = new RTRShader(
-        "../Assignment2/Src/Shaders/BlurVertShader.vert",
-        "../Assignment2/Src/Shaders/BlurFragShader.frag"
+        "../OpenGL_Pinball/Src/Shaders/BlurVertShader.vert",
+        "../OpenGL_Pinball/Src/Shaders/BlurFragShader.frag"
     );
     this->bloomShader = new RTRShader(
-        "../Assignment2/Src/Shaders/BloomFinalVertShader.vert",
-        "../Assignment2/Src/Shaders/BloomFinalFragShader.frag"
+        "../OpenGL_Pinball/Src/Shaders/BloomFinalVertShader.vert",
+        "../OpenGL_Pinball/Src/Shaders/BloomFinalFragShader.frag"
     );
     this->simpleDepthShader = new RTRShader(
-        "../Assignment2/Src/Shaders/DepthVertShader.vert",
-        "../Assignment2/Src/Shaders/DepthFragShader.frag"
+        "../OpenGL_Pinball/Src/Shaders/DepthVertShader.vert",
+        "../OpenGL_Pinball/Src/Shaders/DepthFragShader.frag"
     );
     this->debugDepthQuadShader = new RTRShader(
-        "../Assignment2/Src/Shaders/DebugQuadDepthVertShader.vert",
-        "../Assignment2/Src/Shaders/DebugQuadDepthFragShader.frag"
+        "../OpenGL_Pinball/Src/Shaders/DebugQuadDepthVertShader.vert",
+        "../OpenGL_Pinball/Src/Shaders/DebugQuadDepthFragShader.frag"
     );
     this->particleShader = new RTRShader(
-        "../Assignment2/Src/Shaders/ParticleVertShader.vert",
-        "../Assignment2/Src/Shaders/ParticleFragShader.frag"
+        "../OpenGL_Pinball/Src/Shaders/ParticleVertShader.vert",
+        "../OpenGL_Pinball/Src/Shaders/ParticleFragShader.frag"
     );
 
-    std::string diffuseMapPath = "../Assignment2/Src/Textures/container2.png";
-    std::string specularMapPath = "../Assignment2/Src/Textures/container2_specular.png";
-    std::string reflectionMapPath = "../Assignment2/Src/Textures/container2_specular.png";
-    std::string bumperBlockTexturePath = "../Assignment2/Src/Textures/SpaceFloor.jpg";
-    std::string wallBlockTexturePath = "../Assignment2/Src/Textures/Concrete.jpg";
-    std::string particleTexturePath = "../Assignment2/Src/Textures/particle.png";
+    std::string diffuseMapPath = "../OpenGL_Pinball/Src/Textures/container2.png";
+    std::string specularMapPath = "../OpenGL_Pinball/Src/Textures/container2_specular.png";
+    std::string reflectionMapPath = "../OpenGL_Pinball/Src/Textures/container2_specular.png";
+    std::string bumperBlockTexturePath = "../OpenGL_Pinball/Src/Textures/SpaceFloor.jpg";
+    std::string wallBlockTexturePath = "../OpenGL_Pinball/Src/Textures/Concrete.jpg";
+    std::string particleTexturePath = "../OpenGL_Pinball/Src/Textures/particle.png";
 
     // TODO - Rework constructors
     this->diffuseMapTexture = new TextureObject(&diffuseMapPath, GL_REPEAT, GL_REPEAT, GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR, 0, 0, true);

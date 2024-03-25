@@ -3,7 +3,7 @@
 ParticleGenerator::ParticleGenerator(unsigned int amount)
 {
     this->amount = amount;
-    particlePath = "../Assignment2/Src/particle.png";
+    particlePath = "../OpenGL_Pinball/Src/particle.png";
     particleTexture = 0;
     this->particleQuad = new Quad();
 }

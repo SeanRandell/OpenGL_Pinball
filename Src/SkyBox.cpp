@@ -52,12 +52,12 @@ void SkyBox::Init()
 
     skyBoxFaces =
     {
-        "../Assignment2/Src/SkyBox/right.jpg",
-        "../Assignment2/Src/SkyBox/left.jpg",
-        "../Assignment2/Src/SkyBox/top.jpg",
-        "../Assignment2/Src/SkyBox/bottom.jpg",
-        "../Assignment2/Src/SkyBox/front.jpg",
-        "../Assignment2/Src/SkyBox/back.jpg"
+        "../OpenGL_Pinball/Src/SkyBox/right.jpg",
+        "../OpenGL_Pinball/Src/SkyBox/left.jpg",
+        "../OpenGL_Pinball/Src/SkyBox/top.jpg",
+        "../OpenGL_Pinball/Src/SkyBox/bottom.jpg",
+        "../OpenGL_Pinball/Src/SkyBox/front.jpg",
+        "../OpenGL_Pinball/Src/SkyBox/back.jpg"
     };
 
     cubemapTexture = LoadCubemap();

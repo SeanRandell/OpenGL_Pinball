@@ -48,3 +48,19 @@ Open the `.sln` file in Visual Studio and build (Ctrl+Shift+B).
 ## How To Run
 
 You can run the application from source in Visual Studio using the Local Windows Debugger, or by downloading the release and running the `OpenGL_Pinball.exe` file.
+
+## Controls
+ - [Space] - Launch ball. Small delay 0.1 second between launches
+ - [<] - Left Flipper. Applies force when rising
+ - [>] - Right Flipper. Applies force when rising
+ - [B] - Switch between normal and debug mode.
+ - [Q] - Toggle Between Quadtree and brute force physics comparisons
+ - [H] - Toggle Debug HUD
+**Debug Controls**
+ - [WASD] - Move camera
+ - [Arrow Keys] - Pitch and Yaw camera
+ - [Mouse Movement] - Pitch and Yaw camera
+ - [P] - Pause and unPause physics
+ - [L] - Turn Light boxes off and on
+ - \[X] - Turn display bounding boxes on and off
+ - [N] - Turn display vertex normals on and of
