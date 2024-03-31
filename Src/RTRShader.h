@@ -20,8 +20,12 @@ public:
     unsigned int ID;
 
     // constructor reads and builds the shader
-    RTRShader(const char* vertexPath, const char* fragmentPath, const char* geometryPath = nullptr);
+    RTRShader(const char* vertexCode, const char* fragmentCode, const char* geometryCode = nullptr);
     ~RTRShader();
+
+    unsigned int CreateShader(int ShaderType, const char* shaderCode, const char* ShaderName);
+    // TODO - create define for zero
+    void CreateProgram(unsigned int vertexShader, unsigned int fragmentShader, unsigned int geometryShader = 0);
     // use/activate the shader
     void Use();
     // utility uniform functions

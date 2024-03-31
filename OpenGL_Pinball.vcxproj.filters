@@ -185,6 +185,9 @@
     <ClInclude Include="Src\Rectangle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Src\ShaderSources.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Src\Shaders\BlockFragShader.frag">

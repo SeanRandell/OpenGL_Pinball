@@ -58,6 +58,7 @@
     <ClInclude Include="Src\Lighting.h" />
     <ClInclude Include="Src\Object.h" />
     <ClInclude Include="Src\RTRShader.h" />
+    <ClInclude Include="Src\ShaderSources.h" />
     <ClInclude Include="Src\SkyBox.h" />
     <ClInclude Include="Src\Sphere.h" />
     <ClInclude Include="Src\StateTracker.h" />
@@ -184,7 +185,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </None>
-    <None Include="Src\Shaders\NormalGeomShader.geom">
+	<None Include="Src\Shaders\NormalGeomShader.geom">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
@@ -411,6 +412,12 @@
     <PostBuildEvent>
       <Command>xcopy /y /d "$(ProjectDir)dll\$(PlatformTarget)\SDL2.dll" "$(OutDir)"</Command>
     </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>powershell.exe $(SolutionDir)/Tools/Compile_Shaders.ps1 $(SolutionDir)</Command>
+    </PreBuildEvent>
+    <PreBuildEvent>
+      <Message>Compile Shaders into ShaderSources.h as strings that can be referenced by the shader builder.</Message>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

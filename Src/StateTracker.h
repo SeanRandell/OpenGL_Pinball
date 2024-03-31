@@ -14,6 +14,7 @@
 #include "QuadTree.h"
 #include <sdl/SDL_timer.h>
 #include <string>
+#include "ShaderSources.h"
 
 //const unsigned int SHADOW_WIDTH = 1024, SHADOW_HEIGHT = 1024;
 
@@ -28,6 +29,7 @@ public:
     Debug* debugObject;
     Quad* quad;
     Sphere* InstancedSphere;
+    ShaderSources* shaderSources;
 
     //object collections
     std::vector<Block*> blocks;
