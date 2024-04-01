@@ -64,5 +64,5 @@ You can run the application from source in Visual Studio using the Local Windows
  - [Mouse Movement] - Pitch and Yaw camera
  - [P] - Pause and unPause physics
  - [L] - Turn Light boxes off and on
- - &#91;X&#93; - Turn display bounding boxes on and off
+ - \[X\] - Turn display bounding boxes on and off
  - [N] - Turn display vertex normals on and of
