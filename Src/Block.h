@@ -20,8 +20,8 @@ public:
 
     void InitConstructorValues();
     virtual void Init();
-    virtual void Render(RTRShader* shader, SkyBox* skybox, TextureObject* diffuseMap, TextureObject* specularMap, TextureObject* reflectionMap);
-    void RenderNormalBlock(RTRShader* shader, SkyBox* skybox, TextureObject* diffuseMap);
+    virtual void Render(ShaderObject* shader, SkyBox* skybox, TextureObject* diffuseMap, TextureObject* specularMap, TextureObject* reflectionMap);
+    void RenderNormalBlock(ShaderObject* shader, SkyBox* skybox, TextureObject* diffuseMap);
     virtual void End();
     virtual const char* GetName();
     bool IsContainedWithin(Rectangle* boundary);

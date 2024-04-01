@@ -5,7 +5,7 @@
 //-----------------------------------------------------------------------------
 #pragma once
 #include "Lighting.h"
-#include "RTRShader.h"
+#include "ShaderObject.h"
 #include "TextureObject.h"
 #include "Rectangle.h"
 
@@ -28,7 +28,7 @@ public:
     Object();
     ~Object() {}
     virtual void Init();
-    virtual void Render(RTRShader* shader);
+    virtual void Render(ShaderObject* shader);
     virtual void End();
     void SetMaterial(ObjectMaterial material);
     virtual const char* GetName();

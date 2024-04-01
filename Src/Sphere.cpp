@@ -62,7 +62,7 @@ void Sphere::Init()
 
 }
 
-void Sphere::Render(RTRShader* shader, unsigned int cubeMapTexture, unsigned int sphereCount)
+void Sphere::Render(ShaderObject* shader, unsigned int cubeMapTexture, unsigned int sphereCount)
 {
     shader->SetMaterial("objectMaterialUniform", material);
     glBindVertexArray(vertexArray);
@@ -73,7 +73,7 @@ void Sphere::Render(RTRShader* shader, unsigned int cubeMapTexture, unsigned int
     glBindVertexArray(0);
 }
 
-void Sphere::RenderNormals(RTRShader* shader, unsigned int cubeMapTexture)
+void Sphere::RenderNormals(ShaderObject* shader, unsigned int cubeMapTexture)
 {
     shader->SetMaterial("objectMaterialUniform", material);
     glBindVertexArray(vertexArray);

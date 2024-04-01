@@ -11,7 +11,7 @@ public:
     SkyBox() : Object() {};
     ~SkyBox() {}
     virtual void Init();
-    virtual void Render(RTRShader* shader);
+    virtual void Render(ShaderObject* shader);
     virtual void End();
     virtual const char* GetName();
     unsigned int LoadCubemap();

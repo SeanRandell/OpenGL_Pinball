@@ -20,7 +20,7 @@ void Debug::Init()
     glEnableVertexAttribArray(0);
 }
 
-void Debug::Render(RTRShader* shader)
+void Debug::Render(ShaderObject* shader)
 {
     //shader->SetMaterial("objectMaterialUniform", material);
 

@@ -1,6 +1,6 @@
-#include "RTRShader.h"
+#include "ShaderObject.h"
 
-RTRShader::RTRShader(const char* vertexCode, const char* fragmentCode, const char* geometryCode) {
+ShaderObject::ShaderObject(const char* vertexCode, const char* fragmentCode, const char* geometryCode) {
     unsigned int vertex = CreateShader(GL_VERTEX_SHADER, vertexCode, "VERTEX");
 
     unsigned int fragment = CreateShader(GL_FRAGMENT_SHADER, fragmentCode, "FRAGMENT");
@@ -20,7 +20,7 @@ RTRShader::RTRShader(const char* vertexCode, const char* fragmentCode, const cha
     }
 }
 
-unsigned int RTRShader::CreateShader(int ShaderType, const char* shaderCode, const char* ShaderName) {
+unsigned int ShaderObject::CreateShader(int ShaderType, const char* shaderCode, const char* ShaderName) {
     unsigned int returnShader = glCreateShader(ShaderType);
     glShaderSource(returnShader, 1, &shaderCode, NULL);
     glCompileShader(returnShader);
@@ -29,7 +29,7 @@ unsigned int RTRShader::CreateShader(int ShaderType, const char* shaderCode, con
     return returnShader;
 }
 
-void RTRShader::CreateProgram(unsigned int vertexShader, unsigned int fragmentShader, unsigned int geometryShader)
+void ShaderObject::CreateProgram(unsigned int vertexShader, unsigned int fragmentShader, unsigned int geometryShader)
 {
     ID = glCreateProgram();
     glAttachShader(ID, vertexShader);
@@ -50,77 +50,77 @@ void RTRShader::CreateProgram(unsigned int vertexShader, unsigned int fragmentSh
     }
 }
 
-RTRShader::~RTRShader() {
+ShaderObject::~ShaderObject() {
     if (ID != 0) glDeleteProgram(ID);
 }
 
 // activate the shader
 // ------------------------------------------------------------------------
-void RTRShader::Use()
+void ShaderObject::Use()
 {
     glUseProgram(ID);
 }
 // utility uniform functions
 // ------------------------------------------------------------------------
-void RTRShader::SetBool(const std::string& name, bool value) const
+void ShaderObject::SetBool(const std::string& name, bool value) const
 {
     glUniform1i(glGetUniformLocation(ID, name.c_str()), (int)value);
 }
 // ------------------------------------------------------------------------
-void RTRShader::SetInt(const std::string& name, int value) const
+void ShaderObject::SetInt(const std::string& name, int value) const
 {
     glUniform1i(glGetUniformLocation(ID, name.c_str()), value);
 }
 // ------------------------------------------------------------------------
-void RTRShader::SetFloat(const std::string& name, float value) const
+void ShaderObject::SetFloat(const std::string& name, float value) const
 {
     glUniform1f(glGetUniformLocation(ID, name.c_str()), value);
 }
 
 // ------------------------------------------------------------------------
-void RTRShader::SetVec2(const std::string& name, const glm::vec2& value) const
+void ShaderObject::SetVec2(const std::string& name, const glm::vec2& value) const
 {
     glUniform2fv(glGetUniformLocation(ID, name.c_str()), 1, &value[0]);
 }
-void RTRShader::SetVec2(const std::string& name, float x, float y) const
+void ShaderObject::SetVec2(const std::string& name, float x, float y) const
 {
     glUniform2f(glGetUniformLocation(ID, name.c_str()), x, y);
 }
 // ------------------------------------------------------------------------
-void RTRShader::SetVec3(const std::string& name, const glm::vec3& value) const
+void ShaderObject::SetVec3(const std::string& name, const glm::vec3& value) const
 {
     glUniform3fv(glGetUniformLocation(ID, name.c_str()), 1, &value[0]);
 }
-void RTRShader::SetVec3(const std::string& name, float x, float y, float z) const
+void ShaderObject::SetVec3(const std::string& name, float x, float y, float z) const
 {
     glUniform3f(glGetUniformLocation(ID, name.c_str()), x, y, z);
 }
 // ------------------------------------------------------------------------
-void RTRShader::SetVec4(const std::string& name, const glm::vec4& value) const
+void ShaderObject::SetVec4(const std::string& name, const glm::vec4& value) const
 {
     glUniform4fv(glGetUniformLocation(ID, name.c_str()), 1, &value[0]);
 }
-void RTRShader::SetVec4(const std::string& name, float x, float y, float z, float w) const
+void ShaderObject::SetVec4(const std::string& name, float x, float y, float z, float w) const
 {
     glUniform4f(glGetUniformLocation(ID, name.c_str()), x, y, z, w);
 }
 // ------------------------------------------------------------------------
-void RTRShader::SetMat2(const std::string& name, const glm::mat2& mat) const
+void ShaderObject::SetMat2(const std::string& name, const glm::mat2& mat) const
 {
     glUniformMatrix2fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, &mat[0][0]);
 }
 // ------------------------------------------------------------------------
-void RTRShader::SetMat3(const std::string& name, const glm::mat3& mat) const
+void ShaderObject::SetMat3(const std::string& name, const glm::mat3& mat) const
 {
     glUniformMatrix3fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, &mat[0][0]);
 }
 // ------------------------------------------------------------------------
-void RTRShader::SetMat4(const std::string& name, const glm::mat4& mat) const
+void ShaderObject::SetMat4(const std::string& name, const glm::mat4& mat) const
 {
     glUniformMatrix4fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, &mat[0][0]);
 }
 
-void RTRShader::CheckCompileErrors(unsigned int shader, std::string type)
+void ShaderObject::CheckCompileErrors(unsigned int shader, std::string type)
 {
     int success;
     char infoLog[1024];

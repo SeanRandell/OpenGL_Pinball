@@ -35,6 +35,6 @@ public:
     std::vector<Object*> Query(Sphere* circle);
     std::vector<Quadtree*> FindQuadrant(Sphere* circle);
     std::vector<Object*> GetObjectList(Quadtree* currentQuadtree);
-    void DrawQuadTree(RTRShader* shader);    
+    void DrawQuadTree(ShaderObject* shader);    
     void DrawQuadTree();
 };

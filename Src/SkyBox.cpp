@@ -76,7 +76,7 @@ void SkyBox::Init()
 
 }
 
-void SkyBox::Render(RTRShader* shader)
+void SkyBox::Render(ShaderObject* shader)
 {
     // change depth function so depth test passes when values are equal to depth buffer's content
     glDepthFunc(GL_LEQUAL);

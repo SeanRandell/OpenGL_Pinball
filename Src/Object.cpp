@@ -37,7 +37,7 @@ void Object::Init()
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, numberOfFaces * sizeof(ObjectFace), faces, GL_STATIC_DRAW);
 }
 
-void Object::Render(RTRShader* shader)
+void Object::Render(ShaderObject* shader)
 {
     shader->SetMaterial("objectMaterialUniform", material);
     glBindVertexArray(vertexArray);

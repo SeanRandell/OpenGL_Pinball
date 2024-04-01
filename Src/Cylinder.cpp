@@ -60,8 +60,8 @@ void Cylinder::Init()
 
 }
 
-//void Cylinder::Render(RTRShader* shader, unsigned int cubeMapTexture)
-void Cylinder::Render(RTRShader* shader)
+//void Cylinder::Render(ShaderObject* shader, unsigned int cubeMapTexture)
+void Cylinder::Render(ShaderObject* shader)
 {
     shader->SetMaterial("objectMaterialUniform", material);
     glBindVertexArray(vertexArray);

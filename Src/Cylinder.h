@@ -37,7 +37,7 @@ public:
     ~Cylinder() {}
 
     virtual void Init();
-    virtual void Render(RTRShader* shader);
+    virtual void Render(ShaderObject* shader);
     virtual void End();
 
     // for vertex data

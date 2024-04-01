@@ -185,7 +185,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </None>
-	<None Include="Src\Shaders\NormalGeomShader.geom">
+    <None Include="Src\Shaders\NormalGeomShader.geom">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
@@ -311,7 +311,7 @@
     <IntDir>$(SolutionDir)\Build\$(Configuration) - $(PlatformTarget)\</IntDir>
     <IncludePath>$(SolutionDir)\Include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
     <LibraryPath>$(SolutionDir)\Lib\$(PlatformTarget);$(LibraryPath)</LibraryPath>
-    <TargetName>A2</TargetName>
+    <TargetName>OpenGL_Pinball</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -319,7 +319,7 @@
     <IntDir>$(SolutionDir)\Build\$(Configuration) - $(PlatformTarget)\</IntDir>
     <IncludePath>$(SolutionDir)\Include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
     <LibraryPath>$(SolutionDir)\Lib\$(PlatformTarget);$(LibraryPath)</LibraryPath>
-    <TargetName>A2</TargetName>
+    <TargetName>OpenGL_Pinball</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -335,7 +335,7 @@
     <IntDir>$(SolutionDir)\Build\$(Configuration) - $(PlatformTarget)\</IntDir>
     <IncludePath>$(SolutionDir)\Include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
     <LibraryPath>$(SolutionDir)\Lib\$(PlatformTarget);$(LibraryPath)</LibraryPath>
-    <TargetName>A2</TargetName>
+    <TargetName>OpenGL_Pinball</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -391,6 +391,10 @@
     <PostBuildEvent>
       <Command>xcopy /y /d "$(ProjectDir)dll\$(PlatformTarget)\SDL2.dll" "$(OutDir)"</Command>
     </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>powershell.exe $(SolutionDir)/Tools/Compile_Shaders.ps1 $(SolutionDir)</Command>
+      <Message>Compile Shaders into ShaderSources.h as strings that can be referenced by the shader builder.</Message>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>

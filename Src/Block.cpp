@@ -111,7 +111,7 @@ void Block::Init()
 }
 
 void Block::Render(
-    RTRShader* shader, SkyBox* skybox, TextureObject* diffuseMap, TextureObject* specularMap, TextureObject* reflectionMap)
+    ShaderObject* shader, SkyBox* skybox, TextureObject* diffuseMap, TextureObject* specularMap, TextureObject* reflectionMap)
 {
     //shader->SetMaterial("objectMaterialUniform", material);
     shader->SetVec3("objectMaterialUniform.ambient", material.ambient);
@@ -141,7 +141,7 @@ void Block::Render(
     glBindVertexArray(0);
 }
 
-void Block::RenderNormalBlock(RTRShader* shader, SkyBox* skybox, TextureObject* diffuseMap)
+void Block::RenderNormalBlock(ShaderObject* shader, SkyBox* skybox, TextureObject* diffuseMap)
 {
     shader->SetVec3("objectDefaultMaterialUniform.specular", material.specular);
     shader->SetFloat("objectDefaultMaterialUniform.shininess", material.shininess);

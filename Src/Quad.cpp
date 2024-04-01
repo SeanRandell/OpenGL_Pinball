@@ -27,7 +27,7 @@ void Quad::Init()
     glEnableVertexAttribArray(1);
 }
 
-void Quad::Render(RTRShader* shader)
+void Quad::Render(ShaderObject* shader)
 {
     glBindVertexArray(vertexArray);
 
@@ -36,7 +36,7 @@ void Quad::Render(RTRShader* shader)
     glBindVertexArray(0);
 }
 
-void Quad::RenderParticle(RTRShader* shader)
+void Quad::RenderParticle(ShaderObject* shader)
 {
     //shader->SetMaterial("objectMaterialUniform", material);
     glBindVertexArray(vertexArray);

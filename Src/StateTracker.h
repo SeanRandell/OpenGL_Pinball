@@ -2,7 +2,7 @@
 
 //#include "Sponge.h"
 #include "Camera.h"
-#include "RTRShader.h"
+#include "ShaderObject.h"
 #include "Cube.h"
 #include "Block.h"
 #include "SkyBox.h"
@@ -68,18 +68,18 @@ public:
     bool isLaunchLightMovingUp;
 
     //shaders
-    RTRShader* cubeShader{ nullptr };
-    RTRShader* normalShader{ nullptr };
-    RTRShader* skyBoxShader{ nullptr };
-    RTRShader* lightingShader{ nullptr };
-    RTRShader* blockShader{ nullptr };
-    RTRShader* sphereShader{ nullptr };
-    RTRShader* directionalLightShader{ nullptr };
-    RTRShader* blurShader{ nullptr };
-    RTRShader* bloomShader{ nullptr };
-    RTRShader* simpleDepthShader{ nullptr };
-    RTRShader* debugDepthQuadShader{ nullptr };
-    RTRShader* particleShader{ nullptr };
+    ShaderObject* cubeShader{ nullptr };
+    ShaderObject* normalShader{ nullptr };
+    ShaderObject* skyBoxShader{ nullptr };
+    ShaderObject* lightingShader{ nullptr };
+    ShaderObject* blockShader{ nullptr };
+    ShaderObject* sphereShader{ nullptr };
+    ShaderObject* directionalLightShader{ nullptr };
+    ShaderObject* blurShader{ nullptr };
+    ShaderObject* bloomShader{ nullptr };
+    ShaderObject* simpleDepthShader{ nullptr };
+    ShaderObject* debugDepthQuadShader{ nullptr };
+    ShaderObject* particleShader{ nullptr };
 
     //Subroutine Indexes
     //Block subroutines

@@ -47,56 +47,56 @@ StateTracker::StateTracker(int screenWidth, int screenHeight)
 
 void StateTracker::InitShadersAndTextures()
 {
-    this->cubeShader = new RTRShader(
+    this->cubeShader = new ShaderObject(
         shaderSources->CubeVertShader,
         shaderSources->CubeFragShader,
         shaderSources->CubeGeomShader
     );
 
-    this->blockShader = new RTRShader(
+    this->blockShader = new ShaderObject(
         shaderSources->BlockVertShader,
         shaderSources->BlockFragShader,
         shaderSources->BlockGeomShader
     );
-    this->normalShader = new RTRShader(
+    this->normalShader = new ShaderObject(
         shaderSources->NormalVertShader,
         shaderSources->NormalFragShader,
         shaderSources->NormalGeomShader
     );
-    this->skyBoxShader = new RTRShader(
+    this->skyBoxShader = new ShaderObject(
         shaderSources->SkyBoxVertShader,
         shaderSources->SkyBoxFragShader
     );
-    this->sphereShader = new RTRShader(
+    this->sphereShader = new ShaderObject(
         shaderSources->SphereVertShader,
         shaderSources->SphereFragShader
     );
-    this->lightingShader = new RTRShader(
+    this->lightingShader = new ShaderObject(
         shaderSources->LightingVertexShader,
         shaderSources->LightingFragShader
     );
-    this->directionalLightShader = new RTRShader(
+    this->directionalLightShader = new ShaderObject(
         shaderSources->DirectionalVertShader,
         shaderSources->DirectionalFragShader,
         shaderSources->DirectionalGeomShader
     );
-    this->blurShader = new RTRShader(
+    this->blurShader = new ShaderObject(
         shaderSources->BlurVertShader,
         shaderSources->BlurFragShader
     );
-    this->bloomShader = new RTRShader(
+    this->bloomShader = new ShaderObject(
         shaderSources->BloomFinalVertShader,
         shaderSources->BloomFinalFragShader
     );
-    this->simpleDepthShader = new RTRShader(
+    this->simpleDepthShader = new ShaderObject(
         shaderSources->DepthVertShader,
         shaderSources->DepthFragShader
     );
-    this->debugDepthQuadShader = new RTRShader(
+    this->debugDepthQuadShader = new ShaderObject(
         shaderSources->DebugQuadDepthVertShader,
         shaderSources->DebugQuadDepthFragShader
     );
-    this->particleShader = new RTRShader(
+    this->particleShader = new ShaderObject(
         shaderSources->ParticleVertShader,
         shaderSources->ParticleFragShader
     );

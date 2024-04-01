@@ -13,15 +13,15 @@
 
 #define MAX_UNIFORM_NAME 128
 
-class RTRShader
+class ShaderObject
 {
 public:
     // the program ID
     unsigned int ID;
 
     // constructor reads and builds the shader
-    RTRShader(const char* vertexCode, const char* fragmentCode, const char* geometryCode = nullptr);
-    ~RTRShader();
+    ShaderObject(const char* vertexCode, const char* fragmentCode, const char* geometryCode = nullptr);
+    ~ShaderObject();
 
     unsigned int CreateShader(int ShaderType, const char* shaderCode, const char* ShaderName);
     // TODO - create define for zero

@@ -124,7 +124,7 @@ std::vector<Quadtree*> Quadtree::FindQuadrant(Sphere* circle)
     return resultList;
 }
 
-void Quadtree::DrawQuadTree(RTRShader* shader)
+void Quadtree::DrawQuadTree(ShaderObject* shader)
 {
     glMatrixMode(GL_MODELVIEW);
 

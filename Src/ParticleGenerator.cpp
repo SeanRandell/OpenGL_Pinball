@@ -67,7 +67,7 @@ void ParticleGenerator::Init()
 }
 
 // render all particles
-void ParticleGenerator::Render(RTRShader* shader, TextureObject* particleTexture)
+void ParticleGenerator::Render(ShaderObject* shader, TextureObject* particleTexture)
 {
     // use additive blending to give it a 'glow' effect
     glEnable(GL_BLEND);

@@ -4,7 +4,7 @@
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 
-#include "RTRShader.h"
+#include "ShaderObject.h"
 #include "object.h"
 #include "Quad.h"
 #include "Sphere.h"
@@ -38,7 +38,7 @@ public:
     void Update(float dt, Sphere* object, unsigned int newParticles, glm::vec2 offset = glm::vec2(0.0f, 0.0f));
     void UpdateAllParticles(float deltaTime);
     // render all particles
-    void Render(RTRShader* shader,TextureObject* particleTexture);
+    void Render(ShaderObject* shader,TextureObject* particleTexture);
     void Init();
 private:
 
