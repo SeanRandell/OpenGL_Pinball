@@ -5,16 +5,19 @@
 #include "Block.h"
 #include "Rectangle.h"
 
-struct Circle {
+struct Circle
+{
     float x, y, radius;
-    Circle(float x, float y, float radius) {
+    Circle(float x, float y, float radius)
+    {
         this->x = x;
         this->y = y;
         this->radius = radius;
     }
 };
 
-class Quadtree {
+class Quadtree
+{
 public:
     int MAX_LEVELS = 100;
     int capacity;
@@ -35,6 +38,6 @@ public:
     std::vector<Object*> Query(Sphere* circle);
     std::vector<Quadtree*> FindQuadrant(Sphere* circle);
     std::vector<Object*> GetObjectList(Quadtree* currentQuadtree);
-    void DrawQuadTree(ShaderObject* shader);    
+    void DrawQuadTree(ShaderObject* shader);
     void DrawQuadTree();
 };

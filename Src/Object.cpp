@@ -1,7 +1,8 @@
 
 #include "Object.h"
 
-Object::Object() {
+Object::Object()
+{
     numberOfVertices = 0;
     numberOfFaces = 0;
     vertexPoints = nullptr;
@@ -64,7 +65,8 @@ void Object::End()
     }
 }
 
-void Object::SetMaterial(ObjectMaterial material) {
+void Object::SetMaterial(ObjectMaterial material)
+{
     this->material = material;
 }
 

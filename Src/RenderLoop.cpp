@@ -214,7 +214,8 @@ void RenderLoop::Init(StateTracker* stateTracker, int screenWidth, int screenHei
     }
 }
 
-void RenderLoop::CheckInput(StateTracker* stateTracker, bool* quitApp, float deltaTime) {
+void RenderLoop::CheckInput(StateTracker* stateTracker, bool* quitApp, float deltaTime)
+{
 
     SDL_Event keyEvent;
     if (SDL_PollEvent(&keyEvent))
@@ -235,7 +236,8 @@ void RenderLoop::CheckInput(StateTracker* stateTracker, bool* quitApp, float del
             yPosition += keyEvent.motion.yrel;
 
             // TODO check conversions
-            if (stateTracker->camera->firstMouse && (stateTracker->camera->lastX = (float)xPosition) && (stateTracker->camera->lastY = (float)yPosition)) {
+            if (stateTracker->camera->firstMouse && (stateTracker->camera->lastX = (float)xPosition) && (stateTracker->camera->lastY = (float)yPosition))
+            {
                 stateTracker->camera->lastX = (float)xPosition;
                 stateTracker->camera->lastY = (float)yPosition;
                 stateTracker->camera->firstMouse = false;
@@ -404,7 +406,8 @@ void RenderLoop::UpdateState(StateTracker* stateTracker, float deltaTime, Quadtr
                     stateTracker->canLaunchBall = false;
                 }
             }
-            else {
+            else
+            {
                 stateTracker->launchCountdown += deltaTime;
                 stateTracker->canLaunchBall = false;
                 //std::cout << "Cooldown" << std::endl;
@@ -420,9 +423,11 @@ void RenderLoop::UpdateState(StateTracker* stateTracker, float deltaTime, Quadtr
             {
                 std::vector<Sphere*>::iterator it = stateTracker->spheres.begin();
 
-                while (it != stateTracker->spheres.end()) {
+                while (it != stateTracker->spheres.end())
+                {
                     Sphere* currentSphere = (Sphere*)*it;
-                    if (currentSphere->position.y < -10.0) {
+                    if (currentSphere->position.y < -10.0)
+                    {
                         currentSphere->End();
                         it = stateTracker->spheres.erase(it);
                     }
@@ -452,7 +457,7 @@ void RenderLoop::UpdateState(StateTracker* stateTracker, float deltaTime, Quadtr
             }
 
             // move launch tube light up and down
-            if (stateTracker->isLaunchLightMovingUp) 
+            if (stateTracker->isLaunchLightMovingUp)
             {
                 stateTracker->lightModel->GetLight(12)->position.y += 2 * deltaTime;
                 if (stateTracker->lightModel->GetLight(12)->position.y >= 4.0f)
@@ -544,7 +549,8 @@ void RenderLoop::RenderFrame(StateTracker* stateTracker, Quadtree* quadtree)
     }
 
     //block normal
-    if (stateTracker->isVertexNormalsDisplayOn) {
+    if (stateTracker->isVertexNormalsDisplayOn)
+    {
         stateTracker->normalShader->Use();
         stateTracker->normalShader->SetMat4("projectionMatrixUniform", stateTracker->projectionMatrix);
         stateTracker->normalShader->SetMat4("viewMatrixUniform", stateTracker->viewMatrix);

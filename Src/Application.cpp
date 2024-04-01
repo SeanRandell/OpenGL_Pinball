@@ -19,9 +19,11 @@ Application::Application(const char* title, bool isFullscreen, int width, int he
     quitApp = false;
 }
 
-void Application::Run() {
+void Application::Run()
+{
     bool quit_app = false;
-    while (quit_app == false) {
+    while (quit_app == false)
+    {
 
         static unsigned int fpsCounter = 0;
         static unsigned int fpsTime = 0;
@@ -34,7 +36,8 @@ void Application::Run() {
         fpsCounter++;
         fpsTime += localTimeDeltaMilliseconds;
 
-        if (fpsCounter == 100) {
+        if (fpsCounter == 100)
+        {
             fps = (int)((double)fpsCounter / (double)fpsTime * 1000.0f);
             fpsCounter = 0;
             fpsTime = 0;
@@ -55,7 +58,7 @@ bool Application::Tick()
 {
     quitApp = false;
     CheckInput();
-    Rectangle* boundary = new Rectangle(0, 0, 25 , 25);
+    Rectangle* boundary = new Rectangle(0, 0, 25, 25);
     Quadtree* quadtree = new Quadtree(boundary, 4);
     UpdateState(quadtree);
     RenderFrame(quadtree);
@@ -88,7 +91,8 @@ void Application::RenderFrame(Quadtree* quadtree)
 
 int Application::Init()
 {
-    if (int err = InitTest() != 0) {
+    if (int err = InitTest() != 0)
+    {
         return err;
     }
 
@@ -103,8 +107,10 @@ int Application::Init()
     return 0;
 }
 
-int Application::InitTest() {
-    if (SDL_Init(SDL_INIT_VIDEO) != 0) {
+int Application::InitTest()
+{
+    if (SDL_Init(SDL_INIT_VIDEO) != 0)
+    {
         std::cerr << "RTR:ERROR: SDL2 video subsystem couldn't be initialized. Error: " << SDL_GetError() << std::endl;
         return -1;
     }
@@ -121,14 +127,16 @@ int Application::InitTest() {
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 6);
 
-    if (isFullScreen == true) {
+    if (isFullScreen == true)
+    {
         SDLWindow = SDL_CreateWindow(
             mainWindowTitle.c_str(),
             SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
             0, 0,
             SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN);
     }
-    else {
+    else
+    {
         SDLWindow = SDL_CreateWindow(
             mainWindowTitle.c_str(),
             SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
@@ -137,28 +145,33 @@ int Application::InitTest() {
     }
 
     SDLRenderer = SDL_CreateRenderer(SDLWindow, -1, SDL_RENDERER_ACCELERATED);
-    if (SDLRenderer == nullptr) {
+    if (SDLRenderer == nullptr)
+    {
         std::cerr << "RTR:ERROR: SDL2 Renderer couldn't be created. Error: " << SDL_GetError() << std::endl;
         return -2;
     }
 
     GLContext = SDL_GL_CreateContext(SDLWindow);
 
-    if (!gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress)) {
+    if (!gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress))
+    {
         std::cerr << "RTR:ERROR: Failed to initialize the OpenGL context." << std::endl;
         return -3;
     }
 
     SDL_DisplayMode dm;
-    if (SDL_GetCurrentDisplayMode(0, &dm) == 0) {
+    if (SDL_GetCurrentDisplayMode(0, &dm) == 0)
+    {
         screenWidth = dm.w;
         screenHeight = dm.h;
-        if (isFullScreen == true) {
+        if (isFullScreen == true)
+        {
             windowWidth = screenWidth;
             windowHeight = screenHeight;
         }
     }
-    else {
+    else
+    {
         std::cerr << "RTR:WARNING: SDL coudn't retrieve current display mode details." << std::endl;
     }
 

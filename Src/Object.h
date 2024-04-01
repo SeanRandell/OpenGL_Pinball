@@ -14,11 +14,13 @@ const glm::vec3 OBJECT_DEFAULT_ROTATION = glm::vec3(0.0f, 0.0f, 0.0f);
 const glm::vec3 OBJECT_DEFAULT_SCALE = glm::vec3(1.0f, 1.0f, 1.0f);
 const glm::vec2 OBJECT_DEFAULT_SIZE = glm::vec2(1.0f, 1.0f);
 
-struct VertexPoint {
+struct VertexPoint
+{
     float x, y, z;
 };
 
-struct ObjectFace {
+struct ObjectFace
+{
     unsigned int v0, v1, v2;
 };
 

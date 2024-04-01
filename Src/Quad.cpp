@@ -49,6 +49,7 @@ void Quad::End()
     Object::End();
 }
 
-const char* Quad::GetName() {
+const char* Quad::GetName()
+{
     return "Quad";
 }

@@ -10,12 +10,13 @@
 #include "Sphere.h"
 
 // Represents a single particle and its state
-struct Particle {
+struct Particle
+{
     glm::vec2 position, velocity;
     glm::vec4 color;
     float life;
 
-    Particle() : position(0.0f), velocity(0.0f), color(1.0f), life(0.0f) { }
+    Particle() : position(0.0f), velocity(0.0f), color(1.0f), life(0.0f) {}
     Particle(glm::vec2 position, float life) : velocity(0.0f), color(1.0f), life(0.0f)
     {
         this->position = position;
@@ -38,7 +39,7 @@ public:
     void Update(float dt, Sphere* object, unsigned int newParticles, glm::vec2 offset = glm::vec2(0.0f, 0.0f));
     void UpdateAllParticles(float deltaTime);
     // render all particles
-    void Render(ShaderObject* shader,TextureObject* particleTexture);
+    void Render(ShaderObject* shader, TextureObject* particleTexture);
     void Init();
 private:
 

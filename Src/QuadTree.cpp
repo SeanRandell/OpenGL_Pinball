@@ -15,7 +15,8 @@ Quadtree::Quadtree(Rectangle* boundary, int capacity)
 Quadtree::~Quadtree()
 {
     objects.clear();
-    if (divided) {
+    if (divided)
+    {
         delete northeast->boundary;
         delete northeast;
         delete northwest->boundary;
@@ -50,18 +51,22 @@ void Quadtree::SubDivide()
     divided = true;
 }
 
-bool Quadtree::Insert(Object* object) {
+bool Quadtree::Insert(Object* object)
+{
     // if the circle is not in this rectangle than return
-    if (!object->IsContainedWithin(boundary)) {
+    if (!object->IsContainedWithin(boundary))
+    {
         return false;
     }
     // if the rectangle has less than capacity than 
-    if (objects.size() < capacity && !divided) {
+    if (objects.size() < capacity && !divided)
+    {
         objects.push_back(object);
         return true;
     }
     // divide quad tree
-    if (!divided) {
+    if (!divided)
+    {
         SubDivide();
 
         for (int i = 0; i < objects.size(); i++)
@@ -85,7 +90,8 @@ bool Quadtree::Insert(Object* object) {
 
 std::vector<Object*> Quadtree::Query(Sphere* circle)
 {
-    if (level > MAX_LEVELS) {
+    if (level > MAX_LEVELS)
+    {
         return objects;
     }
 
@@ -109,16 +115,20 @@ std::vector<Object*> Quadtree::Query(Sphere* circle)
 std::vector<Quadtree*> Quadtree::FindQuadrant(Sphere* circle)
 {
     std::vector<Quadtree*> resultList;
-    if (circle->IsContainedWithin(northeast->boundary)) {
+    if (circle->IsContainedWithin(northeast->boundary))
+    {
         resultList.push_back(northeast);
     }
-    if (circle->IsContainedWithin(northwest->boundary)) {
+    if (circle->IsContainedWithin(northwest->boundary))
+    {
         resultList.push_back(northwest);
     }
-    if (circle->IsContainedWithin(southeast->boundary)) {
+    if (circle->IsContainedWithin(southeast->boundary))
+    {
         resultList.push_back(southeast);
     }
-    if (circle->IsContainedWithin(southwest->boundary)) {
+    if (circle->IsContainedWithin(southwest->boundary))
+    {
         resultList.push_back(southwest);
     }
     return resultList;
@@ -137,7 +147,8 @@ void Quadtree::DrawQuadTree(ShaderObject* shader)
     glVertex3f(boundary->left, boundary->top, 0.0f); // top left
 
     glEnd();
-    if (divided) {
+    if (divided)
+    {
         northeast->DrawQuadTree(shader);
         northwest->DrawQuadTree(shader);
         southeast->DrawQuadTree(shader);

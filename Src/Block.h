@@ -2,7 +2,8 @@
 #include "Object.h"
 #include "SkyBox.h"
 
-struct VertexAndTexturePoint {
+struct VertexAndTexturePoint
+{
     float x, y, z, u, v;
 };
 
@@ -12,7 +13,7 @@ public:
     bool isBumper;
     bool isScenery;
     bool isActiveFlipper;
-    
+
     Block();
     Block(bool isBumper);
     Block(glm::vec3 postion, glm::vec3 rotation, glm::vec3 scale, bool isBumper);

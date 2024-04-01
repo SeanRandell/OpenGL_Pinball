@@ -34,6 +34,7 @@ void Debug::End()
     Object::End();
 }
 
-const char* Debug::GetName() {
+const char* Debug::GetName()
+{
     return "Debug";
 }

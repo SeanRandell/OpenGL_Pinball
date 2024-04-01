@@ -92,15 +92,19 @@ unsigned int ParticleGenerator::FirstUnusedParticle()
     // stores the index of the last particle used (for quick access to next dead particle)
     unsigned int lastUsedParticle = 0;
     // first search from last used particle, this will usually return almost instantly
-    for (unsigned int i = lastUsedParticle; i < this->amount; ++i) {
-        if (this->particles[i]->life <= 0.0f) {
+    for (unsigned int i = lastUsedParticle; i < this->amount; ++i)
+    {
+        if (this->particles[i]->life <= 0.0f)
+        {
             lastUsedParticle = i;
             return i;
         }
     }
     // otherwise, do a linear search
-    for (unsigned int i = 0; i < lastUsedParticle; ++i) {
-        if (this->particles[i]->life <= 0.0f) {
+    for (unsigned int i = 0; i < lastUsedParticle; ++i)
+    {
+        if (this->particles[i]->life <= 0.0f)
+        {
             lastUsedParticle = i;
             return i;
         }

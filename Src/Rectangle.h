@@ -1,10 +1,12 @@
 #pragma once
 
-class Rectangle {
+class Rectangle
+{
 public:
     float x, y, width, height;
     float left, right, top, bottom;
-    Rectangle(float x, float y, float width, float height) {
+    Rectangle(float x, float y, float width, float height)
+    {
         this->x = x;
         this->y = y;
         this->width = width;

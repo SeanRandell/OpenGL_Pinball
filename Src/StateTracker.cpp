@@ -359,10 +359,12 @@ void StateTracker::InitBuffers(int screenWidth, int screenHeight)
 std::string StateTracker::GetSettingString(bool boolToCheck)
 {
     std::string returnString;
-    if (boolToCheck) {
+    if (boolToCheck)
+    {
         returnString.append("On");
     }
-    else {
+    else
+    {
         returnString.append("Off");
     }
     return returnString;

@@ -8,7 +8,8 @@ void Physics::CalculateBallPhysics(StateTracker* stateTracker, float deltaTime, 
     }
     else
     {
-        for (auto& ball : stateTracker->spheres) {
+        for (auto& ball : stateTracker->spheres)
+        {
             PhyiscsPerSphere(ball, stateTracker->spheres, stateTracker->blocks, stateTracker->pegs, deltaTime);
         }
     }
@@ -18,7 +19,8 @@ void Physics::BuildQuadtree(StateTracker* stateTracker, float deltaTime, Quadtre
 {
     PopulateQuadtree(stateTracker, quadtree);
 
-    for (auto& ball : stateTracker->spheres) {
+    for (auto& ball : stateTracker->spheres)
+    {
         std::vector<Object*>objectList = quadtree->Query(ball);
 
         std::vector<Sphere*> sphereList;
@@ -27,15 +29,18 @@ void Physics::BuildQuadtree(StateTracker* stateTracker, float deltaTime, Quadtre
 
         for (Object* object : objectList)
         {
-            if (object->GetName() == "Sphere") {
+            if (object->GetName() == "Sphere")
+            {
 
                 sphereList.push_back((Sphere*)object);
             }
-            if (object->GetName() == "Block") {
+            if (object->GetName() == "Block")
+            {
 
                 blockList.push_back((Block*)object);
             }
-            if (object->GetName() == "Peg") {
+            if (object->GetName() == "Peg")
+            {
 
                 pegList.push_back((Cylinder*)object);
             }
@@ -150,7 +155,7 @@ void Physics::SphereAndBlockCollision(Block*& currentBlock, Sphere* ball)
                 if (currentBlock->isBumper)
                 {
                     ball->velocity.x = -ball->velocity.x; // reverse horizontal velocity
-                                                          //ball->acceleration.x += 20.0f;
+                    //ball->acceleration.x += 20.0f;
                     if (currentBlock->isActiveFlipper)
                     {
                         ball->velocity.x += 12.0f;
@@ -177,7 +182,7 @@ void Physics::SphereAndBlockCollision(Block*& currentBlock, Sphere* ball)
                 if (currentBlock->isBumper)
                 {
                     ball->velocity.y = -ball->velocity.y; // reverse vertical velocity
-                                                          //ball->acceleration.y += 5.0f;
+                    //ball->acceleration.y += 5.0f;
                     if (currentBlock->isActiveFlipper)
                     {
                         ball->velocity.y += 12.0f;
@@ -388,15 +393,18 @@ void Physics::FipperPhysics(StateTracker* stateTracker, float deltaTime)
 
 void Physics::PopulateQuadtree(StateTracker* stateTracker, Quadtree* quadtree)
 {
-    for (auto& ball : stateTracker->spheres) {
+    for (auto& ball : stateTracker->spheres)
+    {
         quadtree->Insert(ball);
     }
 
-    for (auto& block : stateTracker->blocks) {
+    for (auto& block : stateTracker->blocks)
+    {
         quadtree->Insert(block);
     }
 
-    for (auto& peg : stateTracker->pegs) {
+    for (auto& peg : stateTracker->pegs)
+    {
         quadtree->Insert(peg);
     }
 }

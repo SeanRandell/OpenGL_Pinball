@@ -364,7 +364,8 @@ const char* Cylinder::GetName()
     return "Peg";
 }
 
-bool Cylinder::IsContainedWithin(Rectangle* boundary) {
+bool Cylinder::IsContainedWithin(Rectangle* boundary)
+{
     return (
         this->position.x + this->topRadius >= boundary->x - boundary->width &&
         this->position.x + this->topRadius <= boundary->x + boundary->width &&

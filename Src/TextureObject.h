@@ -5,7 +5,8 @@
 #include <string>
 #include <iostream>
 
-class TextureObject {
+class TextureObject
+{
 public:
     // constructor (sets default texture modes)
     TextureObject(std::string* filePath, unsigned int wrapS, unsigned int wrapT,

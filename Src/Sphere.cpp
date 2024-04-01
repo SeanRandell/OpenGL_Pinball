@@ -12,7 +12,8 @@ Sphere::Sphere(int id)
     InitConstructorValues();
 }
 
-Sphere::Sphere(float radius, float mass, glm::vec2 velocity, int sectors, int stacks, bool smooth, int id) {
+Sphere::Sphere(float radius, float mass, glm::vec2 velocity, int sectors, int stacks, bool smooth, int id)
+{
     this->radius = radius;
     this->sectorCount = sectors;
     this->stackCount = stacks;
@@ -174,10 +175,8 @@ void Sphere::BuildVerticesSmooth()
     BuildInterleavedVertices();
 }
 
-///////////////////////////////////////////////////////////////////////////////
 // generate interleaved vertices: V/N/T
 // stride must be 32 bytes
-///////////////////////////////////////////////////////////////////////////////
 void Sphere::BuildInterleavedVertices()
 {
     std::vector<float>().swap(interleavedVertices);
@@ -199,9 +198,7 @@ void Sphere::BuildInterleavedVertices()
     }
 }
 
-///////////////////////////////////////////////////////////////////////////////
 // dealloc vectors
-///////////////////////////////////////////////////////////////////////////////
 void Sphere::ClearArrays()
 {
     std::vector<float>().swap(vertices);
@@ -210,9 +207,7 @@ void Sphere::ClearArrays()
     std::vector<unsigned int>().swap(lineIndices);
 }
 
-///////////////////////////////////////////////////////////////////////////////
 // add single vertex to array
-///////////////////////////////////////////////////////////////////////////////
 void Sphere::AddVertex(float x, float y, float z)
 {
     vertices.push_back(x);
@@ -220,9 +215,7 @@ void Sphere::AddVertex(float x, float y, float z)
     vertices.push_back(z);
 }
 
-///////////////////////////////////////////////////////////////////////////////
 // add single normal to array
-///////////////////////////////////////////////////////////////////////////////
 void Sphere::AddNormal(float nx, float ny, float nz)
 {
     normals.push_back(nx);
@@ -242,7 +235,8 @@ const char* Sphere::GetName()
     return "Sphere";
 }
 
-bool Sphere::IsContainedWithin(Rectangle* boundary) {
+bool Sphere::IsContainedWithin(Rectangle* boundary)
+{
     return (
         this->position.x + this->radius >= boundary->x - boundary->width &&
         this->position.x + this->radius <= boundary->x + boundary->width &&

@@ -18,7 +18,8 @@
 
 //const unsigned int SHADOW_WIDTH = 1024, SHADOW_HEIGHT = 1024;
 
-class StateTracker {
+class StateTracker
+{
 public:
     //objects
     Camera* camera;

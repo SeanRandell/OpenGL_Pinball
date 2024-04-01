@@ -23,7 +23,7 @@ Camera::Camera(
 
     MouseSensitivity = SENSITIVITY;
     movementSpeed = DEFAULT_MOVE_SPEED;
-    strafeSpeed= DEFAULT_STRAFE_SPEED;
+    strafeSpeed = DEFAULT_STRAFE_SPEED;
     turnSpeed = DEFAULT_TURN_SPEED;
     tiltSpeed = DEFAULT_TILT_SPEED;
 
@@ -83,31 +83,40 @@ void Camera::ProcessMouseMovement(float xoffset, float yoffset, float deltaTime,
 // processes input received from any keyboard-like input system. Accepts input parameter in the form of camera defined ENUM (to abstract it from windowing systems)
 void Camera::ProcessCameraMoving(float deltaTime)
 {
-    if (moveFoward) {
+    if (moveFoward)
+    {
         position += front * movementSpeed * deltaTime;
     }
-    if (moveBackward) {
+    if (moveBackward)
+    {
         position -= front * movementSpeed * deltaTime;
     }
-    if (moveLeft) {
+    if (moveLeft)
+    {
         position -= right * strafeSpeed * deltaTime;
     }
-    if (moveRight) {
+    if (moveRight)
+    {
         position += right * strafeSpeed * deltaTime;
     }
 }
 
-void Camera::ProcessCameraTurning(float deltaTime) {
-    if (turnLeft) {
+void Camera::ProcessCameraTurning(float deltaTime)
+{
+    if (turnLeft)
+    {
         yaw -= turnSpeed * deltaTime;
     }
-    if (turnRight) {
+    if (turnRight)
+    {
         yaw += turnSpeed * deltaTime;
     }
-    if (tiltUp) {
+    if (tiltUp)
+    {
         pitch += tiltSpeed * deltaTime;
     }
-    if (tiltDown) {
+    if (tiltDown)
+    {
         pitch -= tiltSpeed * deltaTime;
     }
 
@@ -120,10 +129,12 @@ void Camera::ProcessCameraTurning(float deltaTime) {
             pitch = -89.0f;
     }
 
-    if (yaw >= 360) {
+    if (yaw >= 360)
+    {
         yaw = 0;
     }
-    if (yaw <= -360) {
+    if (yaw <= -360)
+    {
         yaw = 0;
     }
 

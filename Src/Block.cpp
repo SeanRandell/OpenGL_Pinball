@@ -167,11 +167,13 @@ void Block::End()
     }
 }
 
-const char* Block::GetName() {
+const char* Block::GetName()
+{
     return "Block";
 }
 
-bool Block::IsContainedWithin(Rectangle* boundary) {
+bool Block::IsContainedWithin(Rectangle* boundary)
+{
     float rectALeft = boundary->left;
     float rectARight = boundary->right;
     float rectBLeft = this->position.x - this->scale.x / 2;

@@ -25,6 +25,7 @@ void Cube::Init()
     Object::Init();
 }
 
-const char* Cube::GetName() {
+const char* Cube::GetName()
+{
     return "Cube";
 }

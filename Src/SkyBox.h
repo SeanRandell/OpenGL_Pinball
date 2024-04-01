@@ -6,7 +6,7 @@ class SkyBox : public Object
 {
 public:
     std::vector<std::string> skyBoxFaces;
-    unsigned int cubemapTexture{0};
+    unsigned int cubemapTexture{ 0 };
 
     SkyBox() : Object() {};
     ~SkyBox() {}
