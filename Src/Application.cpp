@@ -41,7 +41,7 @@ void Application::Run() {
         }
 
         currentTime = localCurrentTime;
-        timeDelta = localTimeDeltaMilliseconds;
+        timeDelta = (float)localTimeDeltaMilliseconds;
 
         //convert timeDelta to seconds
         float tempTimeDelta = timeDelta / 1000.0f;

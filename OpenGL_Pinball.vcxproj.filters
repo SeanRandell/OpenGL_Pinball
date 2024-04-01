@@ -108,7 +108,7 @@
     <ClCompile Include="Src\QuadTree.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Src\RTRShader.cpp">
+    <ClCompile Include="Src\ShaderObject.cpp">
       <Filter>Source Files\Rendering</Filter>
     </ClCompile>
     <ClCompile Include="Src\TextureObject.cpp">
@@ -131,7 +131,7 @@
     <ClInclude Include="Src\Application.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Src\RTRShader.h">
+    <ClInclude Include="Src\ShaderObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Src\Camera.h">

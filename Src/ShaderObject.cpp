@@ -11,7 +11,6 @@ ShaderObject::ShaderObject(const char* vertexCode, const char* fragmentCode, con
         geometry = CreateShader(GL_GEOMETRY_SHADER, geometryCode, "GEOMETRY");
     }
 
-    // shader Program
     if (geometryCode != nullptr) {
         CreateProgram(vertex, fragment, geometry);
     }

@@ -295,7 +295,8 @@ void StateTracker::BuildGameObjects()
 
 void StateTracker::LaunchBall()
 {
-    int newSphereId = spheres.size();
+    // TODO check conversion
+    int newSphereId = (int)spheres.size();
     Sphere* newball = new Sphere(newSphereId);
     newball->Init();
     newball->velocity = glm::vec2(0.0, 50.0);

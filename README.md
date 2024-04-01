@@ -9,7 +9,7 @@
 
 ## About The Project
 
-This project was created for my Realtime Rendering and 3d Graphics course at RMIT. Contributions during this time are attributed under my RMIT student account - s3658051.
+This project was created for my Realtime Rendering and 3D Graphics course at RMIT. Contributions during this time are attributed under my RMIT student account - s3658051.
 
 ![OpenGL_Pinball_Image_0](readme_assets/0.jpg)
 
@@ -36,10 +36,12 @@ The physics used were also made from scratch and were calculated every rendering
 - SDL2 - https://www.libsdl.org/
 - Glad - https://glad.dav1d.de/
 - GLText - https://github.com/go-gl/gltext
+- stb_image - https://github.com/nothings/stb
+- OpenGL Mathematics (GLM) - https://github.com/g-truc/glm
 
 ## Linked Libraries
 
-Required libraries can be found in the `libs` folder, and should already be linked.
+Required libraries can be found in the `Include` folder, and should already be linked.
 
 ## How To Build
 
@@ -62,5 +64,5 @@ You can run the application from source in Visual Studio using the Local Windows
  - [Mouse Movement] - Pitch and Yaw camera
  - [P] - Pause and unPause physics
  - [L] - Turn Light boxes off and on
- - \[X] - Turn display bounding boxes on and off
+ - [X\] - Turn display bounding boxes on and off
  - [N] - Turn display vertex normals on and of

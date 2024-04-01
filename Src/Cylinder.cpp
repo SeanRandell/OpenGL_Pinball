@@ -246,7 +246,8 @@ void Cylinder::BuildInterleavedVertices()
 ///////////////////////////////////////////////////////////////////////////////
 void Cylinder::BuildUnitCircleVertices()
 {
-    const float PI = acos(-1);
+    // TODO check conversion
+    const float PI = (float)acos(-1);
     float sectorStep = 2 * PI / sectorCount;
     float sectorAngle;  // radian
 
@@ -287,7 +288,8 @@ void Cylinder::AddIndices(unsigned int i1, unsigned int i2, unsigned int i3)
 ///////////////////////////////////////////////////////////////////////////////
 std::vector<float> Cylinder::GetSideNormals()
 {
-    const float PI = acos(-1);
+    // TODO check conversion
+    const float PI = (float)acos(-1);
     float sectorStep = 2 * PI / sectorCount;
     float sectorAngle;  // radian
 

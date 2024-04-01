@@ -228,22 +228,25 @@ void RenderLoop::CheckInput(StateTracker* stateTracker, bool* quitApp, float del
         {
             //fprintf(stderr, "mouse x: %d, y: %d\n", keyEvent.button.x, keyEvent.button.y);
 
-            static int xPosition = stateTracker->camera->lastX;
-            static int yPosition = stateTracker->camera->lastY;
+            // TODO check conversions
+            static int xPosition = (int)stateTracker->camera->lastX;
+            static int yPosition = (int)stateTracker->camera->lastY;
             xPosition += keyEvent.motion.xrel;
             yPosition += keyEvent.motion.yrel;
 
-            if (stateTracker->camera->firstMouse && (stateTracker->camera->lastX = xPosition) && (stateTracker->camera->lastY = yPosition)) {
-                stateTracker->camera->lastX = xPosition;
-                stateTracker->camera->lastY = yPosition;
+            // TODO check conversions
+            if (stateTracker->camera->firstMouse && (stateTracker->camera->lastX = (float)xPosition) && (stateTracker->camera->lastY = (float)yPosition)) {
+                stateTracker->camera->lastX = (float)xPosition;
+                stateTracker->camera->lastY = (float)yPosition;
                 stateTracker->camera->firstMouse = false;
             }
 
             float xOffSet = xPosition - stateTracker->camera->lastX;
             float yOffSet = stateTracker->camera->lastY - yPosition;
 
-            stateTracker->camera->lastX = xPosition;
-            stateTracker->camera->lastY = yPosition;
+            // TODO check conversions
+            stateTracker->camera->lastX = (float)xPosition;
+            stateTracker->camera->lastY = (float)yPosition;
 
             if (stateTracker->isDebugOn)
             {
@@ -428,7 +431,8 @@ void RenderLoop::UpdateState(StateTracker* stateTracker, float deltaTime, Quadtr
             }
 
             // Count physics objects
-            stateTracker->physicsObjectCount = stateTracker->spheres.size() + stateTracker->blocks.size() + stateTracker->pegs.size();
+            // TODO check conversion
+            stateTracker->physicsObjectCount = (unsigned int)stateTracker->spheres.size() + (unsigned int)stateTracker->blocks.size() + (unsigned int)stateTracker->pegs.size();
 
             for (int i = 1; i < stateTracker->pegs.size(); i++)
             {
@@ -620,12 +624,14 @@ void RenderLoop::RenderFrame(StateTracker* stateTracker, Quadtree* quadtree)
     stateTracker->sphereShader->SetMat4("modelMatrixUniform", stateTracker->modelMatrix);
     stateTracker->sphereShader->SetCamera("cameraUniform", *stateTracker->camera);
     stateTracker->sphereShader->SetLightingModel(*stateTracker->lightModel);
-    for (unsigned int i = 0; i < stateTracker->spheres.size(); i++)
+    // TODO check conversion
+    for (unsigned int i = 0; i < (unsigned int)stateTracker->spheres.size(); i++)
     {
         stateTracker->sphereShader->SetArrayVec3("offsets", i, stateTracker->spheres[i]->position);
     }
     stateTracker->sphereShader->SetBool("debugUniform", false);
-    stateTracker->InstancedSphere->Render(stateTracker->sphereShader, stateTracker->skyBox->cubemapTexture, stateTracker->spheres.size());
+    // TODO check conversion
+    stateTracker->InstancedSphere->Render(stateTracker->sphereShader, stateTracker->skyBox->cubemapTexture, (unsigned int)stateTracker->spheres.size());
 
     // sphere bounding box
     if (stateTracker->isDebugOn)
@@ -636,7 +642,8 @@ void RenderLoop::RenderFrame(StateTracker* stateTracker, Quadtree* quadtree)
             glPolygonOffset(0, -1);
             glEnable(GL_POLYGON_OFFSET_FILL);
             stateTracker->sphereShader->SetBool("debugUniform", true);
-            stateTracker->InstancedSphere->Render(stateTracker->sphereShader, stateTracker->skyBox->cubemapTexture, stateTracker->spheres.size());
+            // TODO check conversion
+            stateTracker->InstancedSphere->Render(stateTracker->sphereShader, stateTracker->skyBox->cubemapTexture, (unsigned int)stateTracker->spheres.size());
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
             glPolygonOffset(1, 0);
             glEnable(GL_POLYGON_OFFSET_FILL);
@@ -667,7 +674,8 @@ void RenderLoop::RenderFrame(StateTracker* stateTracker, Quadtree* quadtree)
         stateTracker->lightingShader->SetBool("fixedColor", false);
         glBindVertexArray(stateTracker->cube->vertexArray);
 
-        for (unsigned int i = 0; i < stateTracker->lightModel->GetNumberOfLights(); i++)
+        // TODO check conversion
+        for (unsigned int i = 0; i < (unsigned int)stateTracker->lightModel->GetNumberOfLights(); i++)
         {
             stateTracker->modelMatrix = glm::mat4(1.0f);
             stateTracker->modelMatrix = glm::translate(stateTracker->modelMatrix, stateTracker->lightModel->GetLight(i)->position);

@@ -35,7 +35,7 @@
     <ClCompile Include="Src\RenderLoop.cpp" />
     <ClCompile Include="Src\Main.cpp" />
     <ClCompile Include="Src\Object.cpp" />
-    <ClCompile Include="Src\RTRShader.cpp" />
+    <ClCompile Include="Src\ShaderObject.cpp" />
     <ClCompile Include="Src\SkyBox.cpp" />
     <ClCompile Include="Src\Sphere.cpp" />
     <ClCompile Include="Src\StateTracker.cpp" />
@@ -57,7 +57,7 @@
     <ClInclude Include="Src\RenderLoop.h" />
     <ClInclude Include="Src\Lighting.h" />
     <ClInclude Include="Src\Object.h" />
-    <ClInclude Include="Src\RTRShader.h" />
+    <ClInclude Include="Src\ShaderObject.h" />
     <ClInclude Include="Src\ShaderSources.h" />
     <ClInclude Include="Src\SkyBox.h" />
     <ClInclude Include="Src\Sphere.h" />
