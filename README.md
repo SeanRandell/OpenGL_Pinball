@@ -9,7 +9,7 @@
 
 ## About The Project
 
-This project was created for my COSC1226: Real-Time Rendering and 3D Game Programming at RMIT. Contributions during this time are attributed under my RMIT student account - s3658051.
+This project was created for my COSC1226: Real-Time Rendering and 3D Game Programming at RMIT.
 
 ![OpenGL_Pinball_Image_0](readme_assets/0.jpg)
 

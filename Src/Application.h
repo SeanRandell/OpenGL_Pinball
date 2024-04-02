@@ -26,7 +26,7 @@ private:
     int windowHeight;
     int screenWidth;
     int screenHeight;
-    std::string mainWindowTitle; 
+    std::string mainWindowTitle;
 
     unsigned int currentTime{ 0 };
     float timeDelta{ 0 };
