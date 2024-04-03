@@ -45,7 +45,11 @@ Required libraries can be found in the `Include` folder, and should already be l
 
 ## How To Build
 
-Open the `.sln` file in Visual Studio and build (Ctrl+Shift+B). 
+Open the `.sln` file in Visual Studio and build (Ctrl+Shift+B).
+
+## Tools
+### Compile Shaders
+A powershell script that copies the text from shader files and places them into a header file as c-strings. These strings can then be referenced and compiled by the shader class. This script is ran as a pre-build event in the Visual Studio solution.
 
 ## How To Run
 
